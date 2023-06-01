@@ -45,15 +45,26 @@ public class ListTableEditor extends FieldEditor {
 		
 		createURIColumn();
 		
-		//Add Button
-		WidgetFactory.button(SWT.PUSH).text("Add").onSelect(e -> System.out.println("asd")).create(parent);
 		final Text textURL = WidgetFactory.text(SWT.NONE).create(parent);
 		GridData gdTextURL = new GridData();
 		gdTextURL.horizontalSpan = numColumns - 1;
 		gdTextURL.horizontalAlignment = GridData.FILL;
 		gdTextURL.grabExcessHorizontalSpace = true;
 		
-		textURL.setLayoutData(gdTextURL);		
+		textURL.setLayoutData(gdTextURL);
+		
+		//Add Button
+		WidgetFactory.button(SWT.PUSH).text("Add").onSelect(e -> {
+			if (!textURL.getText().isBlank()) {
+				String value = getPreferenceStore().getString(getPreferenceName());
+				String newValue = value + "|" + textURL.getText();
+				getPreferenceStore().setValue(getPreferenceName(), newValue);
+				doLoad();
+				textURL.setText("");
+				tableViewer.getCellEditors()[tableViewer.getCellEditors().length - 1].setFocus();
+			}			
+		}).create(parent);
+				
 		
 		WidgetFactory.button(SWT.PUSH).text("Remove").onSelect(e -> System.out.println("asd")).create(parent);
 		
@@ -66,7 +77,7 @@ public class ListTableEditor extends FieldEditor {
 		viewerColumn.getColumn().setText("URLs");
 		viewerColumn.getColumn().setResizable(true);
 		viewerColumn.getColumn().setMoveable(true);
-		viewerColumn.getColumn().setWidth(200);
+		viewerColumn.getColumn().setWidth(300);
 		viewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {

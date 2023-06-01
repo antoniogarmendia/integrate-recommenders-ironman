@@ -1,7 +1,6 @@
 package integrate.recommenders.ironman.wizard.preferences;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -14,13 +13,10 @@ public class IronManPreferencePage
 	public IronManPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("A demonstration of a preference page implementation");
+		setDescription("Preference Page of the IronMan plugin");
 	}
 	
 	public void createFieldEditors() {
-		addField(
-		new StringFieldEditor(IronManPreferenceConstants.P_STRING, "A &text preference:", getFieldEditorParent()));
-
 		addField(
 				new ListTableEditor(IronManPreferenceConstants.IRONMAN_LIST_SERVERS, 
 						getFieldEditorParent()));
