@@ -22,5 +22,13 @@
             class="integrate.recommenders.ironman.wizard.preferences.IronManPreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="integrate.recommenders.ironman.wizard.preferences.IronManPreferencePage"
+            id="integrate.recommenders.ironman.wizard.preferences.IronManPreferencePage"
+            name="IronMan Preferences">
+      </page>
+   </extension>
 
 </plugin>

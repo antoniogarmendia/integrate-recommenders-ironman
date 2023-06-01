@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import integrate.recommenders.ironman.definition.services.AllRecommenders;
 import integrate.recommenders.ironman.definition.services.Service;
+import integrate.recommenders.ironman.wizard.Activator;
+import integrate.recommenders.ironman.wizard.preferences.IronManPreferenceConstants;
 import integrate.recommenders.ironman.wizard.rest.api.CallAPIJSON;
 import integrate.recommenders.ironman.wizard.rest.api.REQUEST_METHOD;
 import integrate.recommenders.ironman.wizard.rest.api.RestAPIConfiguration;
@@ -14,6 +16,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class IronManWizardUtils {
 	
@@ -55,6 +59,10 @@ public final class IronManWizardUtils {
 	public static String[] getDefinedURL() {
 		final String servers =  ironManPreferences().getString(IronManPreferenceConstants.IRONMAN_LIST_SERVERS);
 		return servers.split("\\|");
+	}
+	
+	public static IPreferenceStore ironManPreferences() {
+		return Activator.getDefault().getPreferenceStore();
 	}
 
 }
