@@ -7,6 +7,14 @@
             class="integrate.recommenders.ironman.contribution.metasearch.BordaCount"
             name="BordaCount">
       </metasearch>
+      <metasearch
+            class="integrate.recommenders.ironman.contribution.MetaSearchAlgorithm2"
+            name="integrate.recommenders.ironman.contribution.metasearch2">
+      </metasearch>
+      <metasearch
+            class="integrate.recommenders.ironman.contribution.metasearch.MedianRankAggregation"
+            name="MedianRankAggregation">
+      </metasearch>
    </extension>
 
 </plugin>
