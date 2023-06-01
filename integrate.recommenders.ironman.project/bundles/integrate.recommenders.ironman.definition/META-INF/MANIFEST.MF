@@ -10,3 +10,5 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.eclipse.emf.ecore;bundle-version="2.25.0",
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.13.2",
  org.eclipse.emf.codegen.ecore;bundle-version="2.28.0"
+Export-Package: integrate.recommenders.ironman.definition.algorithm,
+ integrate.recommenders.ironman.definition.recommenders

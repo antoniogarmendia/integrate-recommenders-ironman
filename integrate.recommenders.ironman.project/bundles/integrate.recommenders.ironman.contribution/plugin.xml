@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="integrate.recommender.metasearch.algorithm">
+      <metasearch
+            class="integrate.recommenders.ironman.contribution.metasearch.BordaCount"
+            name="BordaCount">
+      </metasearch>
+   </extension>
+
+</plugin>

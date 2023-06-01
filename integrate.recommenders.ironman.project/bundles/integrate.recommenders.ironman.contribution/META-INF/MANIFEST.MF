@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Contribution
+Bundle-SymbolicName: integrate.recommenders.ironman.contribution;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: integrate.recommenders.ironman.contribution
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: integrate.recommenders.ironman.definition;bundle-version="1.0.0"
