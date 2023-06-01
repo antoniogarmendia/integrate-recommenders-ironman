@@ -5,4 +5,7 @@ Bundle-SymbolicName: integrate.recommenders.ironman.wizard;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: integrate.recommenders.ironman.wizard
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: org.eclipse.ui
+Require-Bundle: org.eclipse.ui,
+ integrate.recommenders.ironman.definition,
+ com.fasterxml.jackson.core.jackson-core,
+ com.fasterxml.jackson.core.jackson-databind
