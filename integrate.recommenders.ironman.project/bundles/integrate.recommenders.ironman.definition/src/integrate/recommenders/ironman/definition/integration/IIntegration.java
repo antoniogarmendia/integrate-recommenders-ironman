@@ -1,4 +1,4 @@
-package integrate.recommenders.ironman.definition;
+package integrate.recommenders.ironman.definition.integration;
 
 import java.util.List;
 import java.util.Map;
