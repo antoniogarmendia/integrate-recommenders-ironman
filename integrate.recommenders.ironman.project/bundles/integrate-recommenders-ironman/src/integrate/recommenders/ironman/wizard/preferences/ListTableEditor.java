@@ -1,11 +1,16 @@
 package integrate.recommenders.ironman.wizard.preferences;
 
+import java.util.function.Consumer;
+
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.widgets.WidgetFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
@@ -14,8 +19,6 @@ import org.eclipse.swt.widgets.Text;
 public class ListTableEditor extends FieldEditor {
 	
 	private TableViewer tableViewer;
-	
-	private String oldValue;
 	
 	public ListTableEditor(final String listOfServers, Composite parent) {
 		this.setPreferenceName(listOfServers); 
@@ -34,7 +37,7 @@ public class ListTableEditor extends FieldEditor {
 
 	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
-		tableViewer = new TableViewer(parent);
+		tableViewer = new TableViewer(parent, SWT.SINGLE);
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.getTable().setLinesVisible(true);
 		//GridData
@@ -54,21 +57,39 @@ public class ListTableEditor extends FieldEditor {
 		textURL.setLayoutData(gdTextURL);
 		
 		//Add Button
-		WidgetFactory.button(SWT.PUSH).text("Add").onSelect(e -> {
+		WidgetFactory.button(SWT.PUSH).text("Add").onSelect(addURL(textURL)).create(parent);
+				
+		WidgetFactory.button(SWT.PUSH).text("Remove").onSelect(e -> { 
+			final ISelection selection = tableViewer.getSelection();
+			if (selection instanceof IStructuredSelection) {
+				final IStructuredSelection structSelection = (IStructuredSelection) selection;
+				final Object selectedObject = structSelection.getFirstElement();
+				if (selectedObject instanceof String) {
+					final String url = (String) selectedObject;
+					final String value = getPreferenceStore().getString(getPreferenceName());
+					String newValue = value.replace(url, "").replace("||", "|");
+					newValue = newValue.substring(newValue.length() - 1).equals("|") 
+									? newValue.substring(0, newValue.length() - 1)
+									: newValue;
+					getPreferenceStore().setValue(getPreferenceName(), newValue);
+					doLoad();
+				}
+			}			
+		}).create(parent);
+				
+		tableViewer.setContentProvider(new ServerContentProvider());	   	    
+	}
+
+	private Consumer<SelectionEvent> addURL(final Text textURL) {
+		return e -> {
 			if (!textURL.getText().isBlank()) {
 				String value = getPreferenceStore().getString(getPreferenceName());
 				String newValue = value + "|" + textURL.getText();
 				getPreferenceStore().setValue(getPreferenceName(), newValue);
 				doLoad();
-				textURL.setText("");
-				tableViewer.getCellEditors()[tableViewer.getCellEditors().length - 1].setFocus();
+				textURL.setText("");				
 			}			
-		}).create(parent);
-				
-		
-		WidgetFactory.button(SWT.PUSH).text("Remove").onSelect(e -> System.out.println("asd")).create(parent);
-		
-		tableViewer.setContentProvider(new ServerContentProvider());	   	    
+		};
 	}
 
 	private void createURIColumn() {
@@ -93,7 +114,7 @@ public class ListTableEditor extends FieldEditor {
 		if (tableViewer != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
 			tableViewer.setInput(value);
-			oldValue = value;
+			//oldValue = value;
 		}		
 	}
 
@@ -106,7 +127,7 @@ public class ListTableEditor extends FieldEditor {
 		}
 		//TODO valueChanges?
 		//valueChanged();		
-	}
+	}	
 
 	@Override
 	protected void doStore() {
