@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="integrate.recommender.environment" name="integrate.recommender.environment" schema="schema/integrate.recommender.environment.exsd"/>
+   <extension-point id="integrate.recommender.metasearch.algorithm" name="integrate.recommender.metasearch.algorithm" schema="schema/integrate.recommender.metasearch.algorithm.exsd"/>
+
+</plugin>
