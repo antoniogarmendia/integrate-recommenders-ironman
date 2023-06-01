@@ -1,4 +1,4 @@
-package integrate.recommenders.ironman.wizard;
+package integrate.recommenders.ironman.wizard.pages;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;

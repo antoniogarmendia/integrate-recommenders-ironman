@@ -9,7 +9,7 @@
       </category>
       <wizard
             category="integrate.recommenders.ironman.wizard.project.category"
-            class="integrate.recommenders.ironman.wizard.IronManWizard"
+            class="integrate.recommenders.ironman.wizard.pages.IronManWizard"
             icon="icons/ironman-icon.png"
             id="integrate.recommenders.ironman.wizard.project"
             name="New IronMan Project"

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import integrate.recommenders.ironman.definition.services.AllRecommenders;
 import integrate.recommenders.ironman.definition.services.Service;
+import integrate.recommenders.ironman.wizard.rest.api.CallAPIJSON;
+import integrate.recommenders.ironman.wizard.rest.api.REQUEST_METHOD;
+import integrate.recommenders.ironman.wizard.rest.api.RestAPIConfiguration;
 
 import static integrate.recommenders.ironman.wizard.utils.IronManRestAPIUtils.*;
 
@@ -47,6 +50,11 @@ public final class IronManWizardUtils {
 			}
 		}
 		return Collections.unmodifiableMap(recommenderToServices);		
+	}
+	
+	public static String[] getDefinedURL() {
+		final String servers =  ironManPreferences().getString(IronManPreferenceConstants.IRONMAN_LIST_SERVERS);
+		return servers.split("\\|");
 	}
 
 }
