@@ -16,5 +16,11 @@
             project="true">
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="integrate.recommenders.ironman.wizard.preferences.IronManPreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
