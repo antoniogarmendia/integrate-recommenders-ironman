@@ -22,6 +22,10 @@
             class="integrate.recommenders.ironman.contribution.integration.SiriusIntegration"
             name="Sirius">
       </integration>
+      <integration
+            class="integrate.recommenders.ironman.contribution.integration.TreeEditor"
+            name="TreeEditor">
+      </integration>
    </extension>
 
 </plugin>
