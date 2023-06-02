@@ -13,6 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 public class IronManWizard extends Wizard implements INewWizard {
+	
+	//Wizard Pages
+	private SelectRecommenders selectRec;
+	
+	//Wizard Pages's Name
+	public static final String SELECT_RECOMMENDER_PAGE_NAME = "selRecommender"; 
 
 	private final Map<String,List<Service>> recommenderToServices;
 	
@@ -20,6 +26,16 @@ public class IronManWizard extends Wizard implements INewWizard {
 		setWindowTitle(IRONMAN_WIZARD_NAME);
 		//Get All Recommenders
 		recommenderToServices = getAllRecommender();
+	}
+	
+	@Override
+	public void addPages() {
+		// Select Recommender - page 1
+		selectRec = new SelectRecommenders(SELECT_RECOMMENDER_PAGE_NAME);		
+	}
+	
+	public Map<String,List<Service>> getAllRecommenders() {
+		return recommenderToServices;
 	}
 
 	@Override

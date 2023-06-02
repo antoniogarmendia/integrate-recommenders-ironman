@@ -28,6 +28,8 @@ public final class IronManWizardUtils {
 	
 	public static final String IRONMAN_WIZARD_NAME = "IronMan Project";
 	
+	public static final String IRONMAN_WIZARD_PAGE_SELECT_RECOMMENDER_NAME = "Select Available Recommenders";
+	
 	/*
 	 * this returns a map of key = URL of the server and as value the object Service	 * 
 	 * */
