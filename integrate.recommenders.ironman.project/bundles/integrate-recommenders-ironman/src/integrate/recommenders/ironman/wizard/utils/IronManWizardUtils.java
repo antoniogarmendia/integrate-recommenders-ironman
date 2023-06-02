@@ -34,6 +34,8 @@ public final class IronManWizardUtils {
 	
 	public static final String IRONMAN_WIZARD_PAGE_CONFIGURE_MODELLING_LANGUAGE = "Modelling Language Configuration";
 	
+	public static final String IRONMAN_WIZARD_PAGE_AGGREGATION_METHOD_NAME = "Select Aggregation Method";
+	
 	/*
 	 * this returns a map of key = URL of the server and as value the object Service	 * 
 	 * */

@@ -19,6 +19,7 @@ public class IronManWizard extends Wizard implements INewWizard {
 	private SelectRecommenders selectRec;
 	private SelectTargetItems selectTargetItems;
 	private ConfigureModellingLanguage modellingLanguages;
+	private ConfigureAggregationMethod aggMethod;
 	
 	//Wizard Pages's Name
 	public static final String SELECT_RECOMMENDER_PAGE_NAME = "selRecommender"; 
@@ -26,6 +27,8 @@ public class IronManWizard extends Wizard implements INewWizard {
 	public static final String SELECT_TARGET_ITEM_PAGE_NAME = "selTargetItems";
 	
 	public static final String SELECT_MODELLING_LANGUAGE_PAGE_NAME = "configLanguage"; 
+	
+	public static final String SELECT_AGGREGATION_METHOD_PAGE_NAME = "selAggMethod";
 
 	private final Map<String,List<Service>> recommenderToServices;
 	
@@ -43,10 +46,13 @@ public class IronManWizard extends Wizard implements INewWizard {
 		selectTargetItems = new SelectTargetItems(SELECT_TARGET_ITEM_PAGE_NAME);
 		//Configure the Mapping to another modelling language
 		modellingLanguages = new ConfigureModellingLanguage(SELECT_MODELLING_LANGUAGE_PAGE_NAME);
+		//Select Aggregation Method
+		aggMethod = new ConfigureAggregationMethod(SELECT_AGGREGATION_METHOD_PAGE_NAME);
 		
 		addPage(selectRec);
 		addPage(selectTargetItems);
 		addPage(modellingLanguages);
+		addPage(aggMethod);
 	}
 	
 	public Map<String,List<Service>> getAllRecommenders() {
