@@ -39,6 +39,7 @@ public class IronManWizard extends Wizard implements INewWizard {
 		selectTargetItems = new SelectTargetItems(SELECT_TARGET_ITEM_PAGE_NAME);
 		
 		addPage(selectRec);
+		addPage(selectTargetItems);
 	}
 	
 	public Map<String,List<Service>> getAllRecommenders() {
