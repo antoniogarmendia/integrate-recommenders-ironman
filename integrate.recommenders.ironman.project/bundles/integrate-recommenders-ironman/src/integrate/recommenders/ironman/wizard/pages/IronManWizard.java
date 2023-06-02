@@ -31,7 +31,9 @@ public class IronManWizard extends Wizard implements INewWizard {
 	@Override
 	public void addPages() {
 		// Select Recommender - page 1
-		selectRec = new SelectRecommenders(SELECT_RECOMMENDER_PAGE_NAME);		
+		selectRec = new SelectRecommenders(SELECT_RECOMMENDER_PAGE_NAME);
+		
+		addPage(selectRec);
 	}
 	
 	public Map<String,List<Service>> getAllRecommenders() {
