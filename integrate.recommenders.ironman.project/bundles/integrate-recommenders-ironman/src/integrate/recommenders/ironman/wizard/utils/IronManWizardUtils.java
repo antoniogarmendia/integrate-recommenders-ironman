@@ -30,6 +30,8 @@ public final class IronManWizardUtils {
 	
 	public static final String IRONMAN_WIZARD_PAGE_SELECT_RECOMMENDER_NAME = "Select Available Recommenders";
 	
+	public static final String IRONMAN_WIZARD_PAGE_SELECT_TARGET_ITEMS_NAME = "Select Available Target & Items";
+	
 	/*
 	 * this returns a map of key = URL of the server and as value the object Service	 * 
 	 * */

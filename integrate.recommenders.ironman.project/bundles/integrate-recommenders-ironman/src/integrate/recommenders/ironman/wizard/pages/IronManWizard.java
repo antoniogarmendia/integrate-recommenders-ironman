@@ -16,9 +16,12 @@ public class IronManWizard extends Wizard implements INewWizard {
 	
 	//Wizard Pages
 	private SelectRecommenders selectRec;
+	private SelectTargetItems selectTargetItems;
 	
 	//Wizard Pages's Name
 	public static final String SELECT_RECOMMENDER_PAGE_NAME = "selRecommender"; 
+	
+	public static final String SELECT_TARGET_ITEM_PAGE_NAME = "selTargetItems";
 
 	private final Map<String,List<Service>> recommenderToServices;
 	
@@ -32,6 +35,8 @@ public class IronManWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		// Select Recommender - page 1
 		selectRec = new SelectRecommenders(SELECT_RECOMMENDER_PAGE_NAME);
+		//Select Target & Items
+		selectTargetItems = new SelectTargetItems(SELECT_TARGET_ITEM_PAGE_NAME);
 		
 		addPage(selectRec);
 	}
