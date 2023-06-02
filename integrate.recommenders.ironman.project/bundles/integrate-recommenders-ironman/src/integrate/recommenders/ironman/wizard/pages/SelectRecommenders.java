@@ -36,8 +36,7 @@ public class SelectRecommenders extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		//Scrolled Composite
-		//final ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
+		//Composite
 		final Composite sc = new Composite(parent, SWT.NONE);
 		sc.setLayout(GridLayoutFactory.fillDefaults().create());
 		sc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL,GridData.FILL_VERTICAL,true,true,1,1));
@@ -47,17 +46,10 @@ public class SelectRecommenders extends WizardPage {
 		checkboxTreeViewer.getTree().setLinesVisible(true);
 		checkboxTreeViewer.setUseHashlookup(true);
 		
-		//checkboxTreeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().create());
 		checkboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		createColumns(checkboxTreeViewer);	
-		
-		//sc.setExpandHorizontal(true);
-		//sc.setExpandVertical(true);
-		//sc.setAlwaysShowScrollBars(true);
-		
-		//sc.setContent(checkboxTreeViewer.getTree());
-		
+				
 		checkboxTreeViewer.setContentProvider(new LanguageRecommenderContentProvider());	
 		checkboxTreeViewer.setInput(getWizard().getAllRecommenders());		
 		
