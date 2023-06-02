@@ -36,6 +36,8 @@ public final class IronManWizardUtils {
 	
 	public static final String IRONMAN_WIZARD_PAGE_AGGREGATION_METHOD_NAME = "Select Aggregation Method";
 	
+	public static final String IRONMAN_WIZARD_PAGE_CONFIGURE_MODELLING_NAME = "Modelling Tools Integration";
+	
 	/*
 	 * this returns a map of key = URL of the server and as value the object Service	 * 
 	 * */
