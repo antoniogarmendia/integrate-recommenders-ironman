@@ -32,6 +32,8 @@ public final class IronManWizardUtils {
 	
 	public static final String IRONMAN_WIZARD_PAGE_SELECT_TARGET_ITEMS_NAME = "Select Available Target & Items";
 	
+	public static final String IRONMAN_WIZARD_PAGE_CONFIGURE_MODELLING_LANGUAGE = "Modelling Language Configuration";
+	
 	/*
 	 * this returns a map of key = URL of the server and as value the object Service	 * 
 	 * */
