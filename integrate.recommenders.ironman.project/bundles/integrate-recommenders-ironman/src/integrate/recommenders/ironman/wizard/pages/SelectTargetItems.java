@@ -1,11 +1,12 @@
 package integrate.recommenders.ironman.wizard.pages;
 
-import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.widgets.WidgetFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 import integrate.recommenders.ironman.definition.services.Recommender;
@@ -33,36 +34,43 @@ public class SelectTargetItems extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		//Scrolled Composite
-		final ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
-		sc.setLayoutData(GridDataFactory.fillDefaults().create());		
+		//Container Composite
+		final Composite container = new Composite(parent, SWT.NONE);
+		container.setLayout(GridLayoutFactory.fillDefaults().create());
+		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL, GridData.FILL_VERTICAL,true,true,1,1));
 		
-		checkboxTreeViewer = new CheckboxTreeViewer(sc, SWT.VIRTUAL | SWT.BORDER | SWT.CHECK ); 
+		checkboxTreeViewer = new CheckboxTreeViewer(container, SWT.VIRTUAL | SWT.BORDER | SWT.CHECK ); 
 		checkboxTreeViewer.getTree().setHeaderVisible(true);
 		checkboxTreeViewer.getTree().setLinesVisible(true);
 		checkboxTreeViewer.setUseHashlookup(true);
 		
-		checkboxTreeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().create());
+		checkboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		createColumns(checkboxTreeViewer);
-		
-		sc.setExpandHorizontal(true);
-		sc.setExpandVertical(true);
-		sc.setAlwaysShowScrollBars(true);
-		
-		sc.setContent(checkboxTreeViewer.getTree());
-		
+				
 		checkboxTreeViewer.setContentProvider(new SelectItemContentProvider());	
 		checkboxTreeViewer.setInput(mapServerToSelectedRecommender());
 		
-		setControl(sc);
+		checkboxTreeViewer.getTree().addSelectionListener(selectTreeViewerItem());
+		
+		final Composite configureTree = new Composite(container, SWT.NONE);
+		configureTree.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		
+		WidgetFactory.button(SWT.NONE).text("Expand All").onSelect(
+				e -> {this.checkboxTreeViewer.expandAll();}).create(configureTree);
+		
+		WidgetFactory.button(SWT.NONE).text("Collapse All").onSelect(
+				e -> {this.checkboxTreeViewer.collapseAll();})
+						.create(configureTree);		
+		
+		setControl(container);
 		setPageComplete(true);		
 	}
 	
 	private void createColumns(CheckboxTreeViewer checkboxTreeViewer2) {
 		//Choose Items Column
 		TreeViewerColumn itemColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.LEFT);
-		itemColumn.getColumn().setWidth(180);
+		itemColumn.getColumn().setWidth(220);
 		itemColumn.getColumn().setText("Select Items");
 			
 		//Provider Diagram Description Column

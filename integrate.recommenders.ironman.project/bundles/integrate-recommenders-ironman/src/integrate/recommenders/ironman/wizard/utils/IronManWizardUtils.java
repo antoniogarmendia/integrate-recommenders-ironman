@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.TreeItem;
 
 public final class IronManWizardUtils {
 	
@@ -74,5 +77,57 @@ public final class IronManWizardUtils {
 	public static IPreferenceStore ironManPreferences() {
 		return Activator.getDefault().getPreferenceStore();
 	}
+	
+	//Utility methods for TreeViewer
+	public static SelectionAdapter selectTreeViewerItem() {
+		return new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final TreeItem item = (TreeItem) e.item;
+				if (item.getChecked() == true) {
+					selectAllTreeItemChildren(item);	
+					selectParentIfNotChecked(item);
+				} else {
+					deselectAllTreeItemChildren(item);
+					deselectParentIfAnyChildSelected(item);
+				}
+			}			
+		};
+	}
+	
+	public static void selectParentIfNotChecked(TreeItem item) {
+		if (item.getParentItem().getChecked() == false) {
+			item.getParentItem().setChecked(true);
+			selectParentIfNotChecked(item.getParentItem());
+		}		
+	}
 
+	public static void deselectParentIfAnyChildSelected(TreeItem item) {
+		//Check all the tree items
+		boolean isAtLeastOneItemChecked = false;
+		for (TreeItem treeItemChild : item.getParentItem().getItems()) {
+			if (treeItemChild.getChecked() == true) {
+				isAtLeastOneItemChecked = true;
+				break;
+			}					
+		}
+		if (isAtLeastOneItemChecked == false) {
+			item.getParentItem().setChecked(false);
+			deselectParentIfAnyChildSelected(item.getParentItem());
+		}			
+	}
+
+	public static void selectAllTreeItemChildren(final TreeItem item) {
+		for (TreeItem childItem: item.getItems()) {
+			childItem.setChecked(true);	
+			selectAllTreeItemChildren(childItem);
+		}
+	}
+	
+	public static void deselectAllTreeItemChildren(final TreeItem item) {
+		for (TreeItem childItem: item.getItems()) {
+			childItem.setChecked(false);	
+			deselectAllTreeItemChildren(childItem);
+		}
+	}
 }

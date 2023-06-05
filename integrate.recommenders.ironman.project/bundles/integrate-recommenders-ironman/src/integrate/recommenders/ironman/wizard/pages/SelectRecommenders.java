@@ -6,11 +6,8 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.widgets.WidgetFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TreeItem;
 
 import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.wizard.pages.contents.LanguageRecommenderContentProvider;
@@ -38,37 +35,25 @@ public class SelectRecommenders extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		//Composite
-		final Composite sc = new Composite(parent, SWT.NONE);
-		sc.setLayout(GridLayoutFactory.fillDefaults().create());
-		sc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL,GridData.FILL_VERTICAL,true,true,1,1));
+		final Composite container = new Composite(parent, SWT.NONE);
+		container.setLayout(GridLayoutFactory.fillDefaults().create());
+		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL,GridData.FILL_VERTICAL,true,true,1,1));
 		
-		checkboxTreeViewer = new CheckboxTreeViewer(sc, SWT.VIRTUAL | SWT.BORDER | SWT.CHECK ); 
+		checkboxTreeViewer = new CheckboxTreeViewer(container, SWT.VIRTUAL | SWT.BORDER | SWT.CHECK ); 
 		checkboxTreeViewer.getTree().setHeaderVisible(true);
 		checkboxTreeViewer.getTree().setLinesVisible(true);
 		checkboxTreeViewer.setUseHashlookup(true);
 		
 		checkboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		checkboxTreeViewer.getTree().addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				final TreeItem item = (TreeItem) e.item;
-				if (item.getChecked() == true) {
-					selectAllTreeItemChildren(item);	
-					selectParentIfNotChecked(item);
-				} else {
-					deselectAllTreeItemChildren(item);
-					deselectParentIfAnyChildSelected(item);
-				}
-			}			
-		});
+		checkboxTreeViewer.getTree().addSelectionListener(selectTreeViewerItem());
 		
 		createColumns(checkboxTreeViewer);	
 				
 		checkboxTreeViewer.setContentProvider(new LanguageRecommenderContentProvider());	
 		checkboxTreeViewer.setInput(getWizard().getAllRecommenders());		
 		
-		final Composite configureTree = new Composite(sc, SWT.NONE);
+		final Composite configureTree = new Composite(container, SWT.NONE);
 		configureTree.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		WidgetFactory.button(SWT.NONE).text("Expand All").onSelect(
 				e -> {this.checkboxTreeViewer.expandAll();}).create(configureTree);
@@ -77,45 +62,11 @@ public class SelectRecommenders extends WizardPage {
 				e -> {this.checkboxTreeViewer.collapseAll();})
 						.create(configureTree);
 		
-		setControl(sc);
+		setControl(container);
 		setPageComplete(true);		
 	}
-	
-	public void selectParentIfNotChecked(TreeItem item) {
-		if (item.getParentItem().getChecked() == false) {
-			item.getParentItem().setChecked(true);
-			selectParentIfNotChecked(item.getParentItem());
-		}		
-	}
 
-	public void deselectParentIfAnyChildSelected(TreeItem item) {
-		//Check all the tree items
-		boolean isAtLeastOneItemChecked = false;
-		for (TreeItem treeItemChild : item.getParentItem().getItems()) {
-			if (treeItemChild.getChecked() == true) {
-				isAtLeastOneItemChecked = true;
-				break;
-			}					
-		}
-		if (isAtLeastOneItemChecked == false) {
-			item.getParentItem().setChecked(false);
-			deselectParentIfAnyChildSelected(item.getParentItem());
-		}			
-	}
-
-	public void selectAllTreeItemChildren(final TreeItem item) {
-		for (TreeItem childItem: item.getItems()) {
-			childItem.setChecked(true);	
-			selectAllTreeItemChildren(childItem);
-		}
-	}
 	
-	public void deselectAllTreeItemChildren(final TreeItem item) {
-		for (TreeItem childItem: item.getItems()) {
-			childItem.setChecked(false);	
-			deselectAllTreeItemChildren(childItem);
-		}
-	}
 	
 	private void createColumns(CheckboxTreeViewer checkboxTreeViewer) {
 		//Language & Recommenders Column
@@ -142,8 +93,6 @@ public class SelectRecommenders extends WizardPage {
 		//Provider Diagram Description Column
 		itemsColumn.setLabelProvider(new ItemRecommenderProvider());		
 	}
-	
-	
 	
 	@Override
 	public IronManWizard getWizard() {
