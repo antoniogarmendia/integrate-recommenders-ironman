@@ -1,15 +1,16 @@
 package integrate.recommenders.ironman.wizard.pages;
 
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.widgets.WidgetFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TreeItem;
 
 import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.wizard.pages.contents.LanguageRecommenderContentProvider;
@@ -48,6 +49,20 @@ public class SelectRecommenders extends WizardPage {
 		
 		checkboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
+		checkboxTreeViewer.getTree().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final TreeItem item = (TreeItem) e.item;
+				if (item.getChecked() == true) {
+					selectAllTreeItemChildren(item);	
+					selectParentIfNotChecked(item);
+				} else {
+					deselectAllTreeItemChildren(item);
+					deselectParentIfAnyChildSelected(item);
+				}
+			}			
+		});
+		
 		createColumns(checkboxTreeViewer);	
 				
 		checkboxTreeViewer.setContentProvider(new LanguageRecommenderContentProvider());	
@@ -64,6 +79,42 @@ public class SelectRecommenders extends WizardPage {
 		
 		setControl(sc);
 		setPageComplete(true);		
+	}
+	
+	public void selectParentIfNotChecked(TreeItem item) {
+		if (item.getParentItem().getChecked() == false) {
+			item.getParentItem().setChecked(true);
+			selectParentIfNotChecked(item.getParentItem());
+		}		
+	}
+
+	public void deselectParentIfAnyChildSelected(TreeItem item) {
+		//Check all the tree items
+		boolean isAtLeastOneItemChecked = false;
+		for (TreeItem treeItemChild : item.getParentItem().getItems()) {
+			if (treeItemChild.getChecked() == true) {
+				isAtLeastOneItemChecked = true;
+				break;
+			}					
+		}
+		if (isAtLeastOneItemChecked == false) {
+			item.getParentItem().setChecked(false);
+			deselectParentIfAnyChildSelected(item.getParentItem());
+		}			
+	}
+
+	public void selectAllTreeItemChildren(final TreeItem item) {
+		for (TreeItem childItem: item.getItems()) {
+			childItem.setChecked(true);	
+			selectAllTreeItemChildren(childItem);
+		}
+	}
+	
+	public void deselectAllTreeItemChildren(final TreeItem item) {
+		for (TreeItem childItem: item.getItems()) {
+			childItem.setChecked(false);	
+			deselectAllTreeItemChildren(childItem);
+		}
 	}
 	
 	private void createColumns(CheckboxTreeViewer checkboxTreeViewer) {
@@ -91,7 +142,9 @@ public class SelectRecommenders extends WizardPage {
 		//Provider Diagram Description Column
 		itemsColumn.setLabelProvider(new ItemRecommenderProvider());		
 	}
-
+	
+	
+	
 	@Override
 	public IronManWizard getWizard() {
 		return (IronManWizard) super.getWizard();
