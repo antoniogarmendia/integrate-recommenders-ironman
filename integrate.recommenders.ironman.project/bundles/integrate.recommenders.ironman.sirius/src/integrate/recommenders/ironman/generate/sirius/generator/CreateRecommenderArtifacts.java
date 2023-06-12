@@ -25,7 +25,12 @@ import org.eclipse.sirius.viewpoint.description.tool.PopupMenu;
 import org.eclipse.sirius.viewpoint.description.tool.ToolFactory;
 
 import integrate.recommenders.ironman.definition.services.Service;
+import integrate.recommenders.ironman.generate.sirius.generator.template.RecommendItemExtendedAction;
+import project.generator.api.template.sirius.ViewpointEditorPluginXML;
+import project.generator.api.utils.WriteUtils;
+
 import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.*;
+import static project.generator.api.vp.utils.ViewpointSpecificationProjectExtended.*;
 
 public class CreateRecommenderArtifacts {
 	
@@ -48,10 +53,10 @@ public class CreateRecommenderArtifacts {
 		//2. Refine viewpoint
 		refineViewpoint(groupBaseRecommender);
 		//3. Create Viewpoint Specification Project
-		//final IProject viewpointProject = createViepointProject(VIEWPOINT_RECOMMENDER_NAME
-		//		+ "." + VIEWPOINT_MODEL_EXTENSION, groupBaseRecommender);		
+		final IProject viewpointProject = createViepointProject(VIEWPOINT_RECOMMENDER_NAME
+				+ "." + VIEWPOINT_MODEL_EXTENSION, groupBaseRecommender);		
 		//4. Create all files
-		//generateAll(viewpointProject);
+		generateAll(viewpointProject);
 	}
 	
 	private void refineViewpoint(final Group groupBaseRecommender) {
@@ -69,22 +74,21 @@ public class CreateRecommenderArtifacts {
 		}
 		EcoreUtil.remove(diagramDesc);		
 	}
-//
-//	private IProject createViepointProject(final String viewpointName, final Group groupBaseRecommender) {
-//		try {
-//			return createNewViewpointSpecificationProject(this.projectName, viewpointName, groupBaseRecommender);
-//		} catch (CoreException e) {			
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-//	
-//
-//	public void generateAll(IProject viewpointProject){
-//		final List<Runnable> allFiles = init(viewpointProject);
-//		execute(allFiles);
-//	}
-//
+
+	private IProject createViepointProject(final String viewpointName, final Group groupBaseRecommender) {
+		try {
+			return createNewViewpointSpecificationProject(this.projectName, viewpointName, groupBaseRecommender);
+		} catch (CoreException e) {			
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void generateAll(IProject viewpointProject){
+		final List<Runnable> allFiles = init(viewpointProject);
+		execute(allFiles);
+	}
+
 	private List<Runnable> init(IProject viewpointProject) {
 		var allFiles = new ArrayList<Runnable>();
 		final String packageName = viewpointProject.getName() + PACKAGE_ACTIONS;
@@ -95,8 +99,9 @@ public class CreateRecommenderArtifacts {
 		//Actions package
 		for (String item : setOfItems) {
 			final String className = "Recommend" + item;
-			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" + viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
-					className + ".java", 
+			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
+						className + ".java", 
 					new RecommendItemExtendedAction(className, packageName, this.recommenderToServices).doGenerate()));
 		}
 		

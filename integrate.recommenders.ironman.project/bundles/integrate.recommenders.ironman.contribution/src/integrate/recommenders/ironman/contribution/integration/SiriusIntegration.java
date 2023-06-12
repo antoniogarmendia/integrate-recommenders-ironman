@@ -11,6 +11,7 @@ import integrate.recommenders.ironman.definition.integration.IIntegration;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.dialog.SiriusViewpointDialog;
+import integrate.recommenders.ironman.generate.sirius.generator.CreateRecommenderArtifacts;
 
 public class SiriusIntegration implements IIntegration {
 	
@@ -55,8 +56,10 @@ public class SiriusIntegration implements IIntegration {
 
 	@Override
 	public void generateIntegration(String dataFusionAlgorithm, Map<String, List<Service>> recommenderToServices) {
-		// TODO Auto-generated method stub
-		System.out.println("Inspect");
+		new CreateRecommenderArtifacts(projectName, 
+				selectedDiagramDesc,
+				this.recommenderToServices).doGenerateViewpointSpecificationProject();	
+		System.out.println("Create Viewpoint Specification Project");
 	}
 
 }
