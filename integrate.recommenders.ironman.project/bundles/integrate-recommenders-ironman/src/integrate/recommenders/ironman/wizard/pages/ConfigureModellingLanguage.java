@@ -1,12 +1,12 @@
 package integrate.recommenders.ironman.wizard.pages;
 
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.widgets.WidgetFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -45,56 +45,58 @@ public class ConfigureModellingLanguage extends WizardPage {
 
 	private Label labelNsUri;
 	private final MLMappingConfiguration mapping;
-	private TreeViewer configureLangTableViewer;
-	private Composite tableComposite;
+	private Button mappingLanguageButton;
+	private TreeViewer configureLangTreeViewer;
 		
 	protected ConfigureModellingLanguage(String pageName) {
 		super(pageName);
 		setTitle(IRONMAN_WIZARD_PAGE_CONFIGURE_MODELLING_LANGUAGE);	
 		//Get Selected Target & Items
 		mapping = new MLMappingConfiguration(null,null);
-		this.tableComposite = null;
+		this.mappingLanguageButton = null;
 	}	
 
 	@Override
 	public void createControl(Composite parent) {
-		final Composite containerCheck = new Composite(parent, SWT.NONE);		
-		containerCheck.setLayout(GridLayoutFactory.fillDefaults().create());		
+		final Composite container = new Composite(parent, SWT.NONE);		
+		container.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());		
+		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL,GridData.FILL_VERTICAL));
 		//Check if mapping is necessary
-		Button checkedButton = WidgetFactory.button(SWT.CHECK)
-			.text("Configure a Mapping to Another Language")
-			.create(containerCheck);					
-		final Composite container = new Composite(containerCheck, SWT.NONE);		
-		container.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		final Button checkedButton = WidgetFactory.button(SWT.CHECK)
+				.text("Configure a Mapping to Another Language")
+				.create(container);					
+	
 		checkedButton.addListener(SWT.Selection, enableListener(container));
 		//Create composite to select the mapping to a language
-		labelNsUri = WidgetFactory.label(SWT.NONE).text("Mapping to Language: ").create(container);
+		this.labelNsUri = WidgetFactory.label(SWT.NONE).text("Mapping to Language: [Language not defined]").create(container);
 		//Button to Search Package
 		buttonChangeModellingLang(container);
-		this.tableComposite = new Composite(container, SWT.NONE);
-		this.tableComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-		//TreeViewer to define the configuration
-		configureLangTableViewer = new TreeViewer(tableComposite, SWT.VIRTUAL | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL  );
-		configureLangTableViewer.getTree().setHeaderVisible(true);
-		configureLangTableViewer.getTree().setLinesVisible(true);
-		configureLangTableViewer.setUseHashlookup(true);
+
+		configureLangTreeViewer = new TreeViewer(container, SWT.VIRTUAL | SWT.BORDER );
+		configureLangTreeViewer.getTree().setHeaderVisible(true);
+		configureLangTreeViewer.getTree().setLinesVisible(true);
+		configureLangTreeViewer.setUseHashlookup(true);
 		
-		configureLangTableViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().create());
-		
+		configureLangTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL,GridData.FILL, true, true,3,1));
 		createColumns();
 		
-		GridLayoutFactory.fillDefaults().generateLayout(tableComposite);
-				
-		configureLangTableViewer.setContentProvider(new MLConfigureLanguageContentProvider());	
-		configureLangTableViewer.setInput(this.mapping);
+		configureLangTreeViewer.setContentProvider(new MLConfigureLanguageContentProvider());	
+		configureLangTreeViewer.setInput(this.mapping);
 		
-		container.setEnabled(false);
-		setControl(containerCheck);
+		mappingModellingLanguageOptions(false);
+		
+		setControl(container);
 		setPageComplete(true);
 	}
 
+	private void mappingModellingLanguageOptions(boolean enabled) {
+		this.configureLangTreeViewer.getTree().setEnabled(enabled);
+		this.mappingLanguageButton.setEnabled(enabled);		
+	}
+
 	private void buttonChangeModellingLang(final Composite container) {
-		WidgetFactory.button(SWT.NONE).text("Add Modeling Language").create(container).addListener(SWT.Selection, event -> {
+		this.mappingLanguageButton  = WidgetFactory.button(SWT.NONE).text("Add Modeling Language").create(container);
+		this.mappingLanguageButton.addListener(SWT.Selection, event -> {
 			final RegisteredPackageDialog registeredPackageDialog = new RegisteredPackageDialog(getShell());
 			  registeredPackageDialog.setMultipleSelection(false);
 			  registeredPackageDialog.open();
@@ -109,11 +111,7 @@ public class ConfigureModellingLanguage extends WizardPage {
             		  final GenModel genModel = (GenModel) genModelResource.getContents().get(0);            		  
             		  this.mapping.setGenModel(genModel);
             		  labelNsUri.setText("Mapping to Language: " + sourceNsUris);
-            		  container.layout();
-            		  tableComposite.layout();
-            		  configureLangTableViewer.refresh();
-            		  configureLangTableViewer.getTree().layout(); 
-            		  ((Composite)getControl()).layout();
+            		  labelNsUri.redraw();            		  
             	  }
               }              
 		});
@@ -125,10 +123,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 			public void handleEvent(Event event) {
 				 if (event.widget instanceof Button) {
 					final Button button = (Button) event.widget;
-					if (button.getSelection())
-						composite.setEnabled(true);
-					else
-						composite.setEnabled(false);
+					mappingModellingLanguageOptions(button.getSelection());					
 				}									
 			}
 		};		
@@ -136,7 +131,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 
 	private void createColumns() {
 		//Target and Items (Source Language)
-		TreeViewerColumn srcLanguageColumn = new TreeViewerColumn(this.configureLangTableViewer, SWT.LEFT);
+		TreeViewerColumn srcLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
 		srcLanguageColumn.getColumn().setWidth(180);
 		srcLanguageColumn.getColumn().setText("Source Language - Target and Items");
 		
@@ -144,19 +139,19 @@ public class ConfigureModellingLanguage extends WizardPage {
 		srcLanguageColumn.setLabelProvider(new MLSourceLanguageProvider());
 		
 		//Target and Items (Target Language)
-		TreeViewerColumn targetLanguageColumn = new TreeViewerColumn(this.configureLangTableViewer, SWT.LEFT);
+		TreeViewerColumn targetLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
 		targetLanguageColumn.getColumn().setWidth(180);
 		targetLanguageColumn.getColumn().setText("Target Language - Target and Items");
-		targetLanguageColumn.setEditingSupport(new EditingTargetLangElements(configureLangTableViewer,this.mapping));
+		targetLanguageColumn.setEditingSupport(new EditingTargetLangElements(this.configureLangTreeViewer,this.mapping));
 		
 		//Provide Target and Items from the Target Language
 		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());
 		
 		//Target and Items (Target Language)
-		TreeViewerColumn writeSpecFeatureColumn = new TreeViewerColumn(this.configureLangTableViewer, SWT.LEFT);
+		TreeViewerColumn writeSpecFeatureColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
 		writeSpecFeatureColumn.getColumn().setWidth(180);
 		writeSpecFeatureColumn.getColumn().setText("Target Language - Write Feature");
-		writeSpecFeatureColumn.setEditingSupport(new EditingTargetWriteLangElements(configureLangTableViewer, this.mapping));
+		writeSpecFeatureColumn.setEditingSupport(new EditingTargetWriteLangElements(this.configureLangTreeViewer, this.mapping));
 		
 		//Specify the write features
 		writeSpecFeatureColumn.setLabelProvider(new MLWriteFeatureProvider());
@@ -167,7 +162,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 		super.setVisible(visible);
 		this.mapping.setSourceToTargetMap(getSourcetoTargetMap());
 		
-		configureLangTableViewer.refresh();
+		this.configureLangTreeViewer.refresh();
 		((Composite)getControl()).layout();
 	}
 	
