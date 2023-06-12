@@ -5,4 +5,6 @@ Bundle-SymbolicName: integrate.recommenders.ironman.contribution;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: integrate.recommenders.ironman.contribution
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: integrate.recommenders.ironman.definition;bundle-version="1.0.0"
+Require-Bundle: integrate.recommenders.ironman.definition;bundle-version="1.0.0",
+ integrate.recommenders.ironman.generate.sirius;bundle-version="1.0.0",
+ org.eclipse.ui;bundle-version="3.200.0"
