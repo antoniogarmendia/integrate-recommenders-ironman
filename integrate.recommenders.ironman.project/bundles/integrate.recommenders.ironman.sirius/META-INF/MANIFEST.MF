@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sirius
+Bundle-SymbolicName: integrate.recommenders.ironman.generate.sirius
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: integrate.recommenders.ironman.generate.sirius
+Bundle-RequiredExecutionEnvironment: JavaSE-17

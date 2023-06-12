@@ -8,27 +8,32 @@ import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Service;
 
 public class SiriusIntegration implements IIntegration {
+	
+	private Map<String,List<Service>> recommenderToServices; 
 
 	public SiriusIntegration() {
-		// TODO Auto-generated constructor stub
+		// Do nothing
 	}
 
 	@Override
 	public boolean configure(Map<String, List<Service>> recommenderToServices, MLMappingConfiguration mapping) {
-		// TODO Auto-generated method stub
-		return false;
+		this.recommenderToServices = recommenderToServices;
+		return true;
 	}
 
 	@Override
 	public boolean cutomizeIntegration() {
-		// TODO Auto-generated method stub
+		final SiriusViewpointDialog siriusDialog = new SiriusViewpointDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+				this.getMetamodelFromRecommenderToServices());
+		
+		
 		return false;
 	}
 
 	@Override
 	public void generateIntegration(String dataFusionAlgorithm, Map<String, List<Service>> recommenderToServices) {
 		// TODO Auto-generated method stub
-
+		System.out.println("Inspect");
 	}
 
 }
