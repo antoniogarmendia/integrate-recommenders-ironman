@@ -21,7 +21,7 @@ public class MLTargetLanguageProvider extends StyledCellLabelProvider {
 			if (eClass != null)			
 				cell.setText(eClass.getName());			
 		} else if (element instanceof MapItemElement) {
-			final ENamedElement structFeat = ((MapItemElement) element).getReadElement();
+			final ENamedElement structFeat = ((MapItemElement) element).getWriteElement();
 			if (structFeat != null)
 				cell.setText(structFeat.getName());
 		}

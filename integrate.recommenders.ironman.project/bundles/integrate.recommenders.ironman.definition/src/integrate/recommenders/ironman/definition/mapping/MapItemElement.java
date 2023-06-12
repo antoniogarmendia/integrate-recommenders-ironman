@@ -1,28 +1,21 @@
 package integrate.recommenders.ironman.definition.mapping;
 
 import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 public class MapItemElement {
 	
 	private String item;
-	//TODO change ENamedElement to EStructuralFeature...
-	private ENamedElement readElement;
-	private ENamedElement writeElement;
+	private EStructuralFeature writeElement;
 	
 	public MapItemElement() {
 		this.item = null;
-		this.readElement = null;
 		this.writeElement = null;
 	}
 	
-	public MapItemElement(String item, ENamedElement readElement, ENamedElement writeElement) {
+	public MapItemElement(String item, EStructuralFeature writeElement) {
 		this.item = item;
-		this.readElement = readElement;
 		this.writeElement = writeElement;
-	}
-	
-	public ENamedElement getReadElement() {
-		return readElement;
 	}
 	
 	public ENamedElement getWriteElement() {
@@ -33,11 +26,7 @@ public class MapItemElement {
 		return item;
 	}
 	
-	public void setReadElement(ENamedElement readElement) {
-		this.readElement = readElement;
-	}
-	
-	public void setWriteElement(ENamedElement writeElement) {
+	public void setWriteElement(EStructuralFeature writeElement) {
 		this.writeElement = writeElement;
 	}
 	

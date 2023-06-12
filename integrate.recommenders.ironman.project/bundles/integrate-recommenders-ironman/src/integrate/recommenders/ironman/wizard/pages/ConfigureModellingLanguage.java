@@ -19,10 +19,8 @@ import integrate.recommenders.ironman.definition.mapping.MapTargetElement;
 import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.wizard.pages.contents.MLConfigureLanguageContentProvider;
 import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetLangElements;
-import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetWriteLangElements;
 import integrate.recommenders.ironman.wizard.pages.label.MLSourceLanguageProvider;
 import integrate.recommenders.ironman.wizard.pages.label.MLTargetLanguageProvider;
-import integrate.recommenders.ironman.wizard.pages.label.MLWriteFeatureProvider;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
@@ -47,6 +45,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 	private final MLMappingConfiguration mapping;
 	private Button mappingLanguageButton;
 	private TreeViewer configureLangTreeViewer;
+	private Button checkedButton;
 		
 	protected ConfigureModellingLanguage(String pageName) {
 		super(pageName);
@@ -54,6 +53,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 		//Get Selected Target & Items
 		mapping = new MLMappingConfiguration(null,null);
 		this.mappingLanguageButton = null;
+		this.checkedButton = null;
 	}	
 
 	@Override
@@ -62,7 +62,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 		container.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());		
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL,GridData.FILL_VERTICAL));
 		//Check if mapping is necessary
-		final Button checkedButton = WidgetFactory.button(SWT.CHECK)
+		this.checkedButton = WidgetFactory.button(SWT.CHECK)
 				.text("Configure a Mapping to Another Language")
 				.create(container);					
 	
@@ -140,30 +140,22 @@ public class ConfigureModellingLanguage extends WizardPage {
 		
 		//Target and Items (Target Language)
 		TreeViewerColumn targetLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
-		targetLanguageColumn.getColumn().setWidth(180);
-		targetLanguageColumn.getColumn().setText("Target Language - Target and Items");
-		targetLanguageColumn.setEditingSupport(new EditingTargetLangElements(this.configureLangTreeViewer,this.mapping));
+		targetLanguageColumn.getColumn().setWidth(220);
+		targetLanguageColumn.getColumn().setText("Target Language - Write Feature");
+		targetLanguageColumn.setEditingSupport(new EditingTargetLangElements(this.configureLangTreeViewer, this.mapping));
 		
 		//Provide Target and Items from the Target Language
-		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());
-		
-		//Target and Items (Target Language)
-		TreeViewerColumn writeSpecFeatureColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
-		writeSpecFeatureColumn.getColumn().setWidth(180);
-		writeSpecFeatureColumn.getColumn().setText("Target Language - Write Feature");
-		writeSpecFeatureColumn.setEditingSupport(new EditingTargetWriteLangElements(this.configureLangTreeViewer, this.mapping));
-		
-		//Specify the write features
-		writeSpecFeatureColumn.setLabelProvider(new MLWriteFeatureProvider());
+		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());		
 	}
 	
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		this.mapping.setSourceToTargetMap(getSourcetoTargetMap());
-		
-		this.configureLangTreeViewer.refresh();
-		((Composite)getControl()).layout();
+		if (this.mapping.getEPackage() == null) {		
+			this.mapping.setSourceToTargetMap(getSourcetoTargetMap());
+			this.configureLangTreeViewer.refresh();
+			((Composite)getControl()).layout();
+		}
 	}
 	
 	@Override
@@ -188,7 +180,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 				for(String item: recommender.getDetails().getItems()) {
 					final boolean isItemPresent = isItemPresent(sourceToTargetMap.get(entryTargetElement), item); 
 					if (!isItemPresent) {					
-						final MapItemElement itemElement = new MapItemElement(item, null, null);
+						final MapItemElement itemElement = new MapItemElement(item, null);
 						sourceToTargetMap.get(entryTargetElement).add(itemElement);						
 					}					
 				}

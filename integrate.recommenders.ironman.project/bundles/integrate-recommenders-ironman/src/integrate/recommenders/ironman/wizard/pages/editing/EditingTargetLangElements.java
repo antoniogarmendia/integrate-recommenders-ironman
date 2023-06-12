@@ -44,7 +44,7 @@ public class EditingTargetLangElements extends EditingSupport {
 			else
 				fillListOfEStructCC(listOfCCElements);
 					
-		return new ComboBoxCellEditor((Composite)getViewer().getControl(),listOfCCElements.toArray(new String[0]),
+		return new ComboBoxCellEditor((Composite)getViewer().getControl(), listOfCCElements.toArray(new String[0]),
 				SWT.BORDER 
 				| SWT.READ_ONLY				
 				);
@@ -84,7 +84,7 @@ public class EditingTargetLangElements extends EditingSupport {
 			return listOfEClasses.indexOf(((MapTargetElement)entry.getKey()).getTargetElement());
 		} else if (element instanceof MapItemElement){
 			final MapItemElement mapItemElement = (MapItemElement) element;
-			return eClass.getEAllStructuralFeatures().indexOf(mapItemElement.getReadElement());			
+			return eClass.getEAllStructuralFeatures().indexOf(mapItemElement.getWriteElement());			
 		}
 		return 0;
 	}
@@ -100,7 +100,7 @@ public class EditingTargetLangElements extends EditingSupport {
 			} 
 		} else if (element instanceof MapItemElement) {
 			final EStructuralFeature strucFeat = this.eClass.getEAllStructuralFeatures().get((Integer) value);
-			((MapItemElement) element).setReadElement(strucFeat);
+			((MapItemElement) element).setWriteElement(strucFeat);
 			getViewer().update(element, null);
 		}	
 	}	
