@@ -14,7 +14,7 @@ public interface IIntegration {
 	 * @return
 	 */
 	public boolean configure(final Map<String,List<Service>> recommenderToServices,
-								final MLMappingConfiguration mapping );
+								final MLMappingConfiguration mapping);
 	
 	/**
 	 * This method is called if configure returns true

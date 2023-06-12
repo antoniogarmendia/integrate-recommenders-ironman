@@ -198,6 +198,10 @@ public class ConfigureModellingLanguage extends WizardPage {
 		 return null;		
 	}
 	
+	public MLMappingConfiguration getMapping() {
+		return this.mapping;
+	}	
+	
 	private boolean isItemPresent(List<MapItemElement> listOfItems, String item) {
 		return listOfItems
 					.stream()

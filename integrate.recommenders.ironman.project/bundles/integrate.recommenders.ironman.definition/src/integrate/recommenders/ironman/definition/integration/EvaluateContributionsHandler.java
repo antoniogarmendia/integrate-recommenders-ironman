@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
+import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Service;
 
 public class EvaluateContributionsHandler {
@@ -39,8 +40,10 @@ public class EvaluateContributionsHandler {
 		return extensionToIIntegration;
 	}
 	
-	public static boolean executeConfigure(final IIntegration integration, final Map<String, List<Service>> recommenderToServices) {
-		ExecuteConfigureIntegration execute = new ExecuteConfigureIntegration(integration, recommenderToServices);
+	public static boolean executeConfigure(final IIntegration integration, 
+			final Map<String, List<Service>> recommenderToServices,
+			final MLMappingConfiguration mapping) {
+		ExecuteConfigureIntegration execute = new ExecuteConfigureIntegration(integration, recommenderToServices, mapping);
 		SafeRunner.run(execute);		
 		return execute.get();					
     }

@@ -8,7 +8,7 @@ import integrate.recommenders.ironman.definition.services.Service;
 public class ExecuteCustomizeIntegration  extends SafeRunnableType<Boolean>{
 
 	public ExecuteCustomizeIntegration(IIntegration integration, Map<String, List<Service>> recommenderToServices) {
-		super(integration, recommenderToServices);		
+		super(integration);		
 	}
 
 	@Override

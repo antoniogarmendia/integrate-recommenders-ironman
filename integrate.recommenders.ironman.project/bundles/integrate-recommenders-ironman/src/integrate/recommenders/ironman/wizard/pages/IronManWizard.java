@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbench;
 
 import static integrate.recommenders.ironman.wizard.utils.IronManWizardUtils.*;
 
+import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.definition.services.Service;
 
@@ -79,6 +80,10 @@ public class IronManWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public MLMappingConfiguration getMappingConfiguration() {
+		return this.modellingLanguages.getMapping();
 	}
 	
 	public Map<String,List<Recommender>> getSelectedServerToRecommender() {
