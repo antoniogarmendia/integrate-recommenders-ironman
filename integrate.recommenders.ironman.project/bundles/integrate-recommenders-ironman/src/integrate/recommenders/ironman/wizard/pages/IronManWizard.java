@@ -7,6 +7,8 @@ import org.eclipse.ui.IWorkbench;
 
 import static integrate.recommenders.ironman.wizard.utils.IronManWizardUtils.*;
 
+import integrate.recommenders.ironman.definition.integration.EvaluateContributionsHandler;
+import integrate.recommenders.ironman.definition.integration.IIntegration;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.definition.services.Service;
@@ -78,8 +80,16 @@ public class IronManWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		// TODO Auto-generated method stub
-		return false;
+		//Get all selected extensions
+		final List<IIntegration> listOfSelectedIntegrations = modellingTools.getSelectedExtensionToIntegration();
+		//Get the Aggregation Method
+		final String metasearchAlgorithm = aggMethod.getSelectedAlgorithm();
+		// Generate all projects
+		for (IIntegration iIntegration : listOfSelectedIntegrations) {
+				EvaluateContributionsHandler.executeGenerateIntegration(metasearchAlgorithm, 
+						iIntegration, getAllSelectedRecommenders());
+		}			
+		return true;
 	}
 	
 	public MLMappingConfiguration getMappingConfiguration() {

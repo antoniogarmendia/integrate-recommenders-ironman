@@ -8,5 +8,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.swt;bundle-version="3.118.0",
  org.eclipse.jface;bundle-version="3.24.0",
  org.eclipse.sirius.diagram;bundle-version="6.6.0",
- org.eclipse.sirius.ui;bundle-version="6.6.0"
+ org.eclipse.sirius.ui;bundle-version="6.6.0",
+ integrate.recommenders.ironman.definition;bundle-version="1.0.0",
+ org.eclipse.core.runtime;bundle-version="3.24.0",
+ org.eclipse.core.resources;bundle-version="3.16.0",
+ org.eclipse.ui.workbench
 Export-Package: integrate.recommenders.ironman.generate.sirius.dialog
+Bundle-Activator: integrate.recommenders.ironman.generate.sirius.Activator
