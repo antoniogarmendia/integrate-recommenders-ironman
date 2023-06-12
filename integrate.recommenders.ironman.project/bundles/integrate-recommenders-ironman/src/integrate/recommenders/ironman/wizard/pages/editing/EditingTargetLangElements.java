@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -27,11 +29,13 @@ public class EditingTargetLangElements extends EditingSupport {
 	
 	private EClass eClass;
 	private EList<EClass> listOfEClasses;
+	private EList<EStructuralFeature> listOfFeatures;
 		
 	public EditingTargetLangElements(ColumnViewer viewer, MLMappingConfiguration mapping) {
 		super(viewer);		
 		this.mapping = mapping;
-		this.listOfEClasses = new BasicEList<EClass>();		
+		this.listOfEClasses = new BasicEList<EClass>();	
+		this.listOfFeatures = new BasicEList<EStructuralFeature>();
 		this.eClass = null;
 	}
 
@@ -52,7 +56,17 @@ public class EditingTargetLangElements extends EditingSupport {
 
 	private void fillListOfEStructCC(List<String> listOfCCElements) {
 		if (eClass != null) {
-			eClass.getEAllStructuralFeatures().stream().map(eStruct -> eStruct.getName()).collect(Collectors.toCollection(() -> listOfCCElements));
+			this.listOfFeatures = eClass.getEAllStructuralFeatures().stream().filter(eStruct -> 
+									eStruct instanceof EAttribute 
+									|| (eStruct instanceof EReference && ((EReference)eStruct).isContainment()))
+									.collect(Collectors.toCollection(BasicEList::new));
+			
+			this.eClass.getEAllStructuralFeatures().stream().filter(eStruct -> 
+						eStruct instanceof EAttribute 
+						|| (eStruct instanceof EReference && ((EReference)eStruct).isContainment())
+						)
+						.map(eStruct -> eStruct.getName())
+						.collect(Collectors.toCollection(() -> listOfCCElements));
 		}
 	}
 
@@ -84,7 +98,7 @@ public class EditingTargetLangElements extends EditingSupport {
 			return listOfEClasses.indexOf(((MapTargetElement)entry.getKey()).getTargetElement());
 		} else if (element instanceof MapItemElement){
 			final MapItemElement mapItemElement = (MapItemElement) element;
-			return eClass.getEAllStructuralFeatures().indexOf(mapItemElement.getWriteElement());			
+			return this.listOfFeatures.indexOf(mapItemElement.getWriteElement());			
 		}
 		return 0;
 	}
@@ -99,7 +113,7 @@ public class EditingTargetLangElements extends EditingSupport {
 				getViewer().update(element, null);
 			} 
 		} else if (element instanceof MapItemElement) {
-			final EStructuralFeature strucFeat = this.eClass.getEAllStructuralFeatures().get((Integer) value);
+			final EStructuralFeature strucFeat = this.listOfFeatures.get((Integer) value);
 			((MapItemElement) element).setWriteElement(strucFeat);
 			getViewer().update(element, null);
 		}	

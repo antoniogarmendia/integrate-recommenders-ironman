@@ -96,10 +96,12 @@ public final class IronManWizardUtils {
 	}
 	
 	public static void selectParentIfNotChecked(TreeItem item) {
-		if (item.getParentItem().getChecked() == false) {
-			item.getParentItem().setChecked(true);
-			selectParentIfNotChecked(item.getParentItem());
-		}		
+		if (item.getParentItem() != null) {
+			if (item.getParentItem().getChecked() == false) {
+				item.getParentItem().setChecked(true);
+				selectParentIfNotChecked(item.getParentItem());
+			}		
+		}
 	}
 
 	public static void deselectParentIfAnyChildSelected(TreeItem item) {
