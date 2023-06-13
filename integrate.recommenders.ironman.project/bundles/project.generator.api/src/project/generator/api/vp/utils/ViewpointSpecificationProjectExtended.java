@@ -197,7 +197,6 @@ public class ViewpointSpecificationProjectExtended {
         };
         ResourcesPlugin.getWorkspace().run(create, null);
         return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-
     }
 
     /**

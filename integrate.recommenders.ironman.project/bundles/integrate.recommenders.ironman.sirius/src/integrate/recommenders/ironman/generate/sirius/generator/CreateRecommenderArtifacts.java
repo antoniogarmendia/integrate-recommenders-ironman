@@ -49,9 +49,9 @@ public class CreateRecommenderArtifacts {
 		this.recommenderToServices = recommenderToServices;
 		this.mapping = mapping;
 		if (this.mapping == null) {
-			this.generateMenu = new GenerateMenuArtifactsMapping();
-		} else {
 			this.generateMenu = new GenerateMenuArtifacts();
+		} else {
+			this.generateMenu = new GenerateMenuArtifactsMapping();
 		}
 	}
 	

@@ -14,4 +14,37 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		this.recommenderToServices = recommenderToServices;
 	}
 	
+	override middleDefaultExecute() {
+		'''
+			if (!selectedElements.isEmpty()) {
+				final EObject selectedNode = selectedElements.stream().findFirst().get();
+				if (selectedNode instanceof DNodeList) {
+					var nodeList = (DNodeList) selectedNode;
+					final EObject targetEObject = nodeList.getTarget();
+					//TODO generate target EClass or Class
+					if (targetEObject instanceof EClass) {
+						//TODO EClass name is not a reflective...
+						final EClass eClass = ((EClass) targetEObject);
+						final String name = eClass.getName();
+						//TODO Call all the recommenders
+						final RecommenderCase recommenderCase = getRecommenderCase(name);
+						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
+						//Merge 
+						final Map<String, Double> dataFusion = EvaluateMetaSearchContributionHandler.
+								executeMetaSearchAlgorithByName("OutRankingApproach", recServerToItemRecommenders);
+						final Map<String, Double> normalizeDataFusion = normalization(dataFusion);
+						//Graphical Interface
+						final RecommenderDialog recDialog = new RecommenderDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
+								, recServerToItemRecommenders, normalizeDataFusion, "EClass");
+						
+						if (recDialog.open() == Window.OK) {
+							//Add selected elements
+							addSelectRecommendation(recDialog.getSelectedRecommendations(),eClass);
+						}					
+					}				
+				}			
+			}	
+		'''
+	}
+	
 }
