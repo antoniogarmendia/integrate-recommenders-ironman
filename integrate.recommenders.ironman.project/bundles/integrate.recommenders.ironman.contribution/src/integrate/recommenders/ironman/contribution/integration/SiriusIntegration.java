@@ -49,7 +49,7 @@ public class SiriusIntegration implements IIntegration {
 	//Get the nsURI of the meta-model. Get any nsURI because all the nsURI are the same.
 	private String getMetamodelFromRecommenderToServices() {
 		//First Check Mapping
-		if (this.mapping.getEPackage() != null)
+		if (this.mapping != null)
 			return this.mapping.getEPackage().getNsURI();
 		return this.recommenderToServices.entrySet().stream().findAny().get().getValue().get(0).getNsURI();
 	}
