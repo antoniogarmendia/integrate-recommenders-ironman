@@ -48,7 +48,7 @@ public class CreateRecommenderArtifacts {
 		this.selectedDiagramDesc = selectedDiagramDesc;		
 		this.recommenderToServices = recommenderToServices;
 		this.mapping = mapping;
-		if (this.mapping.getEPackage() != null) {
+		if (this.mapping == null) {
 			this.generateMenu = new GenerateMenuArtifactsMapping();
 		} else {
 			this.generateMenu = new GenerateMenuArtifacts();
@@ -61,29 +61,14 @@ public class CreateRecommenderArtifacts {
 		//1. Load resources
 		final Group groupBaseRecommender = copyOfBaseRecommenderGroup(reset);
 		//2. Refine viewpoint
-		refineViewpoint(groupBaseRecommender);
+		this.generateMenu.generateMenuArtifacts(this.projectName, groupBaseRecommender, selectedDiagramDesc, recommenderToServices);
 		//3. Create Viewpoint Specification Project
 		final IProject viewpointProject = createViepointProject(VIEWPOINT_RECOMMENDER_NAME
 				+ "." + VIEWPOINT_MODEL_EXTENSION, groupBaseRecommender);		
 		//4. Create all files
 		generateAll(viewpointProject);
-	}
+	}	
 	
-	private void refineViewpoint(final Group groupBaseRecommender) {
-		// Get source diagram extension
-		final Viewpoint recommenderVp = groupBaseRecommender.getOwnedViewpoints().get(0);
-		final DiagramExtensionDescription diagramDesc = (DiagramExtensionDescription) recommenderVp.getOwnedRepresentationExtensions().get(0);
-		for (DiagramDescription diagramDescription : selectedDiagramDesc) {
-			final DiagramExtensionDescription currentDiagDescrip = EcoreUtil.copy(diagramDesc);
-			currentDiagDescrip.setName("Recommender-" + diagramDescription.getName());
-			currentDiagDescrip.setViewpointURI(getViewpointURIFromDiagramDescription(diagramDescription));
-			currentDiagDescrip.setRepresentationName(diagramDescription.getName());
-			recommenderVp.getOwnedRepresentationExtensions().add(currentDiagDescrip);
-			//Add menu to each layer
-			addMenuForItems(currentDiagDescrip);
-		}
-		EcoreUtil.remove(diagramDesc);		
-	}
 
 	private IProject createViepointProject(final String viewpointName, final Group groupBaseRecommender) {
 		try {
@@ -118,48 +103,7 @@ public class CreateRecommenderArtifacts {
 		return allFiles;
 	}	
 	
-	private EPackage getEPackageByNsURI() {
-		final String nsURI = recommenderToServices.entrySet().stream().findAny().orElseThrow().getValue().get(0).getNsURI();
-		return EPackageRegistryImpl.INSTANCE.getEPackage(nsURI);		
-	}
-	
-	private String getTarget() {
-		final String target = recommenderToServices.entrySet()
-									.stream().findAny().orElseThrow()
-									.getValue().get(0).getServices().get(0).getDetails().getTarget();
-		return target;		
-	}
-
 	private void execute(List<Runnable> allFiles){
 		allFiles.forEach(Runnable::run);
-	}
-	
-	private void addMenuForItems(DiagramExtensionDescription currentDiagDescrip) {
-		final String packageName = projectName + PACKAGE_ACTIONS;
-		//Get PopupMenu
-		final PopupMenu popupMenu = currentDiagDescrip.getLayers().get(0).getToolSections().get(0).getPopupMenus().get(0);
-		popupMenu.setLabel("Recommender-" + getTarget());
-		final Set<String> setOfItems = getAllItems(this.recommenderToServices);
-		//Add menu for each item
-		for (String item : setOfItems) {
-			ExternalJavaAction externalJavaAction = ToolFactory.eINSTANCE.createExternalJavaAction();
-			externalJavaAction.setId(packageName + "." + item);
-			externalJavaAction.setName(packageName + ".Recommend" + item);
-			externalJavaAction.setLabel(getETypefromItem(item));
-			popupMenu.getMenuItemDescription().add(externalJavaAction);
-		}
-	}
-	
-	private String getETypefromItem(String item) {
-		final EClassifier classifier = getEPackageByNsURI().getEClassifier(getTarget());
-		if (classifier instanceof EClass) {
-			final EClass eClass = (EClass) classifier; 
-			final EStructuralFeature feature = eClass.getEAllStructuralFeatures()
-											.stream()
-											.filter(struct -> struct.getName().equalsIgnoreCase(item))
-											.findAny().orElseThrow();
-			return feature.getEType().getName();
-		}
-		return null;
-	}
+	}	
 }
