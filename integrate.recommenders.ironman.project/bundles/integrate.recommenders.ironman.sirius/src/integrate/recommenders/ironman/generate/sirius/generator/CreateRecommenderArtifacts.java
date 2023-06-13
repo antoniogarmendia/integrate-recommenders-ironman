@@ -24,7 +24,9 @@ import org.eclipse.sirius.viewpoint.description.tool.ExternalJavaAction;
 import org.eclipse.sirius.viewpoint.description.tool.PopupMenu;
 import org.eclipse.sirius.viewpoint.description.tool.ToolFactory;
 
+import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Service;
+import integrate.recommenders.ironman.generate.sirius.api.IStrategyGenerateMenu;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommendItemExtendedAction;
 import project.generator.api.template.sirius.ViewpointEditorPluginXML;
 import project.generator.api.utils.WriteUtils;
@@ -37,12 +39,20 @@ public class CreateRecommenderArtifacts {
 	private final String projectName;
 	private final EList<DiagramDescription> selectedDiagramDesc;
 	private final Map<String,List<Service>> recommenderToServices;
+	private final MLMappingConfiguration mapping;
+	private final IStrategyGenerateMenu generateMenu;
 	
 	public CreateRecommenderArtifacts(final String projectName, final EList<DiagramDescription> selectedDiagramDesc, 
-			final Map<String,List<Service>> recommenderToServices) {
+			final Map<String,List<Service>> recommenderToServices, MLMappingConfiguration mapping) {
 		this.projectName = projectName;
 		this.selectedDiagramDesc = selectedDiagramDesc;		
 		this.recommenderToServices = recommenderToServices;
+		this.mapping = mapping;
+		if (this.mapping.getEPackage() != null) {
+			this.generateMenu = new GenerateMenuArtifactsMapping();
+		} else {
+			this.generateMenu = new GenerateMenuArtifacts();
+		}
 	}
 	
 	public void doGenerateViewpointSpecificationProject() {
