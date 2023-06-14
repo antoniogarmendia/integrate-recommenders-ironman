@@ -54,12 +54,18 @@ public abstract class ExternalJavaActionTemplate extends AbstractJavaClass imple
     CharSequence _endExecute = this.endExecute();
     _builder.append(_endExecute, "\t");
     _builder.newLineIfNotEmpty();
+    _builder.append("\t");
+    String _restOfMethods = this.restOfMethods();
+    _builder.append(_restOfMethods, "\t");
+    _builder.newLineIfNotEmpty();
     CharSequence _end = this.end();
     _builder.append(_end);
     _builder.append("\t\t");
     _builder.newLineIfNotEmpty();
     return _builder.toString();
   }
+
+  public abstract String restOfMethods();
 
   public CharSequence importDependencies() {
     StringConcatenation _builder = new StringConcatenation();

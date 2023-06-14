@@ -14,12 +14,14 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	val String item;
 	val Map.Entry<String, List<Service>> service;
 	var Recommender recommender;
-			
-	new(String className, String packageName, String item, Map<String,List<Service>> recommenderToServices) {
+	val String packageNameUtils;
+	
+	new(String className, String packageName, String packageNameUtils, String item, Map<String,List<Service>> recommenderToServices) {
 		super(className,packageName);
 		this.recommenderToServices = recommenderToServices;
 		this.item = item;
 		this.service = getService;
+		this.packageNameUtils = packageNameUtils;
 	}
 	
 	//Return the Entry
@@ -74,7 +76,32 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	override importDependencies() {
 		'''
 			«super.importDependencies()»
+			import java.util.AbstractMap;
 			import «GenModelUtils.getPackageClassFromEClass(this.recommender.details.targetEClass)»;
+			import «this.packageNameUtils».RecommenderCase;
+		'''
+	}
+	
+	override restOfMethods() {
+		'''
+		«recommenderCase»
+		'''
+	}
+	
+	def recommenderCase() {
+		'''
+			private RecommenderCase getRecommenderCase(String targetName) {
+				final Map<String, Collection<String>> urlToRecommenders = 	Map.ofEntries(
+						new AbstractMap.SimpleEntry<String, Collection<String>>(
+								URL_RECOMMENDER_1,
+								Arrays.asList(
+										RECOMMENDER_1,RECOMMENDER_2,RECOMMENDER_3,RECOMMENDER_4
+										)	
+								)
+						);
+				final String type = "EAttribute";
+				return new RecommenderCase(urlToRecommenders, type, targetName);
+			}
 		'''
 	}
 	

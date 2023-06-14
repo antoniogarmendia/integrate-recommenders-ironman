@@ -20,11 +20,14 @@ public class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 
   private Recommender recommender;
 
-  public RecommendItemExtendedAction(final String className, final String packageName, final String item, final Map<String, List<Service>> recommenderToServices) {
+  private final String packageNameUtils;
+
+  public RecommendItemExtendedAction(final String className, final String packageName, final String packageNameUtils, final String item, final Map<String, List<Service>> recommenderToServices) {
     super(className, packageName);
     this.recommenderToServices = recommenderToServices;
     this.item = item;
     this.service = this.getService();
+    this.packageNameUtils = packageNameUtils;
   }
 
   public Map.Entry<String, List<Service>> getService() {
@@ -144,11 +147,64 @@ public class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
     CharSequence _importDependencies = super.importDependencies();
     _builder.append(_importDependencies);
     _builder.newLineIfNotEmpty();
+    _builder.append("import java.util.AbstractMap;");
+    _builder.newLine();
     _builder.append("import ");
     String _packageClassFromEClass = GenModelUtils.getPackageClassFromEClass(this.recommender.getDetails().getTargetEClass());
     _builder.append(_packageClassFromEClass);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
+    _builder.append("import ");
+    _builder.append(this.packageNameUtils);
+    _builder.append(".RecommenderCase;");
+    _builder.newLineIfNotEmpty();
+    return _builder;
+  }
+
+  public String restOfMethods() {
+    StringConcatenation _builder = new StringConcatenation();
+    CharSequence _recommenderCase = this.recommenderCase();
+    _builder.append(_recommenderCase);
+    _builder.newLineIfNotEmpty();
+    return _builder.toString();
+  }
+
+  public CharSequence recommenderCase() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("private RecommenderCase getRecommenderCase(String targetName) {");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("final Map<String, Collection<String>> urlToRecommenders = \tMap.ofEntries(");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("new AbstractMap.SimpleEntry<String, Collection<String>>(");
+    _builder.newLine();
+    _builder.append("\t\t\t\t\t");
+    _builder.append("URL_RECOMMENDER_1,");
+    _builder.newLine();
+    _builder.append("\t\t\t\t\t");
+    _builder.append("Arrays.asList(");
+    _builder.newLine();
+    _builder.append("\t\t\t\t\t\t\t");
+    _builder.append("RECOMMENDER_1,RECOMMENDER_2,RECOMMENDER_3,RECOMMENDER_4");
+    _builder.newLine();
+    _builder.append("\t\t\t\t\t\t\t");
+    _builder.append(")\t");
+    _builder.newLine();
+    _builder.append("\t\t\t\t\t");
+    _builder.append(")");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append(");");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("final String type = \"EAttribute\";");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("return new RecommenderCase(urlToRecommenders, type, targetName);");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
     return _builder;
   }
 }

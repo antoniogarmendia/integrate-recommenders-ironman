@@ -22,9 +22,12 @@ abstract class ExternalJavaActionTemplate extends AbstractJavaClass implements I
 				«startExecute»
 				«middleDefaultExecute»
 				«endExecute»
+				«restOfMethods»
 			«end»		
 		'''
 	}
+	
+	def String restOfMethods()
 		
 	def importDependencies() {
 		'''

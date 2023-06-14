@@ -30,6 +30,7 @@ import integrate.recommenders.ironman.generate.sirius.api.IStrategyGenerateMenu;
 import integrate.recommenders.ironman.generate.sirius.generator.template.MetaInfRecommender;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommendItemExtendedAction;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderCase;
+import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderUtils;
 import project.generator.api.template.sirius.ViewpointEditorPluginXML;
 import project.generator.api.utils.WriteUtils;
 
@@ -91,6 +92,23 @@ public class CreateRecommenderArtifacts {
 		final String packageName = viewpointProject.getName() + PACKAGE_ACTIONS;
 		final String packageNameUtils = viewpointProject.getName() + PACKAGE_UTILS;
 		final Set<String> setOfItems = getAllItems(this.recommenderToServices);
+		
+		generateInfrastructureClasses(viewpointProject, allFiles, packageName, packageNameUtils, setOfItems);
+		
+		//Actions package
+		for (String item : setOfItems) {
+			final String className = "Recommend" + item;
+			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
+						className + ".java", 
+					new RecommendItemExtendedAction(className, packageName, packageNameUtils, item, this.recommenderToServices).doGenerate()));
+		}
+		
+		return allFiles;
+	}
+
+	private void generateInfrastructureClasses(IProject viewpointProject, ArrayList<Runnable> allFiles,
+			final String packageName, final String packageNameUtils, final Set<String> setOfItems) {
 		//Generate Plugin.XML
 		allFiles.add(() -> WriteUtils.write(viewpointProject, "plugin.xml", 
 				new ViewpointEditorPluginXML(viewpointProject,packageName,
@@ -103,17 +121,11 @@ public class CreateRecommenderArtifacts {
 				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/utils/"), 
 				"RecommenderCase" + ".java", 
 			new RecommenderCase(packageNameUtils).doGenerate()));
-		
-		//Actions package
-		for (String item : setOfItems) {
-			final String className = "Recommend" + item;
-			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
-					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
-						className + ".java", 
-					new RecommendItemExtendedAction(className, packageName, item, this.recommenderToServices).doGenerate()));
-		}
-		
-		return allFiles;
+		//Generate RecommenderUtils
+		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/utils/"), 
+				"RecommenderUtils" + ".java", 
+			new RecommenderUtils(packageNameUtils, this.recommenderToServices).doGenerate()));
 	}	
 	
 	private void execute(List<Runnable> allFiles){
