@@ -76,8 +76,6 @@ public abstract class ExternalJavaActionTemplate extends AbstractJavaClass imple
     _builder.newLine();
     _builder.append("import org.eclipse.emf.ecore.EObject;");
     _builder.newLine();
-    _builder.append("import org.eclipse.emf.ecore.EClass;");
-    _builder.newLine();
     _builder.append("import org.eclipse.sirius.diagram.DNodeList;");
     _builder.newLine();
     _builder.append("import org.eclipse.sirius.tools.api.ui.IExternalJavaAction;\t\t");

@@ -95,7 +95,7 @@ public class CreateRecommenderArtifacts {
 						setOfItems).doGenerate()));
 		//Generate MANIFEST.MF
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/META-INF"), "MANIFEST.MF", 
-				new MetaInfRecommender(viewpointProject).doGenerate()));
+				new MetaInfRecommender(viewpointProject, this.recommenderToServices).doGenerate()));
 		
 		//Actions package
 		for (String item : setOfItems) {
@@ -103,7 +103,7 @@ public class CreateRecommenderArtifacts {
 			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
 						className + ".java", 
-					new RecommendItemExtendedAction(className, packageName, this.recommenderToServices).doGenerate()));
+					new RecommendItemExtendedAction(className, packageName, item, this.recommenderToServices).doGenerate()));
 		}
 		
 		return allFiles;
