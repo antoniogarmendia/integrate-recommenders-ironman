@@ -50,7 +50,6 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					final EObject targetEObject = nodeList.getTarget();
 					if (targetEObject instanceof «this.recommender.details.targetEClass.name») {
 						final «this.recommender.details.targetEClass.name» target = ((EClass) targetEObject);
-						//final String target = eClass.getName();
 						//TODO Call all the recommenders
 						final RecommenderCase recommenderCase = getRecommenderCase(name);
 						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);

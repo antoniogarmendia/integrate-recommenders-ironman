@@ -85,9 +85,6 @@ public class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
     _builder.append(" target = ((EClass) targetEObject);");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t\t");
-    _builder.append("//final String target = eClass.getName();");
-    _builder.newLine();
-    _builder.append("\t\t\t");
     _builder.append("//TODO Call all the recommenders");
     _builder.newLine();
     _builder.append("\t\t\t");

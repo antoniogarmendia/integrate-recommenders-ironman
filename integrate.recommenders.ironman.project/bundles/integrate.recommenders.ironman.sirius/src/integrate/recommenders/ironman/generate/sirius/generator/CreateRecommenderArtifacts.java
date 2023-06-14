@@ -29,6 +29,7 @@ import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.api.IStrategyGenerateMenu;
 import integrate.recommenders.ironman.generate.sirius.generator.template.MetaInfRecommender;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommendItemExtendedAction;
+import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderCase;
 import project.generator.api.template.sirius.ViewpointEditorPluginXML;
 import project.generator.api.utils.WriteUtils;
 
@@ -88,6 +89,7 @@ public class CreateRecommenderArtifacts {
 	private List<Runnable> init(IProject viewpointProject) {
 		var allFiles = new ArrayList<Runnable>();
 		final String packageName = viewpointProject.getName() + PACKAGE_ACTIONS;
+		final String packageNameUtils = viewpointProject.getName() + PACKAGE_UTILS;
 		final Set<String> setOfItems = getAllItems(this.recommenderToServices);
 		//Generate Plugin.XML
 		allFiles.add(() -> WriteUtils.write(viewpointProject, "plugin.xml", 
@@ -96,6 +98,11 @@ public class CreateRecommenderArtifacts {
 		//Generate MANIFEST.MF
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/META-INF"), "MANIFEST.MF", 
 				new MetaInfRecommender(viewpointProject, this.recommenderToServices).doGenerate()));
+		//Generate RecommenderCase
+		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/utils/"), 
+				"RecommenderCase" + ".java", 
+			new RecommenderCase(packageNameUtils).doGenerate()));
 		
 		//Actions package
 		for (String item : setOfItems) {

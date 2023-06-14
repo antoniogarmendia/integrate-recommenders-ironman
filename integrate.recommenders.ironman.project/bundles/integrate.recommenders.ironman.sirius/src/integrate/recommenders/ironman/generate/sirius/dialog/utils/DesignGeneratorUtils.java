@@ -34,6 +34,9 @@ public final class DesignGeneratorUtils {
 	// Package Actions 
 	public static final String PACKAGE_ACTIONS = ".actions";
 	
+	// Package Utils
+	public static final String PACKAGE_UTILS = ".utils";
+	
 	//Get the skeleton of the recommender odesign
 	public static Resource recommenderResource(ResourceSet reset) {
 		return reset.getResource(URI.createPlatformPluginURI(Activator.PLUGIN_ID + BASE_RECOMMENDER, false), true);
