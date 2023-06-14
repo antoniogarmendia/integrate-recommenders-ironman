@@ -34,6 +34,8 @@ abstract class ExternalJavaActionTemplate extends AbstractJavaClass implements I
 			import java.util.Map;
 			
 			import org.eclipse.emf.ecore.EObject;
+			import org.eclipse.emf.ecore.EClass;
+			import org.eclipse.sirius.diagram.DNodeList;
 			import org.eclipse.sirius.tools.api.ui.IExternalJavaAction;		
 		'''
 	}

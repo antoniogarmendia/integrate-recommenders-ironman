@@ -134,8 +134,32 @@ public class ViewpointSpecificationProjectExtended {
         final ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(activeShell);
 
         return ViewpointSpecificationProjectExtended.createNewViewpointSpecificationProject(PlatformUI.getWorkbench(), projectName, projectLocationPath, modelName, INITIAL_OBJECT_NAME, ENCODING_DEFAULT,
-        		groupBaseVariability, monitorDialog);
+        		groupBaseVariability, monitorDialog, true);
     }
+    
+    /**
+     * Create a new viewpoint specification project.
+     * 
+     * @param projectName
+     *            The project name
+     * @param modelName
+     *            The model name
+     * @param vpBaseVariability 
+     * @return The new project.
+     * @throws CoreException .
+     */
+    public static IProject createNewViewpointSpecificationProject(final String projectName, final String modelName, Group groupBaseVariability, 
+    		boolean generateManifest) throws CoreException {
+        final IPath projectLocationPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+
+        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        final ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(activeShell);
+
+        return ViewpointSpecificationProjectExtended.createNewViewpointSpecificationProject(PlatformUI.getWorkbench(), 
+        		projectName, projectLocationPath, modelName, INITIAL_OBJECT_NAME, ENCODING_DEFAULT,
+        		groupBaseVariability, monitorDialog, generateManifest);
+    }   
+    
 
     /**
      * Create a new viewpoint specification project.
@@ -155,11 +179,12 @@ public class ViewpointSpecificationProjectExtended {
      * @param vpBaseVariability 
      * @param runnable
      *            The runnable to launch the operation
+     * @param generateManifest 
      * @return The new project.
      * @throws CoreException .
      */
     public static IProject createNewViewpointSpecificationProject(final IWorkbench workbench, final String projectName, final IPath projectLocationPath, final String modelName,
-            final String modelInitialObjectName, final String encoding, Group groupBaseVariability, final IRunnableContext runnable) throws CoreException {
+            final String modelInitialObjectName, final String encoding, Group groupBaseVariability, final IRunnableContext runnable, boolean generateManifest) throws CoreException {
         final IWorkspaceRunnable create = new IWorkspaceRunnable() {
             public void run(final IProgressMonitor monitor) throws CoreException {
                 final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
@@ -188,7 +213,7 @@ public class ViewpointSpecificationProjectExtended {
                         throw new RuntimeException(e);
                     }
                     //ViewpointSpecificationProjectExtended.selectAndOpen(workbench, modelFile);
-                    ViewpointSpecificationProjectExtended.convert(project, modelName, monitor);
+                    ViewpointSpecificationProjectExtended.convert(project, modelName, monitor, generateManifest);
                 }
                 if (!project.isOpen()) {
                     project.open(monitor);
@@ -399,8 +424,9 @@ public class ViewpointSpecificationProjectExtended {
      *            The model name
      * @param monitor
      *            is the monitor
+     * @param generateManifest 
      */
-    private static void convert(final IProject prj, final String modelName, final IProgressMonitor monitor) {
+    private static void convert(final IProject prj, final String modelName, final IProgressMonitor monitor, boolean generateManifest) {
         final String modelNameWithoutExtension = modelName.replaceAll(DOT_SEPARATOR_PATH + VIEWPOINT_MODEL_EXTENSION + "$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
         // WARNING: variable names should not share any common prefix.
@@ -429,7 +455,9 @@ public class ViewpointSpecificationProjectExtended {
         ViewpointSpecificationProjectExtended.createFileFromTemplate(prj, "src/" + packageName.replaceAll(DOT_SEPARATOR_PATH, "/") + "/Activator.java", "resources/Activator.java_", replacements, monitor); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         ViewpointSpecificationProjectExtended.createFileFromTemplate(prj, "src/" + packageName.replaceAll(DOT_SEPARATOR_PATH, "/") + "/Services.java", "resources/Services.java_", replacements, monitor); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         ViewpointSpecificationProjectExtended.createFileFromTemplate(prj, ".classpath", "resources/classpath.xml", replacements, monitor); //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
-        ViewpointSpecificationProjectExtended.createFileFromTemplate(prj, "META-INF/MANIFEST.MF", "resources/MANIFEST.MF", replacements, monitor); //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+        if (generateManifest)
+        	ViewpointSpecificationProjectExtended.createFileFromTemplate(prj, "META-INF/MANIFEST.MF", "resources/MANIFEST.MF", replacements, monitor); //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+        
         ViewpointSpecificationProjectExtended.createFileFromTemplate(prj, ".project", "resources/project.xml", replacements, monitor); //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
         //Comment this line becaus the plugin.xml is created with Acceleo
         //ViewpointSpecificationProjectExtended.createFileFromTemplate(prj, "plugin.xml", "resources/plugin.xml", replacements, monitor); //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$   

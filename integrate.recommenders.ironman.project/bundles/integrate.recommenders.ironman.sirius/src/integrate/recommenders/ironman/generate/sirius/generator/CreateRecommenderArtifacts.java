@@ -27,6 +27,7 @@ import org.eclipse.sirius.viewpoint.description.tool.ToolFactory;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.api.IStrategyGenerateMenu;
+import integrate.recommenders.ironman.generate.sirius.generator.template.MetaInfRecommender;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommendItemExtendedAction;
 import project.generator.api.template.sirius.ViewpointEditorPluginXML;
 import project.generator.api.utils.WriteUtils;
@@ -63,16 +64,16 @@ public class CreateRecommenderArtifacts {
 		//2. Refine viewpoint
 		this.generateMenu.generateMenuArtifacts(this.projectName, groupBaseRecommender, selectedDiagramDesc, recommenderToServices);
 		//3. Create Viewpoint Specification Project
-		final IProject viewpointProject = createViepointProject(VIEWPOINT_RECOMMENDER_NAME
+		final IProject viewpointProject = createViewpointProject(VIEWPOINT_RECOMMENDER_NAME
 				+ "." + VIEWPOINT_MODEL_EXTENSION, groupBaseRecommender);		
 		//4. Create all files
 		generateAll(viewpointProject);
 	}	
 	
 
-	private IProject createViepointProject(final String viewpointName, final Group groupBaseRecommender) {
+	private IProject createViewpointProject(final String viewpointName, final Group groupBaseRecommender) {
 		try {
-			return createNewViewpointSpecificationProject(this.projectName, viewpointName, groupBaseRecommender);
+			return createNewViewpointSpecificationProject(this.projectName, viewpointName, groupBaseRecommender, false);
 		} catch (CoreException e) {			
 			e.printStackTrace();
 		}
@@ -88,9 +89,14 @@ public class CreateRecommenderArtifacts {
 		var allFiles = new ArrayList<Runnable>();
 		final String packageName = viewpointProject.getName() + PACKAGE_ACTIONS;
 		final Set<String> setOfItems = getAllItems(this.recommenderToServices);
+		//Generate Plugin.XML
 		allFiles.add(() -> WriteUtils.write(viewpointProject, "plugin.xml", 
 				new ViewpointEditorPluginXML(viewpointProject,packageName,
 						setOfItems).doGenerate()));
+		//Generate MANIFEST.MF
+		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/META-INF"), "MANIFEST.MF", 
+				new MetaInfRecommender(viewpointProject).doGenerate()));
+		
 		//Actions package
 		for (String item : setOfItems) {
 			final String className = "Recommend" + item;
