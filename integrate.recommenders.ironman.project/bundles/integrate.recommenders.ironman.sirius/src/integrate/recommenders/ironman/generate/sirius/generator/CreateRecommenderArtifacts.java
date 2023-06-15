@@ -21,6 +21,7 @@ import integrate.recommenders.ironman.generate.sirius.generator.template.Recomme
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderCase;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderUtils;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.NameColumLabelProvider;
+import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecColumLabelProvider;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderData;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderDialog;
 import project.generator.api.template.sirius.ViewpointEditorPluginXML;
@@ -115,11 +116,17 @@ public class CreateRecommenderArtifacts {
 				"RecommenderData" + ".java", 
 			new RecommenderData(packageNameDialog).doGenerate()));
 		
-		//Generate RecommenderData
+		//Generate NameColumLabelProvider
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
 				"NameColumLabelProvider" + ".java", 
 			new NameColumLabelProvider(packageNameDialog).doGenerate()));
+		
+		//Generate NameColumLabelProvider
+				allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+						+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
+						"RecColumLabelProvider" + ".java", 
+					new RecColumLabelProvider(packageNameDialog).doGenerate()));
 	}
 
 	private void generateInfrastructureClasses(IProject viewpointProject, ArrayList<Runnable> allFiles,
