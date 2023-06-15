@@ -10,6 +10,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# Xtend generated code
+xtend-gen/
+
 # Package Files #
 *.jar
 *.war
