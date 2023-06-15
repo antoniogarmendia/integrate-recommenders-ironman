@@ -21,6 +21,7 @@ import integrate.recommenders.ironman.generate.sirius.generator.template.Recomme
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderCase;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderUtils;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.NameColumLabelProvider;
+import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RatingColumLabelProvider;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecColumLabelProvider;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderData;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderDialog;
@@ -87,9 +88,9 @@ public class CreateRecommenderArtifacts {
 		final String packageNameDialog = viewpointProject.getName() + PACKAGE_DIALOG;
 		final Set<String> setOfItems = getAllItems(this.recommenderToServices);
 		
-		generateInfrastructureClasses(viewpointProject, allFiles, packageName, packageNameUtils, setOfItems);
+		generateInfrastructureClasses(viewpointProject, allFiles, packageName, packageNameUtils, packageNameDialog, setOfItems);
 		
-		generateDialogClasses(viewpointProject, packageNameDialog, allFiles);
+		generateDialogClasses(viewpointProject, packageNameDialog, packageNameUtils, allFiles);
 		
 		//Actions package
 		for (String item : setOfItems) {
@@ -97,18 +98,18 @@ public class CreateRecommenderArtifacts {
 			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
 						className + ".java", 
-					new RecommendItemExtendedAction(className, packageName, packageNameUtils, item, this.recommenderToServices).doGenerate()));
+					new RecommendItemExtendedAction(className, packageName, packageNameUtils, packageNameDialog, item, this.recommenderToServices).doGenerate()));
 		}
 		
 		return allFiles;
 	}
 
-	private void generateDialogClasses(IProject viewpointProject, String packageNameDialog, ArrayList<Runnable> allFiles) {
+	private void generateDialogClasses(IProject viewpointProject, String packageNameDialog, String packageNameUtils, ArrayList<Runnable> allFiles) {
 		//Generate RecommenderUtils
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
 				"RecommenderDialog" + ".java", 
-			new RecommenderDialog(packageNameDialog).doGenerate()));	
+			new RecommenderDialog(packageNameDialog, packageNameUtils).doGenerate()));	
 		
 		//Generate RecommenderData
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
@@ -127,10 +128,15 @@ public class CreateRecommenderArtifacts {
 						+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
 						"RecColumLabelProvider" + ".java", 
 					new RecColumLabelProvider(packageNameDialog).doGenerate()));
+		//Generate NameColumLabelProvider
+		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
+				"RatingColumLabelProvider" + ".java", 
+			new RatingColumLabelProvider(packageNameDialog).doGenerate()));
 	}
 
 	private void generateInfrastructureClasses(IProject viewpointProject, ArrayList<Runnable> allFiles,
-			final String packageName, final String packageNameUtils, final Set<String> setOfItems) {
+			final String packageName, final String packageNameUtils, String packageNameDialog, final Set<String> setOfItems) {
 		//Generate Plugin.XML
 		allFiles.add(() -> WriteUtils.write(viewpointProject, "plugin.xml", 
 				new ViewpointEditorPluginXML(viewpointProject,packageName,
@@ -147,7 +153,7 @@ public class CreateRecommenderArtifacts {
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/utils/"), 
 				"RecommenderUtils" + ".java", 
-			new RecommenderUtils(packageNameUtils, this.recommenderToServices).doGenerate()));
+			new RecommenderUtils(packageNameUtils, packageNameDialog, this.recommenderToServices).doGenerate()));
 	}	
 	
 	private void execute(List<Runnable> allFiles){

@@ -4,9 +4,9 @@ import java.util.List
 import java.util.Map
 import project.generator.api.template.sirius.ExternalJavaActionTemplate
 import integrate.recommenders.ironman.definition.services.Service
-import java.util.stream.Collectors
 import integrate.recommenders.ironman.definition.services.Recommender
 import project.generator.api.utils.GenModelUtils
+import java.util.stream.Collectors
 
 class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
@@ -15,13 +15,15 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	val Map.Entry<String, List<Service>> service;
 	var Recommender recommender;
 	val String packageNameUtils;
+	val String packageNameDialog;
 	
-	new(String className, String packageName, String packageNameUtils, String item, Map<String,List<Service>> recommenderToServices) {
+	new(String className, String packageName, String packageNameUtils, String packageNameDialog, String item, Map<String,List<Service>> recommenderToServices) {
 		super(className,packageName);
 		this.recommenderToServices = recommenderToServices;
 		this.item = item;
 		this.service = getService;
 		this.packageNameUtils = packageNameUtils;
+		this.packageNameDialog = packageNameDialog;
 	}
 	
 	//Return the Entry
@@ -51,7 +53,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					var nodeList = (DNodeList) selectedNode;
 					final EObject targetEObject = nodeList.getTarget();
 					if (targetEObject instanceof «this.recommender.details.targetEClass.name») {
-						final «this.recommender.details.targetEClass.name» target = ((EClass) targetEObject);
+						final «this.recommender.details.targetEClass.name» target = ((«this.recommender.details.targetEClass.name») targetEObject);
 						//TODO EMF Jackson convert from XMI to JSON
 						final RecommenderCase recommenderCase = getRecommenderCase("{name: Author}");
 						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
@@ -65,7 +67,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 						
 						if (recDialog.open() == Window.OK) {
 							//Add selected elements
-							addSelectRecommendation(recDialog.getSelectedRecommendations(),eClass);
+							addSelectRecommendation(recDialog.getSelectedRecommendations(),target);
 						}					
 					}				
 				}			
@@ -85,14 +87,26 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
 			import «GenModelUtils.getPackageClassFromEClass(this.recommender.details.targetEClass)»;
 			import «this.packageNameUtils».RecommenderCase;
+			import «this.packageNameDialog».RecommenderData;
 			import static «this.packageNameUtils».RecommenderUtils.*;
 			import java.util.Arrays;
+			import «this.packageNameDialog».RecommenderDialog;
 		'''
 	}
 	
 	override restOfMethods() {
 		'''
 		«recommenderCase»
+		«addSelectedRecommendation»
+		'''
+	}
+	
+	def addSelectedRecommendation() {
+		'''
+		
+		private void addSelectRecommendation(List<RecommenderData> selectedRecommendations, EClass eClass) {
+			
+		}
 		'''
 	}
 	

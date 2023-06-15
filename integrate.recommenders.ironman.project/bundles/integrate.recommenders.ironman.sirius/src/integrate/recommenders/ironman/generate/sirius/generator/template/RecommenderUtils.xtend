@@ -8,10 +8,12 @@ import integrate.recommenders.ironman.definition.services.Service
 class RecommenderUtils implements IGeneration {
 	
 	val String packageName;
+	val String packageNameDialog;
 	val Map<String, List<Service>> recommenderToServices;
 	
-	new(String packageName, Map<String, List<Service>> recommenderToServices) {
+	new(String packageName, String packageNameDialog, Map<String, List<Service>> recommenderToServices) {
 		this.packageName = packageName;
+		this.packageNameDialog = packageNameDialog;
 		this.recommenderToServices = recommenderToServices;
 	}
 	
@@ -19,12 +21,17 @@ class RecommenderUtils implements IGeneration {
 		'''
 			package «packageName»;
 			
+			import java.util.ArrayList;
 			import java.util.Collection;
 			import java.util.Collections;
+			import java.util.Comparator;
 			import java.util.HashMap;
+			import java.util.LinkedHashMap;
 			import java.util.List;
 			import java.util.Map;
 			import java.util.stream.Collectors;
+			
+			import «this.packageNameDialog».RecommenderData;
 			
 			import com.fasterxml.jackson.core.JsonProcessingException;
 			import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,6 +55,8 @@ class RecommenderUtils implements IGeneration {
 				«recommendations»
 				«filterEmptyRecommendations»
 				«normalization»
+				«convertToOrderedList»
+				«recommenders»
 			}			
 		'''
 	}
@@ -145,4 +154,57 @@ class RecommenderUtils implements IGeneration {
 		}
 		'''
 	}	
+	
+	def String convertToOrderedList() {
+		'''
+		public static List<RecommenderData> convertToOrderedListOfRecommendations(Map<String, List<ItemRecommender>> recServerToItemRecommenders, 
+				Map<String, Double> normalizeDataFusion){
+			final List<RecommenderData> listOfRecommendations = new ArrayList<RecommenderData>();
+				
+			final LinkedHashMap<String, Double> sortedNormalizeMap = normalizeDataFusion.entrySet()
+																	  	.stream()
+																	  	.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+																	  	.collect(Collectors.toMap(
+																	  	        Map.Entry::getKey,
+																	  	        Map.Entry::getValue,
+																	  	        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+			
+			for (Map.Entry<String, Double> entry : sortedNormalizeMap.entrySet()) {
+				final String recommendation = entry.getKey();
+				final double rating = entry.getValue();
+				final String recommenders = recommenders(recServerToItemRecommenders,recommendation);			
+				RecommenderData recData = new RecommenderData(recommendation, recommenders, Double.toString(rating));
+				listOfRecommendations.add(recData);		
+			}		
+			return listOfRecommendations;
+		}
+		'''
+	}
+	
+	def String recommenders() {
+		'''
+		
+		private static String recommenders(Map<String, List<ItemRecommender>> recServerToItemRecommenders,
+					String recommendation) {
+			final StringBuilder recommenders = new StringBuilder();
+			String SEPARATOR = "";
+			for (Map.Entry<String, List<ItemRecommender>> entry : recServerToItemRecommenders.entrySet()) {
+				final List<ItemRecommender> itemsOfRecommenders = entry.getValue();			
+				for (ItemRecommender itemRecommender : itemsOfRecommenders) {
+					boolean isPresent = !itemRecommender.getItems()
+												.stream()
+												.filter(item -> item.getPk().get("name").equals(recommendation))
+												.findAny()
+												.isEmpty();
+					if (isPresent) {
+						recommenders.append(SEPARATOR);
+						recommenders.append(itemRecommender.getName());	
+						SEPARATOR = ",";
+					}				
+				}			
+			}		
+			return recommenders.toString();
+		}
+		'''
+	}
 }

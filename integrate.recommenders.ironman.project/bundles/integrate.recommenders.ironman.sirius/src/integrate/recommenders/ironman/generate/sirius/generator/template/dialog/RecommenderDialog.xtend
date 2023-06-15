@@ -5,9 +5,11 @@ import project.generator.api.template.IGeneration
 class RecommenderDialog implements IGeneration {
 	
 	val String packageName;
+	val String packageNameUtils;
 	
-	new(String packageName) {
+	new(String packageName, String packageNameUtils) {
 		this.packageName = packageName;
+		this.packageNameUtils = packageNameUtils;
 	}
 	
 	override doGenerate() {
@@ -30,6 +32,7 @@ class RecommenderDialog implements IGeneration {
 		import org.eclipse.swt.widgets.Control;
 		import org.eclipse.swt.widgets.Shell;
 		
+		import static «this.packageNameUtils».RecommenderUtils.*;
 		import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
 		
 		public class RecommenderDialog extends Dialog {
@@ -48,7 +51,7 @@ class RecommenderDialog implements IGeneration {
 			«createDialogArea»
 			«configureShell»
 			«selectedRecommendations»
-			}
+		}
 		'''
 	}
 	
