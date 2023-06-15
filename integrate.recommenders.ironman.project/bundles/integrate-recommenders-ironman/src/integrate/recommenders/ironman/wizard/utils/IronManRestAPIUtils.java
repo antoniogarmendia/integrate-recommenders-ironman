@@ -8,6 +8,8 @@ public class IronManRestAPIUtils {
 	
 	public static final String NSURI_PARAM = "nsURI";
 	public static final String SERVICES_URL = "services";
+	public static final String ITEM_TYPE_PARAM = "itemType";
+	public static final String RECOMMENDER_URL = "recommender";
 	
 	public static String getParamsString(Map<String, String> params) 
 		      throws UnsupportedEncodingException {

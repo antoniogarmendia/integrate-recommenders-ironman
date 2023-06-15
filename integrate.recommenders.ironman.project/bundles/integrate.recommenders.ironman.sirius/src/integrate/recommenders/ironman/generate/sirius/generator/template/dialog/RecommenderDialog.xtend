@@ -1,0 +1,112 @@
+package integrate.recommenders.ironman.generate.sirius.generator.template.dialog
+
+import project.generator.api.template.IGeneration
+
+class RecommenderDialog implements IGeneration {
+	
+	val String packageName;
+	
+	new(String packageName) {
+		this.packageName = packageName;
+	}
+	
+	override doGenerate() {
+		'''
+		package «packageName»;
+		
+		import java.util.List;
+		
+		import org.eclipse.jface.dialogs.Dialog;
+		import org.eclipse.jface.viewers.CheckboxTableViewer;
+		
+		public class RecommenderDialog extends Dialog {
+			
+			private final String target;
+			private CheckboxTableViewer tableOfRecommendations;
+			private final List<RecommenderData> recommendations;
+			private List<RecommenderData> selectedRecommendations;
+			
+			public RecommenderDialog(Shell parentShell, Map<String, List<ItemRecommender>> recServerToItemRecommenders, 
+					Map<String, Double> normalizeDataFusion, String target) {
+				super(parentShell);		
+				this.target = target;
+				this.recommendations = convertToOrderedListOfRecommendations(recServerToItemRecommenders, normalizeDataFusion);		
+			}
+			«createDialogArea»
+			«configureShell»
+			«selectedRecommendations»
+			}
+		'''
+	}
+	
+	def createDialogArea() {
+		'''
+		
+		@Override
+		protected Control createDialogArea(Composite parent) {
+			final Composite container = (Composite) super.createDialogArea(parent);
+			LabelFactory.newLabel(SWT.NONE).text("Select Recommendations").create(container);
+			//CheckTableViewer
+			tableOfRecommendations = CheckboxTableViewer.newCheckList(container, SWT.NONE);
+			tableOfRecommendations.getTable().setLinesVisible(true);
+			tableOfRecommendations.getTable().setHeaderVisible(true);
+			tableOfRecommendations.setUseHashlookup(true);
+			
+			tableOfRecommendations.getTable().setLayoutData(GridDataFactory.fillDefaults().create());
+			
+			//Name Column
+			final TableViewerColumn nameColumn = new TableViewerColumn(tableOfRecommendations, SWT.CENTER);
+			nameColumn.getColumn().setWidth(180);
+			nameColumn.getColumn().setText("Name");
+			nameColumn.setLabelProvider(new NameColumLabelProvider());
+			
+			//Recommender Column
+			final TableViewerColumn recColumn = new TableViewerColumn(tableOfRecommendations, SWT.CENTER);
+			recColumn.getColumn().setWidth(180);
+			recColumn.getColumn().setText("Recommenders");
+			recColumn.setLabelProvider(new RecColumLabelProvider());
+				
+			//Recommender Column
+			final TableViewerColumn ratingColumn = new TableViewerColumn(tableOfRecommendations, SWT.CENTER);
+			ratingColumn.getColumn().setWidth(180);
+			ratingColumn.getColumn().setText("Rating");
+			ratingColumn.setLabelProvider(new RatingColumLabelProvider());
+			
+			
+			tableOfRecommendations.setContentProvider(ArrayContentProvider.getInstance());	
+			tableOfRecommendations.setInput(this.recommendations);
+					
+			return super.createDialogArea(parent);
+		}
+		'''
+	}
+	
+	def getSelectedRecommendations() {
+		'''
+		public List<RecommenderData> getSelectedRecommendations() {		
+				return selectedRecommendations;		
+		}
+			
+		@Override
+		protected void okPressed() {		
+			selectedRecommendations = Arrays.stream(tableOfRecommendations.getCheckedElements())
+											.map(RecommenderData.class::cast)
+											.collect(Collectors.toList());
+			super.okPressed();
+		}
+		'''
+	}
+	
+	def String configureShell(){
+		'''
+		
+		// Set the title of the dialog
+		@Override
+		protected void configureShell(Shell newShell) {
+			super.configureShell(newShell);
+			newShell.setText("Recommend " + "EAttribute " + "for " + this.target);
+		}
+		'''
+	}
+	
+}

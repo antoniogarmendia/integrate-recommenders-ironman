@@ -8,21 +8,10 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.sirius.diagram.description.DiagramDescription;
-import org.eclipse.sirius.diagram.description.DiagramExtensionDescription;
 import org.eclipse.sirius.viewpoint.description.Group;
-import org.eclipse.sirius.viewpoint.description.Viewpoint;
-import org.eclipse.sirius.viewpoint.description.tool.ExternalJavaAction;
-import org.eclipse.sirius.viewpoint.description.tool.PopupMenu;
-import org.eclipse.sirius.viewpoint.description.tool.ToolFactory;
 
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.services.Service;
@@ -31,6 +20,8 @@ import integrate.recommenders.ironman.generate.sirius.generator.template.MetaInf
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommendItemExtendedAction;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderCase;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderUtils;
+import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderData;
+import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderDialog;
 import project.generator.api.template.sirius.ViewpointEditorPluginXML;
 import project.generator.api.utils.WriteUtils;
 
@@ -91,9 +82,12 @@ public class CreateRecommenderArtifacts {
 		var allFiles = new ArrayList<Runnable>();
 		final String packageName = viewpointProject.getName() + PACKAGE_ACTIONS;
 		final String packageNameUtils = viewpointProject.getName() + PACKAGE_UTILS;
+		final String packageNameDialog = viewpointProject.getName() + PACKAGE_DIALOG;
 		final Set<String> setOfItems = getAllItems(this.recommenderToServices);
 		
 		generateInfrastructureClasses(viewpointProject, allFiles, packageName, packageNameUtils, setOfItems);
+		
+		generateDialogClasses(viewpointProject, packageNameDialog, allFiles);
 		
 		//Actions package
 		for (String item : setOfItems) {
@@ -105,6 +99,20 @@ public class CreateRecommenderArtifacts {
 		}
 		
 		return allFiles;
+	}
+
+	private void generateDialogClasses(IProject viewpointProject, String packageNameDialog, ArrayList<Runnable> allFiles) {
+		//Generate RecommenderUtils
+		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
+				"RecommenderDialog" + ".java", 
+			new RecommenderDialog(packageNameDialog).doGenerate()));	
+		
+		//Generate RecommenderUtils
+		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
+				"RecommenderData" + ".java", 
+			new RecommenderData(packageNameDialog).doGenerate()));
 	}
 
 	private void generateInfrastructureClasses(IProject viewpointProject, ArrayList<Runnable> allFiles,

@@ -52,8 +52,8 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					final EObject targetEObject = nodeList.getTarget();
 					if (targetEObject instanceof «this.recommender.details.targetEClass.name») {
 						final «this.recommender.details.targetEClass.name» target = ((EClass) targetEObject);
-						//TODO Call all the recommenders
-						final RecommenderCase recommenderCase = getRecommenderCase(name);
+						//TODO EMF Jackson convert from XMI to JSON
+						final RecommenderCase recommenderCase = getRecommenderCase("{name: Author}");
 						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
 						//Merge 
 						final Map<String, Double> dataFusion = EvaluateMetaSearchContributionHandler.
@@ -76,9 +76,17 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	override importDependencies() {
 		'''
 			«super.importDependencies()»
+			import java.util.List;
+			import org.eclipse.jface.window.Window;
+			import org.eclipse.ui.PlatformUI;
+			import java.util.Map;
 			import java.util.AbstractMap;
+			import integrate.recommenders.ironman.definition.algorithm.EvaluateMetaSearchContributionHandler;
+			import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
 			import «GenModelUtils.getPackageClassFromEClass(this.recommender.details.targetEClass)»;
 			import «this.packageNameUtils».RecommenderCase;
+			import static «this.packageNameUtils».RecommenderUtils.*;
+			import java.util.Arrays;
 		'''
 	}
 	
@@ -93,16 +101,43 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			private RecommenderCase getRecommenderCase(String targetName) {
 				final Map<String, Collection<String>> urlToRecommenders = 	Map.ofEntries(
 						new AbstractMap.SimpleEntry<String, Collection<String>>(
-								URL_RECOMMENDER_1,
-								Arrays.asList(
-										RECOMMENDER_1,RECOMMENDER_2,RECOMMENDER_3,RECOMMENDER_4
-										)	
-								)
+								«allRecommenders»
 						);
-				final String type = "EAttribute";
+				final String type = "«getEType»";
 				return new RecommenderCase(urlToRecommenders, type, targetName);
 			}
 		'''
 	}
 	
+	def String getEType() {
+		val struct = this.recommender.details.targetEClass.getEStructuralFeature(item);
+		struct.EType.name;		
+	}
+	
+	def String allRecommenders(){
+		'''
+		«var int i = 1»
+		«FOR Map.Entry<String, List<Service>> entryRecommend : recommenderToServices.entrySet»
+			«IF recommendTypeOfItem(entryRecommend)»
+				URL_RECOMMENDER_«i++»,
+					Arrays.asList(
+					//List of Recommenders
+					«FOR Service service: entryRecommend.value»
+						«FOR Recommender recommender: service.services SEPARATOR ','»
+						RECOMMENDER_«i»_«recommender.name»
+						«ENDFOR»
+					«ENDFOR»
+					))
+			«ELSE»
+			«{i=i+1;null}»
+			«ENDIF»
+		«ENDFOR»		
+		'''
+	}
+	
+	def boolean recommendTypeOfItem(Map.Entry<String, List<Service>> entryRecommend) {
+		return entryRecommend.value.stream.filter(serv | 
+			serv.services.stream.filter( r | r.details.items.contains(this.item)).findFirst.isEmpty === false		
+		).count > 0;	
+	}	
 }

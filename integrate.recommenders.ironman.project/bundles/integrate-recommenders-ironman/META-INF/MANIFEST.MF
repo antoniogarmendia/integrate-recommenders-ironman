@@ -16,3 +16,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.ecore.editor;bundle-version="2.17.0"
 Bundle-Activator: integrate.recommenders.ironman.wizard.Activator
 Bundle-ActivationPolicy: lazy
+Export-Package: integrate.recommenders.ironman.wizard.rest.api,
+ integrate.recommenders.ironman.wizard.utils

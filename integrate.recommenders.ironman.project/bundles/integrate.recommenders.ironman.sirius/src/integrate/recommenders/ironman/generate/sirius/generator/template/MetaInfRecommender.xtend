@@ -47,7 +47,11 @@ class MetaInfRecommender extends MetaInfTemplate {
 			 		«ENDFOR»
 			 	«ENDFOR»
 			 «ENDFOR»
-			 org.eclipse.emf
+			 org.eclipse.emf,
+			 integrate.recommenders.ironman.definition,
+			 integrate.recommenders.ironman.wizard,
+			 com.fasterxml.jackson.core.jackson-core,
+			 com.fasterxml.jackson.core.jackson-databind
 		'''	
 	}
 	
