@@ -14,10 +14,23 @@ class RecommenderDialog implements IGeneration {
 		'''
 		package «packageName»;
 		
+		import java.util.Arrays;
 		import java.util.List;
+		import java.util.Map;
+		import java.util.stream.Collectors;
 		
 		import org.eclipse.jface.dialogs.Dialog;
+		import org.eclipse.jface.layout.GridDataFactory;
+		import org.eclipse.jface.viewers.ArrayContentProvider;
 		import org.eclipse.jface.viewers.CheckboxTableViewer;
+		import org.eclipse.jface.viewers.TableViewerColumn;
+		import org.eclipse.jface.widgets.LabelFactory;
+		import org.eclipse.swt.SWT;
+		import org.eclipse.swt.widgets.Composite;
+		import org.eclipse.swt.widgets.Control;
+		import org.eclipse.swt.widgets.Shell;
+		
+		import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
 		
 		public class RecommenderDialog extends Dialog {
 			

@@ -20,6 +20,7 @@ import integrate.recommenders.ironman.generate.sirius.generator.template.MetaInf
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommendItemExtendedAction;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderCase;
 import integrate.recommenders.ironman.generate.sirius.generator.template.RecommenderUtils;
+import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.NameColumLabelProvider;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderData;
 import integrate.recommenders.ironman.generate.sirius.generator.template.dialog.RecommenderDialog;
 import project.generator.api.template.sirius.ViewpointEditorPluginXML;
@@ -108,11 +109,17 @@ public class CreateRecommenderArtifacts {
 				"RecommenderDialog" + ".java", 
 			new RecommenderDialog(packageNameDialog).doGenerate()));	
 		
-		//Generate RecommenderUtils
+		//Generate RecommenderData
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
 				"RecommenderData" + ".java", 
 			new RecommenderData(packageNameDialog).doGenerate()));
+		
+		//Generate RecommenderData
+		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
+				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/dialog/"), 
+				"NameColumLabelProvider" + ".java", 
+			new NameColumLabelProvider(packageNameDialog).doGenerate()));
 	}
 
 	private void generateInfrastructureClasses(IProject viewpointProject, ArrayList<Runnable> allFiles,
