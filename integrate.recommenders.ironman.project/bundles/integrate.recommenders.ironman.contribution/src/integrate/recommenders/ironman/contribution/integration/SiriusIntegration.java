@@ -59,7 +59,7 @@ public class SiriusIntegration implements IIntegration {
 		new CreateRecommenderArtifacts(projectName, 
 				selectedDiagramDesc,
 				this.recommenderToServices,
-				this.mapping).doGenerateViewpointSpecificationProject();	
+				this.mapping, dataFusionAlgorithm).doGenerateViewpointSpecificationProject();	
 		System.out.println("Create Viewpoint Specification Project");
 	}
 

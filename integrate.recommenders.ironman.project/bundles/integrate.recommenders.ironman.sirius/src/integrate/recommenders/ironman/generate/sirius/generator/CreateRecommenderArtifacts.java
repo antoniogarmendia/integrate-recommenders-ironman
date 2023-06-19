@@ -38,12 +38,14 @@ public class CreateRecommenderArtifacts {
 	private final Map<String,List<Service>> recommenderToServices;
 	private final MLMappingConfiguration mapping;
 	private final IStrategyGenerateMenu generateMenu;
+	private final String dataFusionAlgorithm;
 	
 	public CreateRecommenderArtifacts(final String projectName, final EList<DiagramDescription> selectedDiagramDesc, 
-			final Map<String,List<Service>> recommenderToServices, MLMappingConfiguration mapping) {
+			final Map<String,List<Service>> recommenderToServices, MLMappingConfiguration mapping, String dataFusionAlgorithm) {
 		this.projectName = projectName;
 		this.selectedDiagramDesc = selectedDiagramDesc;		
 		this.recommenderToServices = recommenderToServices;
+		this.dataFusionAlgorithm = dataFusionAlgorithm;
 		this.mapping = mapping;
 		if (this.mapping == null) {
 			this.generateMenu = new GenerateMenuArtifacts();
@@ -98,7 +100,8 @@ public class CreateRecommenderArtifacts {
 			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
 						className + ".java", 
-					new RecommendItemExtendedAction(className, packageName, packageNameUtils, packageNameDialog, item, this.recommenderToServices).doGenerate()));
+					new RecommendItemExtendedAction(className, packageName, packageNameUtils, 
+							packageNameDialog, item, this.recommenderToServices, this.dataFusionAlgorithm).doGenerate()));
 		}
 		
 		return allFiles;

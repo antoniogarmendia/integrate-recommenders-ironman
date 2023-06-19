@@ -7,6 +7,7 @@ import integrate.recommenders.ironman.definition.services.Service
 import integrate.recommenders.ironman.definition.services.Recommender
 import project.generator.api.utils.GenModelUtils
 import java.util.stream.Collectors
+import org.eclipse.emf.ecore.EClassifier
 
 class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
@@ -16,14 +17,18 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	var Recommender recommender;
 	val String packageNameUtils;
 	val String packageNameDialog;
+	val String dataFusionAlgorithm;
 	
-	new(String className, String packageName, String packageNameUtils, String packageNameDialog, String item, Map<String,List<Service>> recommenderToServices) {
+	new(String className, String packageName, String packageNameUtils, String packageNameDialog, String item, 
+		Map<String,List<Service>> recommenderToServices, String dataFusionAlgorithm
+	) {
 		super(className,packageName);
 		this.recommenderToServices = recommenderToServices;
 		this.item = item;
 		this.service = getService;
 		this.packageNameUtils = packageNameUtils;
 		this.packageNameDialog = packageNameDialog;
+		this.dataFusionAlgorithm = dataFusionAlgorithm;
 	}
 	
 	//Return the Entry
@@ -55,20 +60,28 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					if (targetEObject instanceof «this.recommender.details.targetEClass.name») {
 						final «this.recommender.details.targetEClass.name» target = ((«this.recommender.details.targetEClass.name») targetEObject);
 						//TODO EMF Jackson convert from XMI to JSON
-						final RecommenderCase recommenderCase = getRecommenderCase("{name: Author}");
+						final RecommenderCase recommenderCase = getRecommenderCase(target.getName());
 						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
 						//Merge 
 						final Map<String, Double> dataFusion = EvaluateMetaSearchContributionHandler.
-								executeMetaSearchAlgorithByName("OutRankingApproach", recServerToItemRecommenders);
-						final Map<String, Double> normalizeDataFusion = normalization(dataFusion);
-						//Graphical Interface
-						final RecommenderDialog recDialog = new RecommenderDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
-								, recServerToItemRecommenders, normalizeDataFusion, "EClass");
-						
-						if (recDialog.open() == Window.OK) {
-							//Add selected elements
-							addSelectRecommendation(recDialog.getSelectedRecommendations(),target);
-						}					
+								executeMetaSearchAlgorithByName("«this.dataFusionAlgorithm»", recServerToItemRecommenders);
+						if (dataFusion.size() != 0 ) {
+							final Map<String, Double> normalizeDataFusion = normalization(dataFusion);
+							//Graphical Interface
+							final RecommenderDialog recDialog = new RecommenderDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
+									, recServerToItemRecommenders, normalizeDataFusion, "EClass");
+							
+							if (recDialog.open() == Window.OK) {
+								//Add selected elements
+								addSelectRecommendation(recDialog.getSelectedRecommendations(),target);
+							}
+						} else {
+							final MessageBox messageBox = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+														                SWT.ICON_INFORMATION |
+														                SWT.OK);
+							messageBox.setMessage("It was not provided any recommendation");
+							messageBox.open();
+						}				
 					}				
 				}			
 			}	
@@ -81,16 +94,22 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import java.util.List;
 			import org.eclipse.jface.window.Window;
 			import org.eclipse.ui.PlatformUI;
-			import java.util.Map;
+			import org.eclipse.emf.ecore.util.EcoreUtil;
+			import org.eclipse.emf.ecore.EClassifier;
+			import org.eclipse.emf.ecore.EStructuralFeature;
+			import org.eclipse.emf.common.util.EList;
 			import java.util.AbstractMap;
 			import integrate.recommenders.ironman.definition.algorithm.EvaluateMetaSearchContributionHandler;
 			import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
-			import «GenModelUtils.getPackageClassFromEClass(this.recommender.details.targetEClass)»;
+			import «GenModelUtils.getPackageClassFromEClassifier(this.recommender.details.targetEClass)»;
+			import «GenModelUtils.getPackageClassFromEClassifier(this.getEType)»;
 			import «this.packageNameUtils».RecommenderCase;
 			import «this.packageNameDialog».RecommenderData;
 			import static «this.packageNameUtils».RecommenderUtils.*;
 			import java.util.Arrays;
 			import «this.packageNameDialog».RecommenderDialog;
+			import org.eclipse.swt.SWT;
+			import org.eclipse.swt.widgets.MessageBox;			
 		'''
 	}
 	
@@ -105,7 +124,19 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		'''
 		
 		private void addSelectRecommendation(List<RecommenderData> selectedRecommendations, EClass eClass) {
-			
+			selectedRecommendations.stream().forEach(rec -> {
+				final EClassifier classifier = eClass.eClass().getEPackage().getEClassifier("«getEType.name»");
+				final «getEType.name» element = («getEType.name») EcoreUtil.create((EClass)classifier);
+				
+				element.setName(rec.getName());
+				
+				//Good
+				EStructuralFeature structFeateAllAttributes = eClass.eClass().getEStructuralFeature("eStructuralFeatures");
+				@SuppressWarnings("unchecked")
+				EList<EObject> listOfAttributes =  (EList<EObject>) eClass.eGet(structFeateAllAttributes);
+				listOfAttributes.add(element);
+				System.out.println("It does work");
+			});
 		}
 		'''
 	}
@@ -117,15 +148,15 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 						new AbstractMap.SimpleEntry<String, Collection<String>>(
 								«allRecommenders»
 						);
-				final String type = "«getEType»";
+				final String type = "«getEType.name»";
 				return new RecommenderCase(urlToRecommenders, type, targetName);
 			}
 		'''
 	}
 	
-	def String getEType() {
+	def EClassifier getEType() {
 		val struct = this.recommender.details.targetEClass.getEStructuralFeature(item);
-		struct.EType.name;		
+		struct.EType;		
 	}
 	
 	def String allRecommenders(){
