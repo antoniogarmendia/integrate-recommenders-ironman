@@ -91,8 +91,9 @@ public class SelectTargetItems extends WizardPage {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible == true & this.refresh == true) {
-			checkboxTreeViewer.setInput(mapServerToSelectedRecommender());
-			checkboxTreeViewer.refresh();	
+			this.checkboxTreeViewer.setInput(mapServerToSelectedRecommender());
+			this.checkboxTreeViewer.refresh();	
+			this.checkboxTreeViewer.expandAll();
 			this.refresh = false;
 		}
 	}

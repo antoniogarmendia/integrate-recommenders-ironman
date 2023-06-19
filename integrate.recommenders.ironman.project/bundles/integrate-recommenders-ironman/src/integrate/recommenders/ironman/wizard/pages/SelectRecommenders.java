@@ -63,10 +63,9 @@ public class SelectRecommenders extends WizardPage {
 						.create(configureTree);
 		
 		setControl(container);
+		this.checkboxTreeViewer.expandAll();
 		setPageComplete(true);		
-	}
-
-	
+	}	
 	
 	private void createColumns(CheckboxTreeViewer checkboxTreeViewer) {
 		//Language & Recommenders Column

@@ -128,9 +128,10 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 				final EClassifier classifier = eClass.eClass().getEPackage().getEClassifier("«getEType.name»");
 				final «getEType.name» element = («getEType.name») EcoreUtil.create((EClass)classifier);
 				
+				//TODO Feature
 				element.setName(rec.getName());
 				
-				//Good
+				//TODO Write
 				EStructuralFeature structFeateAllAttributes = eClass.eClass().getEStructuralFeature("eStructuralFeatures");
 				@SuppressWarnings("unchecked")
 				EList<EObject> listOfAttributes =  (EList<EObject>) eClass.eGet(structFeateAllAttributes);
