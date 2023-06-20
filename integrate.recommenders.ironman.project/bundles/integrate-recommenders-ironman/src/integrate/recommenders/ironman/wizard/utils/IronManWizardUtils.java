@@ -105,18 +105,19 @@ public final class IronManWizardUtils {
 	}
 
 	public static void deselectParentIfAnyChildSelected(TreeItem item) {
-		//Check all the tree items TODO fix
-//		boolean isAtLeastOneItemChecked = false;
-//		for (TreeItem treeItemChild : item.getParentItem().getItems()) {
-//			if (treeItemChild.getChecked() == true) {
-//				isAtLeastOneItemChecked = true;
-//				break;
-//			}					
-//		}
-//		if (isAtLeastOneItemChecked == false) {
-//			item.getParentItem().setChecked(false);
-//			deselectParentIfAnyChildSelected(item.getParentItem());
-//		}			
+		boolean isAtLeastOneItemChecked = false;
+		if (item.getParentItem() != null) {
+			for (TreeItem treeItemChild : item.getParentItem().getItems()) {
+				if (treeItemChild.getChecked() == true) {
+					isAtLeastOneItemChecked = true;
+					break;
+				}					
+			}
+			if (isAtLeastOneItemChecked == false) {
+				item.getParentItem().setChecked(false);
+				deselectParentIfAnyChildSelected(item.getParentItem());
+			}
+		}
 	}
 
 	public static void selectAllTreeItemChildren(final TreeItem item) {
