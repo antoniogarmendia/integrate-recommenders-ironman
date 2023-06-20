@@ -6,24 +6,21 @@ import java.util.Map;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
 import integrate.recommenders.ironman.definition.services.Recommender;
+import integrate.recommenders.ironman.definition.services.Service;
 
 public class SelectItemContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof Map)
-			return ((Map<?,?>)inputElement).entrySet().toArray();
+		if (inputElement instanceof List)
+			return ((List<?>) inputElement).toArray();
 		return null;
 	}
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof Recommender)
-			return ((Recommender) parentElement).getDetails().getItems().toArray();
-		if (parentElement instanceof Map.Entry) {
-			final Object value = ((Map.Entry<?,?>)(parentElement)).getValue();
-			return ((List<?>) value).toArray();
-		}
+		if (parentElement instanceof Service)
+			return ((Service) parentElement).getDetail().getItems().toArray();
 		return null;
 	}
 
@@ -34,10 +31,8 @@ public class SelectItemContentProvider implements ITreeContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof Recommender)
-			return true;
-		if (element instanceof Map.Entry) 
-			return true;
+		if (element instanceof Service)
+			return true;		
 		return false;
 	}
 

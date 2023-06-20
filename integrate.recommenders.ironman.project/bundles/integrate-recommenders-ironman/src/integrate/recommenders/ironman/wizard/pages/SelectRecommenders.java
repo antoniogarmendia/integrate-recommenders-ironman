@@ -9,7 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
-import integrate.recommenders.ironman.definition.services.Recommender;
+import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.wizard.pages.contents.LanguageRecommenderContentProvider;
 import integrate.recommenders.ironman.wizard.pages.label.ItemRecommenderProvider;
 import integrate.recommenders.ironman.wizard.pages.label.LanguageRecommenderProvider;
@@ -98,17 +98,17 @@ public class SelectRecommenders extends WizardPage {
 		return (IronManWizard) super.getWizard();
 	}	
 	
-	public Map<String,List<Recommender>> mapServerToSelectedRecommender() {
+	public Map<String,List<Service>> mapServerToSelectedRecommender() {
 		final Object[] selectedObjects = checkboxTreeViewer.getCheckedElements();
-		final Map<String,List<Recommender>> mapServerToSelectedRecommender = new HashMap<String,List<Recommender>>();
+		final Map<String,List<Service>> mapServerToSelectedRecommender = new HashMap<String,List<Service>>();
 		String server = null;
 		for (Object object : selectedObjects) {
 			if (object instanceof Map.Entry) {
 				final Entry<?, ?> serversToServices = (Map.Entry<?, ?>) object;
 				server = (String) serversToServices.getKey();	
-				mapServerToSelectedRecommender.put(server, new ArrayList<Recommender>());
-			} else if (object instanceof Recommender) {
-				mapServerToSelectedRecommender.get(server).add((Recommender)object);
+				mapServerToSelectedRecommender.put(server, new ArrayList<Service>());
+			} else if (object instanceof Service) {
+				mapServerToSelectedRecommender.get(server).add((Service)object);
 			}
 		}		
 		return mapServerToSelectedRecommender;

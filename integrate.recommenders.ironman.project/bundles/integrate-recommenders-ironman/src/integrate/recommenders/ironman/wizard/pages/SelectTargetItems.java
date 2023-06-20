@@ -9,7 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
-import integrate.recommenders.ironman.definition.services.Recommender;
+import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.wizard.pages.contents.SelectItemContentProvider;
 import integrate.recommenders.ironman.wizard.pages.label.SelectItemRecommenderProvider;
 
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SelectTargetItems extends WizardPage {
 	
@@ -49,8 +50,7 @@ public class SelectTargetItems extends WizardPage {
 		createColumns(checkboxTreeViewer);
 				
 		checkboxTreeViewer.setContentProvider(new SelectItemContentProvider());	
-		checkboxTreeViewer.setInput(mapServerToSelectedRecommender());
-		
+				
 		checkboxTreeViewer.getTree().addSelectionListener(selectTreeViewerItem());
 		
 		final Composite configureTree = new Composite(container, SWT.NONE);
@@ -70,7 +70,7 @@ public class SelectTargetItems extends WizardPage {
 	private void createColumns(CheckboxTreeViewer checkboxTreeViewer2) {
 		//Choose Items Column
 		TreeViewerColumn itemColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.LEFT);
-		itemColumn.getColumn().setWidth(220);
+		itemColumn.getColumn().setWidth(280);
 		itemColumn.getColumn().setText("Select Items");
 			
 		//Provider Diagram Description Column
@@ -82,7 +82,7 @@ public class SelectTargetItems extends WizardPage {
 		return (IronManWizard) super.getWizard();
 	}
 	
-	public Map<String,List<Recommender>> mapServerToSelectedRecommender() {
+	public Map<String,List<Service>> mapServerToSelectedRecommender() {
 		return ((SelectRecommenders)getWizard()
 				.getPage(IronManWizard.SELECT_RECOMMENDER_PAGE_NAME)).mapServerToSelectedRecommender();
 	}
@@ -91,7 +91,8 @@ public class SelectTargetItems extends WizardPage {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible == true & this.refresh == true) {
-			this.checkboxTreeViewer.setInput(mapServerToSelectedRecommender());
+			this.checkboxTreeViewer.setInput(mapServerToSelectedRecommender()
+					.values().stream().flatMap(List::stream).collect(Collectors.toList()));
 			this.checkboxTreeViewer.refresh();	
 			this.checkboxTreeViewer.expandAll();
 			this.refresh = false;
@@ -102,25 +103,26 @@ public class SelectTargetItems extends WizardPage {
 		return checkboxTreeViewer;
 	}
 	
-	public Map<String,List<Recommender>> getSelectedServerToRecommender() {
-		final Map<String,List<Recommender>> selectedServerToRecommender = 
-				new HashMap<String, List<Recommender>>();
+	public Map<String,List<Service>> getSelectedServerToRecommender() {
+		final Map<String,List<Service>> selectedServerToRecommender = 
+				new HashMap<String, List<Service>>();
 		final Object[] selectedElements = this.checkboxTreeViewer.getCheckedElements();
-		List<Recommender> currentRecList = null;
+		List<Service> currentRecList = null;
 		List<String> currrentItems = null;
 		for (Object object : selectedElements) {
 			if (object instanceof Map.Entry) {
 				final Map.Entry<?,?> entryMap = (Map.Entry<?,?>) object;
 				final String url =  (String) entryMap.getKey();
-				currentRecList = new ArrayList<Recommender>();
+				currentRecList = new ArrayList<Service>();
 				selectedServerToRecommender.put(url, currentRecList);				
-			} else if (object instanceof Recommender) {
-				final Recommender rec = (Recommender) object;
-				final Recommender copyRec = new Recommender(rec);
-				copyRec.getDetails().getItems().clear();
-				currrentItems = new ArrayList<String>();
-				copyRec.getDetails().setItems(currrentItems);
-				currentRecList.add(rec);				
+			} else if (object instanceof Service) {
+				final Service rec = (Service) object;
+				//TODO fix
+//				final Service copyRec = new Service(rec);
+//				copyRec.getDetail().getItems().clear();
+//				currrentItems = new ArrayList<String>();
+//				copyRec.getDetail().setItems(currrentItems);
+//				currentRecList.add(rec);				
 			} else if (object instanceof String) {
 				currrentItems.add((String) object);				
 			}			

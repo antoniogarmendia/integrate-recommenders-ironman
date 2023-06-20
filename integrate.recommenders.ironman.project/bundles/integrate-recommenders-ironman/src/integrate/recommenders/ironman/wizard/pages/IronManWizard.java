@@ -10,15 +10,12 @@ import static integrate.recommenders.ironman.wizard.utils.IronManWizardUtils.*;
 import integrate.recommenders.ironman.definition.integration.EvaluateContributionsHandler;
 import integrate.recommenders.ironman.definition.integration.IIntegration;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
-import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.definition.services.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 public class IronManWizard extends Wizard implements INewWizard {
 	
@@ -113,7 +110,7 @@ public class IronManWizard extends Wizard implements INewWizard {
 		return this.modellingLanguages.getMapping();
 	}
 	
-	public Map<String,List<Recommender>> getSelectedServerToRecommender() {
+	public Map<String,List<Service>> getSelectedServerToRecommender() {
 		return selectTargetItems.getSelectedServerToRecommender();
 	}
 	
