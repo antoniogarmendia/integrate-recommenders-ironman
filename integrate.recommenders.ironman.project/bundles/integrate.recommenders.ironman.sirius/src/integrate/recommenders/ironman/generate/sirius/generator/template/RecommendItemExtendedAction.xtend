@@ -60,6 +60,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					if (targetEObject instanceof «this.recommender.details.targetEClass.name») {
 						final «this.recommender.details.targetEClass.name» target = ((«this.recommender.details.targetEClass.name») targetEObject);
 						//TODO EMF Jackson convert from XMI to JSON
+						//TODO feature read
 						final RecommenderCase recommenderCase = getRecommenderCase(target.getName());
 						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
 						//Merge 
