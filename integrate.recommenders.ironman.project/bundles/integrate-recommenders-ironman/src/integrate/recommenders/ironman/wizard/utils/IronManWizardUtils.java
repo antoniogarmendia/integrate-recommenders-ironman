@@ -58,10 +58,10 @@ public final class IronManWizardUtils {
 			CallAPIJSON<AllRecommenders> callAPI = new CallAPIJSON<AllRecommenders>(config);
 			//create ObjectMapper instance
 			ObjectMapper objectMapper = new ObjectMapper();
-			final String jsonResponse = callAPI.doRequest();			;
+			final String jsonResponse = callAPI.doRequest();			
 			try {
 				final AllRecommenders allRecommenders = objectMapper.readValue(jsonResponse, AllRecommenders.class);
-				recommenderToServices.put(url, allRecommenders.getRecommenders());			
+				recommenderToServices.put(url, allRecommenders.getServices());			
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
@@ -105,18 +105,18 @@ public final class IronManWizardUtils {
 	}
 
 	public static void deselectParentIfAnyChildSelected(TreeItem item) {
-		//Check all the tree items
-		boolean isAtLeastOneItemChecked = false;
-		for (TreeItem treeItemChild : item.getParentItem().getItems()) {
-			if (treeItemChild.getChecked() == true) {
-				isAtLeastOneItemChecked = true;
-				break;
-			}					
-		}
-		if (isAtLeastOneItemChecked == false) {
-			item.getParentItem().setChecked(false);
-			deselectParentIfAnyChildSelected(item.getParentItem());
-		}			
+		//Check all the tree items TODO fix
+//		boolean isAtLeastOneItemChecked = false;
+//		for (TreeItem treeItemChild : item.getParentItem().getItems()) {
+//			if (treeItemChild.getChecked() == true) {
+//				isAtLeastOneItemChecked = true;
+//				break;
+//			}					
+//		}
+//		if (isAtLeastOneItemChecked == false) {
+//			item.getParentItem().setChecked(false);
+//			deselectParentIfAnyChildSelected(item.getParentItem());
+//		}			
 	}
 
 	public static void selectAllTreeItemChildren(final TreeItem item) {

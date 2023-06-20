@@ -6,13 +6,13 @@ import java.util.List;
 public class AllRecommenders {
 	
 	//Services
-	private List<Service> recommenders = new ArrayList<Service>();
+	private List<Service> services = new ArrayList<Service>();
 	
-	public void setRecommenders(List<Service> recommenders) {
-		this.recommenders = recommenders;
+	public void setRecommenders(List<Service> services) {
+		this.services = services;
 	}
 	
-	public List<Service> getRecommenders() {
-		return recommenders;
+	public List<Service> getServices() {
+		return services;
 	}
 }

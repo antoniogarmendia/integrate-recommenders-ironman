@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@Deprecated
 @JsonIgnoreProperties(value = { "targetEClass" , "itemsEStrucFeat"})
 public class TargetItems {
 	
@@ -46,26 +47,26 @@ public class TargetItems {
 		return items;
 	}
 	
-	public EClass getTargetEClass() {
-		if(this.targetEClass == null) {
-			this.targetEClass = getService().getEPackage()
-									.getEClassifiers().stream()
-									.filter(eClassifier -> eClassifier.getName().equals(this.target))
-									.findAny()
-									.map(EClass.class::cast)
-									.orElseThrow()
-									;	
-		}			
-		return this.targetEClass;	
-	}
-	
-	public EList<EStructuralFeature> getItemsEStrucFeat() {
-		if (this.itemsEStrucFeat.isEmpty()) {
-			this.itemsEStrucFeat = getTargetEClass().getEAllStructuralFeatures()
-										.stream()
-										.filter(structFeat -> getItems().contains(structFeat.getName()))
-										.collect(Collectors.toCollection(BasicEList::new));
-		}
-		return itemsEStrucFeat;
-	}
+//	public EClass getTargetEClass() {
+//		if(this.targetEClass == null) {
+//			this.targetEClass = getService().getEPackage()
+//									.getEClassifiers().stream()
+//									.filter(eClassifier -> eClassifier.getName().equals(this.target))
+//									.findAny()
+//									.map(EClass.class::cast)
+//									.orElseThrow()
+//									;	
+//		}			
+//		return this.targetEClass;	
+//	}
+//	
+//	public EList<EStructuralFeature> getItemsEStrucFeat() {
+//		if (this.itemsEStrucFeat.isEmpty()) {
+//			this.itemsEStrucFeat = getTargetEClass().getEAllStructuralFeatures()
+//										.stream()
+//										.filter(structFeat -> getItems().contains(structFeat.getName()))
+//										.collect(Collectors.toCollection(BasicEList::new));
+//		}
+//		return itemsEStrucFeat;
+//	}
 }

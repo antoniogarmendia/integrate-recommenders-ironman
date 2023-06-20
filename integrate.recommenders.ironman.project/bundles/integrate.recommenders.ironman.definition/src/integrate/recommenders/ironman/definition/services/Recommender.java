@@ -1,6 +1,6 @@
 package integrate.recommenders.ironman.definition.services;
 
-
+@Deprecated
 public class Recommender {
 	
 	private Service service;

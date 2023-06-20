@@ -51,7 +51,7 @@ public class SelectRecommenders extends WizardPage {
 		createColumns(checkboxTreeViewer);	
 				
 		checkboxTreeViewer.setContentProvider(new LanguageRecommenderContentProvider());	
-		checkboxTreeViewer.setInput(getWizard().getAllRecommenders());		
+		checkboxTreeViewer.setInput(getWizard().getServicesBySource());		
 		
 		final Composite configureTree = new Composite(container, SWT.NONE);
 		configureTree.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -69,15 +69,15 @@ public class SelectRecommenders extends WizardPage {
 	
 	private void createColumns(CheckboxTreeViewer checkboxTreeViewer) {
 		//Language & Recommenders Column
-		TreeViewerColumn languageColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.LEFT);
-		languageColumn.getColumn().setWidth(180);
+		TreeViewerColumn languageColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.CENTER);
+		languageColumn.getColumn().setWidth(300);
 		languageColumn.getColumn().setText("Language And Recommenders");
 		
 		//Provider Diagram Description Column
 		languageColumn.setLabelProvider(new LanguageRecommenderProvider());
 		
 		//Target Column
-		TreeViewerColumn targetColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.LEFT);
+		TreeViewerColumn targetColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.CENTER);
 		targetColumn.getColumn().setWidth(180);
 		targetColumn.getColumn().setText("Target");
 		
@@ -85,8 +85,8 @@ public class SelectRecommenders extends WizardPage {
 		targetColumn.setLabelProvider(new TargetRecommenderProvider());
 		
 		//Items Column
-		TreeViewerColumn itemsColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.LEFT);
-		itemsColumn.getColumn().setWidth(180);
+		TreeViewerColumn itemsColumn = new TreeViewerColumn(checkboxTreeViewer, SWT.CENTER);
+		itemsColumn.getColumn().setWidth(230);
 		itemsColumn.getColumn().setText("Items");
 		
 		//Provider Diagram Description Column

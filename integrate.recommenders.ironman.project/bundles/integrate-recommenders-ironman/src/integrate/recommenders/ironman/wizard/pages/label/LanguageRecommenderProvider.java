@@ -16,10 +16,12 @@ public class LanguageRecommenderProvider extends StyledCellLabelProvider {
 		if (element instanceof Map.Entry) {
 			cell.setText(((Map.Entry<?, ?>) element).getKey().toString());			
 		}
+		
 		if (element instanceof Service)
-			cell.setText(((Service) element).getNsURI());
-		if (element instanceof Recommender)
-			cell.setText(((Recommender) element).getName());
+			cell.setText(((Service) element).getName());
+		//TODO update
+//		if (element instanceof Recommender)
+//			cell.setText(((Recommender) element).getName());
 	}
 
 }

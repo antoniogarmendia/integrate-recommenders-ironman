@@ -22,8 +22,9 @@ public class LanguageRecommenderContentProvider implements ITreeContentProvider 
 				&& ((Map.Entry<?, ?>) parentElement).getValue() instanceof List) {
 			return ((List<?>)((Map.Entry<?, ?>) parentElement).getValue()).toArray();
 		}
-		if (parentElement instanceof Service)
-			return ((Service) parentElement).getServices().toArray();
+//		
+//		if (parentElement instanceof Service)
+//			return ((Service) parentElement).getDetails().toArray();
 		return null;
 	}
 
@@ -34,10 +35,11 @@ public class LanguageRecommenderContentProvider implements ITreeContentProvider 
 
 	@Override
 	public boolean hasChildren(Object element) {
+		//TODO update
 		if (element instanceof Map.Entry)
 			return true;
-		if (element instanceof Service)
-			return true;
+//		if (element instanceof Service)
+//			return true;
 		return false;
 	}
 

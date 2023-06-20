@@ -9,34 +9,50 @@ import java.util.List;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
 
-@JsonIgnoreProperties(value = { "ePackage" })
-@JsonDeserialize(using = ServiceDeserializer.class)
-public class Service {
+//TODO add in another class?
+//@JsonIgnoreProperties(value = { "ePackage" })
+//@JsonDeserialize(using = ServiceDeserializer.class)
+public class Service {	
 	
-	private String nsURI;
-	private List<Recommender> services = new ArrayList<Recommender>();
-	private EPackage ePackage = null;
+	private String name;
+	private List<Detail> details;
 	
-	public List<Recommender> getServices() {
-		return services;
+	public String getName() {
+		return name;
 	}
 	
-	public void setServices(List<Recommender> services) {
-		this.services = services;
+	public List<Detail> getDetails() {
+		return details;
 	}
 	
-	public void setNsURI(String nsURI) {
-		this.nsURI = nsURI;
+	public Detail getDetail() {
+		return getDetails().get(0);
 	}
 	
-	public String getNsURI() {
-		return nsURI;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public EPackage getEPackage() {
-		if (ePackage == null) {
-			this.ePackage = EPackageRegistryImpl.INSTANCE.getEPackage(this.nsURI);
-		}
-		return this.ePackage;
-	}	
+	public void setDetails(List<Detail> details) {
+		this.details = details;
+	}
+	
+	//TODO getEPackage() use nsURI
+	//private String nsURI;
+	//private EPackage ePackage = null;
+//	public void setNsURI(String nsURI) {
+//		this.nsURI = nsURI;
+//	}
+//	
+//	public String getNsURI() {
+//		return nsURI;
+//	}
+
+	//TODO add in another class?
+//	public EPackage getEPackage() {
+//		if (ePackage == null) {
+//			this.ePackage = EPackageRegistryImpl.INSTANCE.getEPackage(this.nsURI);
+//		}
+//		return this.ePackage;
+//	}	
 }
