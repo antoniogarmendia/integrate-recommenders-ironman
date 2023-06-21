@@ -22,6 +22,8 @@ import integrate.recommenders.ironman.wizard.pages.contents.MLConfigureLanguageC
 import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetLangElements;
 import integrate.recommenders.ironman.wizard.pages.label.MLSourceLanguageProvider;
 import integrate.recommenders.ironman.wizard.pages.label.MLTargetLanguageProvider;
+import integrate.recommenders.ironman.wizard.pages.label.TargetEClassLanguageProvider;
+import integrate.recommenders.ironman.wizard.pages.label.TargetFeatureLanguageProvider;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
@@ -134,19 +136,31 @@ public class ConfigureModellingLanguage extends WizardPage {
 		//Target and Items (Source Language)
 		TreeViewerColumn srcLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
 		srcLanguageColumn.getColumn().setWidth(180);
-		srcLanguageColumn.getColumn().setText("Source Language - Target and Items");
-		
+		srcLanguageColumn.getColumn().setText("Source Language - Target and Items");		
 		//Provider Target and Items from the Source Language
 		srcLanguageColumn.setLabelProvider(new MLSourceLanguageProvider());
 		
+		//Type EClass column
+		TreeViewerColumn typeEClassLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
+		typeEClassLanguageColumn.getColumn().setWidth(220);
+		typeEClassLanguageColumn.getColumn().setText("Target Language - Type EClass");		
+		//Provide the EClass that match with the selected language
+		typeEClassLanguageColumn.setLabelProvider(new TargetEClassLanguageProvider());
+				
 		//Target and Items (Target Language)
 		TreeViewerColumn targetLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
 		targetLanguageColumn.getColumn().setWidth(220);
 		targetLanguageColumn.getColumn().setText("Target Language - Write Feature");
 		targetLanguageColumn.setEditingSupport(new EditingTargetLangElements(this.configureLangTreeViewer, this.mapping));
-		
 		//Provide Target and Items from the Target Language
-		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());		
+		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());	
+		
+		//Feature Column
+		TreeViewerColumn featureLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
+		featureLanguageColumn.getColumn().setWidth(220);
+		featureLanguageColumn.getColumn().setText("Target Language - Feature");	
+		//Provide Target and Items from the Target Language
+		featureLanguageColumn.setLabelProvider(new TargetFeatureLanguageProvider());			
 	}
 	
 	@Override
