@@ -2,6 +2,10 @@ package integrate.recommenders.ironman.definition.services;
 
 import java.util.ArrayList;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
+
 public class Detail {
 	
 	private String nsURI;
@@ -10,6 +14,8 @@ public class Detail {
 	private String id;
 	private ArrayList<Item> items;
 	private String target;
+	private EPackage ePackage = null;
+	private EClass targetEClass = null;
 	
 	public String getNsURI() {
 		return nsURI;
@@ -53,5 +59,25 @@ public class Detail {
 	
 	public void setTarget(String target) {
 		this.target = target;
+	}
+	
+	public EPackage getEPackage() {
+		if (ePackage == null) {
+			this.ePackage = EPackageRegistryImpl.INSTANCE.getEPackage(this.nsURI);
+		}
+		return this.ePackage;
+	}
+	
+	public EClass getTargetEClass() {
+		if(this.targetEClass == null) {
+			this.targetEClass = this.getEPackage()
+									.getEClassifiers().stream()
+									.filter(eClassifier -> eClassifier.getName().equals(this.target))
+									.findAny()
+									.map(EClass.class::cast)
+									.orElseThrow()
+									;	
+		}			
+		return this.targetEClass;	
 	}
 }

@@ -15,7 +15,6 @@ import org.eclipse.sirius.diagram.description.DiagramDescription;
 import org.eclipse.sirius.viewpoint.description.Group;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;
 
-import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.Activator;
 
@@ -95,11 +94,10 @@ public final class DesignGeneratorUtils {
 		for (Map.Entry<String, List<Service>> entry : recommenderToServices.entrySet()) {
 			final List<Service> listOfServices = entry.getValue();
 			for (Service service : listOfServices) {
-				for (Recommender recommend : service.getServices()) {
-					for(String item:  recommend.getDetails().getItems()) {
-						setOfItems.add(item);						
-					}					
-				}
+				final List<String> listOfItems = service.getDetail().getItems()
+														.stream().map(i -> i.getRead())
+														.toList();
+				setOfItems.addAll(listOfItems);			
 			}			
 		}		
 		return setOfItems;

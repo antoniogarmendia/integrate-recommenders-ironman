@@ -66,10 +66,8 @@ class RecommenderUtils implements IGeneration {
 		«var i = 1»
 		«FOR Map.Entry<String, List<Service>> entryRecommend : recommenderToServices.entrySet»
 			public static final String URL_RECOMMENDER_«i++» = "«entryRecommend.key»";
-			«FOR services: entryRecommend.value»
-				«FOR service: services.services»
+			«FOR service: entryRecommend.value»
 				public static final String RECOMMENDER_«i»_«service.name» = "«service.name»";
-				«ENDFOR»
 			«ENDFOR»			
 		«ENDFOR»
 		'''

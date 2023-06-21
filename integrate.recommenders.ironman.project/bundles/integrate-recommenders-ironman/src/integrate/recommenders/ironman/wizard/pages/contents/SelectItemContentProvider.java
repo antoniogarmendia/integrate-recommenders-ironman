@@ -1,11 +1,9 @@
 package integrate.recommenders.ironman.wizard.pages.contents;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
-import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.definition.services.Service;
 
 public class SelectItemContentProvider implements ITreeContentProvider {
@@ -35,6 +33,5 @@ public class SelectItemContentProvider implements ITreeContentProvider {
 			return true;		
 		return false;
 	}
-
 	
 }

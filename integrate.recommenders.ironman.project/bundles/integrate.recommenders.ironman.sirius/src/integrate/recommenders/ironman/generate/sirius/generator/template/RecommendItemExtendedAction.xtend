@@ -13,8 +13,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	val Map<String,List<Service>> recommenderToServices;
 	val String item;
-	val Map.Entry<String, List<Service>> service;
-	var Recommender recommender;
+	val Map.Entry<String, List<Service>> entryService;
 	val String packageNameUtils;
 	val String packageNameDialog;
 	val String dataFusionAlgorithm;
@@ -25,7 +24,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		super(className,packageName);
 		this.recommenderToServices = recommenderToServices;
 		this.item = item;
-		this.service = getService;
+		this.entryService = getService;
 		this.packageNameUtils = packageNameUtils;
 		this.packageNameDialog = packageNameDialog;
 		this.dataFusionAlgorithm = dataFusionAlgorithm;
@@ -42,9 +41,8 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	//Return the recommender
 	def boolean existRecommender(Service service) {
-		val rec = service.services.stream.filter( r | r.details.items.contains(this.item)).findAny.orElse(null);
+		val rec = service.detail.items.stream.filter(i | i.read.equals(this.item)).findAny.orElse(null);
 		if (rec !== null) {
-			this.recommender = rec;	
 			return true;
 		}	
 		return false;		
@@ -57,8 +55,8 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 				if (selectedNode instanceof DNodeList) {
 					var nodeList = (DNodeList) selectedNode;
 					final EObject targetEObject = nodeList.getTarget();
-					if (targetEObject instanceof «this.recommender.details.targetEClass.name») {
-						final «this.recommender.details.targetEClass.name» target = ((«this.recommender.details.targetEClass.name») targetEObject);
+«««					if (targetEObject instanceof «this.entryService.recommender.details.targetEClass.name») {
+«««						final «this.recommender.details.targetEClass.name» target = ((«this.recommender.details.targetEClass.name») targetEObject);
 						//TODO EMF Jackson convert from XMI to JSON
 						//TODO feature read
 						final RecommenderCase recommenderCase = getRecommenderCase(target.getName());
@@ -102,7 +100,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import java.util.AbstractMap;
 			import integrate.recommenders.ironman.definition.algorithm.EvaluateMetaSearchContributionHandler;
 			import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
-			import «GenModelUtils.getPackageClassFromEClassifier(this.recommender.details.targetEClass)»;
+«««			import «GenModelUtils.getPackageClassFromEClassifier(this.recommender.details.targetEClass)»;
 			import «GenModelUtils.getPackageClassFromEClassifier(this.getEType)»;
 			import «this.packageNameUtils».RecommenderCase;
 			import «this.packageNameDialog».RecommenderData;
@@ -157,8 +155,8 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	}
 	
 	def EClassifier getEType() {
-		val struct = this.recommender.details.targetEClass.getEStructuralFeature(item);
-		struct.EType;		
+		//val struct = this.service.detail.targetEClass.getEStructuralFeature(item);
+		//struct.EType;		
 	}
 	
 	def String allRecommenders(){
@@ -170,9 +168,9 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					Arrays.asList(
 					//List of Recommenders
 					«FOR Service service: entryRecommend.value»
-						«FOR Recommender recommender: service.services SEPARATOR ','»
-						RECOMMENDER_«i»_«recommender.name»
-						«ENDFOR»
+«««						«FOR Recommender recommender: service.services SEPARATOR ','»
+«««						RECOMMENDER_«i»_«recommender.name»
+«««						«ENDFOR»
 					«ENDFOR»
 					))
 			«ELSE»
@@ -183,8 +181,9 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	}
 	
 	def boolean recommendTypeOfItem(Map.Entry<String, List<Service>> entryRecommend) {
-		return entryRecommend.value.stream.filter(serv | 
-			serv.services.stream.filter( r | r.details.items.contains(this.item)).findFirst.isEmpty === false		
-		).count > 0;	
+//		return entryRecommend.value.stream.filter(serv | 
+//			serv.services.stream.filter( r | r.details.items.contains(this.item)).findFirst.isEmpty === false		
+//		).count > 0;
+		return false;
 	}	
 }

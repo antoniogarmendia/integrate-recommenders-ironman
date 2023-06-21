@@ -1,12 +1,9 @@
 package integrate.recommenders.ironman.wizard.pages.label;
 
-import java.util.Map;
-
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 
 import integrate.recommenders.ironman.definition.services.Item;
-import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.definition.services.Service;
 
 public class SelectItemRecommenderProvider extends CellLabelProvider {
@@ -19,13 +16,6 @@ public class SelectItemRecommenderProvider extends CellLabelProvider {
 		}
 		if (element instanceof Item)
 			cell.setText(((Item) element).getRead());
-		//TODO fix
-//		if (element instanceof Map.Entry) {
-//			cell.setText((String)((Map.Entry<?, ?>) element).getKey());
-//		}
-//		if (element instanceof String)
-//			cell.setText((String) element);
-//		System.out.println(element.toString());
 	}
 
 }

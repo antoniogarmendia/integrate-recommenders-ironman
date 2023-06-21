@@ -40,12 +40,10 @@ class MetaInfRecommender extends MetaInfTemplate {
 			 org.eclipse.sirius.diagram,
 			 «FOR Map.Entry<String, List<Service>> service: recommenderToServices.entrySet»
 			 	«FOR serv: service.value»
-			 		«FOR Recommender rec: serv.services»
-			 			«IF !(rec.details.targetEClass instanceof EClass)»
-			 «GenModelUtils.getProjectFromEClass(rec.details.targetEClass)»				
-			 			«ENDIF»
-			 		«ENDFOR»
-			 	«ENDFOR»
+			 		«IF !(serv.detail.targetEClass instanceof EClass)»
+			 «GenModelUtils.getProjectFromEClass(serv.detail.targetEClass)»				
+			 		«ENDIF»
+			  	«ENDFOR»
 			 «ENDFOR»
 			 org.eclipse.emf,
 			 integrate.recommenders.ironman.definition,

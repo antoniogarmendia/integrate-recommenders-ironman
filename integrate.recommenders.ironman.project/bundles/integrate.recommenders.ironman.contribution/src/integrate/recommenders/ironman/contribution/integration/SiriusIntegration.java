@@ -51,7 +51,7 @@ public class SiriusIntegration implements IIntegration {
 		//First Check Mapping
 		if (this.mapping != null)
 			return this.mapping.getEPackage().getNsURI();
-		return this.recommenderToServices.entrySet().stream().findAny().get().getValue().get(0).getNsURI();
+		return this.recommenderToServices.entrySet().stream().findAny().get().getValue().get(0).getDetail().getNsURI();
 	}
 
 	@Override

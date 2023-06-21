@@ -70,7 +70,7 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 	private String getTarget(Map<String, List<Service>> recommenderToServices) {
 		final String target = recommenderToServices.entrySet()
 									.stream().findAny().orElseThrow()
-									.getValue().get(0).getServices().get(0).getDetails().getTarget();
+									.getValue().get(0).getDetail().getTarget();
 		return target;		
 	}
 	
@@ -88,7 +88,7 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 	}
 	
 	private EPackage getEPackageByNsURI(Map<String, List<Service>> recommenderToServices) {
-		final String nsURI = recommenderToServices.entrySet().stream().findAny().orElseThrow().getValue().get(0).getNsURI();
+		final String nsURI = recommenderToServices.entrySet().stream().findAny().orElseThrow().getValue().get(0).getDetail().getNsURI();
 		return EPackageRegistryImpl.INSTANCE.getEPackage(nsURI);		
 	}
 }
