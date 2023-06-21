@@ -17,7 +17,6 @@ import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.mapping.MapItemElement;
 import integrate.recommenders.ironman.definition.mapping.MapTargetElement;
 import integrate.recommenders.ironman.definition.services.Item;
-import integrate.recommenders.ironman.definition.services.Recommender;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.wizard.pages.contents.MLConfigureLanguageContentProvider;
 import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetLangElements;
@@ -180,12 +179,10 @@ public class ConfigureModellingLanguage extends WizardPage {
 					sourceToTargetMap.put(entryTargetElement, new ArrayList<MapItemElement>());
 				}
 				for(Item item: recommender.getDetail().getItems()) {
-					//final boolean isItemPresent = isItemPresent(sourceToTargetMap.get(entryTargetElement), item); 
-					final boolean isItemPresent = true;//TODO fix^^
+					final boolean isItemPresent = isItemPresent(sourceToTargetMap.get(entryTargetElement), item.getRead()); 
 					if (!isItemPresent) {		
-						//TODO fix
-						//final MapItemElement itemElement = new MapItemElement(item, null);
-						//sourceToTargetMap.get(entryTargetElement).add(itemElement);						
+						final MapItemElement itemElement = new MapItemElement(item.getRead(), null);
+						sourceToTargetMap.get(entryTargetElement).add(itemElement);						
 					}					
 				}
 			}			

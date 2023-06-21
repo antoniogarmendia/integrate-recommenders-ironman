@@ -105,18 +105,20 @@ public class EditingTargetLangElements extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		if (element instanceof Entry) {
-			final Entry<?, ?> entry = (Entry<?, ?>) element;
-			if ((Integer) value != -1) {
-				this.eClass = this.listOfEClasses.get((Integer) value);
-				((MapTargetElement)entry.getKey()).setTargetElement(eClass);
+		if (element instanceof Integer && ((Integer)element) != -1 ) {
+			if (element instanceof Entry) {
+				final Entry<?, ?> entry = (Entry<?, ?>) element;
+				if ((Integer) value != -1) {
+					this.eClass = this.listOfEClasses.get((Integer) value);
+					((MapTargetElement)entry.getKey()).setTargetElement(eClass);
+					getViewer().update(element, null);
+				} 
+			} else if (element instanceof MapItemElement) {
+				final EStructuralFeature strucFeat = this.listOfFeatures.get((Integer) value);
+				((MapItemElement) element).setWriteElement(strucFeat);
 				getViewer().update(element, null);
-			} 
-		} else if (element instanceof MapItemElement) {
-			final EStructuralFeature strucFeat = this.listOfFeatures.get((Integer) value);
-			((MapItemElement) element).setWriteElement(strucFeat);
-			getViewer().update(element, null);
-		}	
+			}
+		}
 	}	
 	
 }
