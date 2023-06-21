@@ -1,21 +1,30 @@
 package integrate.recommenders.ironman.definition.services;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
-
-//TODO add in another class?
-//@JsonIgnoreProperties(value = { "ePackage" })
-//@JsonDeserialize(using = ServiceDeserializer.class)
 public class Service {	
 	
 	private String name;
 	private List<Detail> details;
+	
+	public Service() {
+		// Do nothing
+	}
+	
+	public Service(String name) {
+		this.name = name;
+		this.details = new ArrayList<Detail>();
+	}
+	
+	public Service(Service service) {
+		this.name = service.getName();
+		this.details = new ArrayList<Detail>();
+		final Detail detail = new Detail(service.getDetail().getNsURI(),
+				service.getDetail().hasContext(), service.getDetail().getSource(),
+				service.getDetail().getId(), service.getDetail().getTarget());
+		this.details.add(detail);
+	}
 	
 	public String getName() {
 		return name;
@@ -36,23 +45,4 @@ public class Service {
 	public void setDetails(List<Detail> details) {
 		this.details = details;
 	}
-	
-	//TODO getEPackage() use nsURI
-	//private String nsURI;
-	//private EPackage ePackage = null;
-//	public void setNsURI(String nsURI) {
-//		this.nsURI = nsURI;
-//	}
-//	
-//	public String getNsURI() {
-//		return nsURI;
-//	}
-
-	//TODO add in another class?
-//	public EPackage getEPackage() {
-//		if (ePackage == null) {
-//			this.ePackage = EPackageRegistryImpl.INSTANCE.getEPackage(this.nsURI);
-//		}
-//		return this.ePackage;
-//	}	
 }

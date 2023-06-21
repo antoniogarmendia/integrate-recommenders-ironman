@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
+import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.wizard.pages.contents.SelectItemContentProvider;
 import integrate.recommenders.ironman.wizard.pages.label.SelectItemRecommenderProvider;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class SelectTargetItems extends WizardPage {
 	
 	private CheckboxTreeViewer checkboxTreeViewer;
+	private Map<String,List<Service>> mapServiceToRecommender;
 	
 	private boolean refresh;
 	
@@ -31,6 +33,7 @@ public class SelectTargetItems extends WizardPage {
 		super(pageName);	
 		setTitle(IRONMAN_WIZARD_PAGE_SELECT_TARGET_ITEMS_NAME);
 		this.refresh = true;
+		this.mapServiceToRecommender = null;
 	}
 
 	@Override
@@ -83,8 +86,11 @@ public class SelectTargetItems extends WizardPage {
 	}
 	
 	public Map<String,List<Service>> mapServerToSelectedRecommender() {
-		return ((SelectRecommenders)getWizard()
+		if (this.mapServiceToRecommender == null)
+			this.mapServiceToRecommender = 
+			((SelectRecommenders)getWizard()
 				.getPage(IronManWizard.SELECT_RECOMMENDER_PAGE_NAME)).mapServerToSelectedRecommender();
+		return this.mapServiceToRecommender;
 	}
 	
 	@Override
@@ -107,26 +113,36 @@ public class SelectTargetItems extends WizardPage {
 		final Map<String,List<Service>> selectedServerToRecommender = 
 				new HashMap<String, List<Service>>();
 		final Object[] selectedElements = this.checkboxTreeViewer.getCheckedElements();
-		List<Service> currentRecList = null;
-		List<String> currrentItems = null;
+		Service currentService = null;
 		for (Object object : selectedElements) {
-			if (object instanceof Map.Entry) {
-				final Map.Entry<?,?> entryMap = (Map.Entry<?,?>) object;
-				final String url =  (String) entryMap.getKey();
-				currentRecList = new ArrayList<Service>();
-				selectedServerToRecommender.put(url, currentRecList);				
-			} else if (object instanceof Service) {
-				final Service rec = (Service) object;
-				//TODO fix
-//				final Service copyRec = new Service(rec);
-//				copyRec.getDetail().getItems().clear();
-//				currrentItems = new ArrayList<String>();
-//				copyRec.getDetail().setItems(currrentItems);
-//				currentRecList.add(rec);				
-			} else if (object instanceof String) {
-				currrentItems.add((String) object);				
-			}			
+			if (object instanceof Service) {
+				//Search in the map
+				final Service service = (Service) object;
+				Map.Entry<String, List<Service>> entryRecommender = entryService(service);
+				List<Service> listOfServices = selectedServerToRecommender.get(entryRecommender.getKey());
+				final Service newService = new Service(service);
+				currentService = newService;
+				if (listOfServices == null) {					
+					final List<Service> newListOfServices = new ArrayList<Service>();
+					newListOfServices.add(newService);
+					selectedServerToRecommender.put(entryRecommender.getKey(), newListOfServices);					
+				} else {
+					listOfServices.add(newService);					
+				}					
+			} else if (object instanceof Item) {
+				final Item newItem = new Item((Item) object);
+				currentService.getDetail().getItems().add(newItem);
+			}
 		}		
 		return selectedServerToRecommender;
+	}
+	
+	private Map.Entry<String, List<Service>> entryService(Service service) {
+		for (Map.Entry<String, List<Service>> entryRecommender : this.mapServiceToRecommender.entrySet()) {
+			final List<Service> listOfServices = entryRecommender.getValue();
+			if (listOfServices.contains(service))
+				return entryRecommender;
+		}
+		throw new IllegalArgumentException("Illegal service as parameter: " + service.toString());
 	}
 }

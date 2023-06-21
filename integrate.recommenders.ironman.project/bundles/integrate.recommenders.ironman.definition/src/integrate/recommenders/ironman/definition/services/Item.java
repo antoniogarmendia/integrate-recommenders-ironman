@@ -5,7 +5,17 @@ public class Item {
 	private String features;
 	private String read;
 	private String write;
+	
+	public Item() {
+		// Do nothing
+	}
     
+	public Item(Item item) {
+		this.features = item.features;
+		this.read = item.read;
+		this.write = item.write;
+	}
+	
     public String getFeatures() {
 		return features;
 	}

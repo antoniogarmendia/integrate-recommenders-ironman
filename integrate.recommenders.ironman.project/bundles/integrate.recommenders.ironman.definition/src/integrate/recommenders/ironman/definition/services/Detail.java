@@ -16,7 +16,20 @@ public class Detail {
 	private String target;
 	private EPackage ePackage = null;
 	private EClass targetEClass = null;
+
+	public Detail() {
+		// Do nothing
+	}
 	
+	public Detail(String nsURI, boolean context, String source, String id, String target) {
+		this.nsURI = nsURI;
+		this.context = context;
+		this.source = source;
+		this.id = id;
+		this.target = target;
+		this.items = new ArrayList<Item>();
+	}
+
 	public String getNsURI() {
 		return nsURI;
 	}
