@@ -12,7 +12,7 @@ public class TargetFeatureLanguageProvider extends CellLabelProvider {
 		final Object element = cell.getElement();
 		if (element instanceof MapItemElement) {
 			final MapItemElement mapItemElement = (MapItemElement) element;
-			if (mapItemElement.getTypeEClass() != null) 
+			if (mapItemElement.getFeature() != null) 
 				cell.setText(mapItemElement.getFeature().getName());
 		}
 	}
