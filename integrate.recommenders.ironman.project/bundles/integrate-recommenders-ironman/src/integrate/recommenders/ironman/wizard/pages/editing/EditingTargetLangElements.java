@@ -105,7 +105,7 @@ public class EditingTargetLangElements extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		if (element instanceof Integer && ((Integer)element) != -1 ) {
+		if (value instanceof Integer && ((Integer) value) != -1) {
 			if (element instanceof Entry) {
 				final Entry<?, ?> entry = (Entry<?, ?>) element;
 				if ((Integer) value != -1) {

@@ -140,13 +140,6 @@ public class ConfigureModellingLanguage extends WizardPage {
 		//Provider Target and Items from the Source Language
 		srcLanguageColumn.setLabelProvider(new MLSourceLanguageProvider());
 		
-		//Type EClass column
-		TreeViewerColumn typeEClassLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
-		typeEClassLanguageColumn.getColumn().setWidth(220);
-		typeEClassLanguageColumn.getColumn().setText("Target Language - Type EClass");		
-		//Provide the EClass that match with the selected language
-		typeEClassLanguageColumn.setLabelProvider(new TargetEClassLanguageProvider());
-				
 		//Target and Items (Target Language)
 		TreeViewerColumn targetLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
 		targetLanguageColumn.getColumn().setWidth(220);
@@ -155,6 +148,13 @@ public class ConfigureModellingLanguage extends WizardPage {
 		//Provide Target and Items from the Target Language
 		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());	
 		
+		//Type EClass column
+		TreeViewerColumn typeEClassLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
+		typeEClassLanguageColumn.getColumn().setWidth(220);
+		typeEClassLanguageColumn.getColumn().setText("Target Language - Type EClass");		
+		//Provide the EClass that match with the selected language
+		typeEClassLanguageColumn.setLabelProvider(new TargetEClassLanguageProvider());
+				
 		//Feature Column
 		TreeViewerColumn featureLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
 		featureLanguageColumn.getColumn().setWidth(220);
