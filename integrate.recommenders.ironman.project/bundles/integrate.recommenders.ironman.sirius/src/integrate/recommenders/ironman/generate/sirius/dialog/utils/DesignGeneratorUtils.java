@@ -88,7 +88,8 @@ public final class DesignGeneratorUtils {
         }
 		return "";
 	}
-
+	
+	//Return all the items (String)
 	public static Set<String> getAllItems(Map<String, List<Service>> recommenderToServices) {
 		final Set<String> setOfItems = new HashSet<String>();
 		for (Map.Entry<String, List<Service>> entry : recommenderToServices.entrySet()) {

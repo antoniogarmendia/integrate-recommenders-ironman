@@ -64,7 +64,14 @@ public class SelectTargetItems extends WizardPage {
 		
 		WidgetFactory.button(SWT.NONE).text("Collapse All").onSelect(
 				e -> {this.checkboxTreeViewer.collapseAll();})
-						.create(configureTree);		
+						.create(configureTree);	
+		
+		WidgetFactory.button(SWT.NONE).text("Select All").onSelect(
+				e -> {
+					for (Object element : this.checkboxTreeViewer.getExpandedElements()) {
+						this.checkboxTreeViewer.setSubtreeChecked(element, true);
+					}					
+				}).create(configureTree);	
 		
 		setControl(container);
 		setPageComplete(true);		

@@ -59,7 +59,7 @@ public class ConfigureModellingTools extends WizardPage {
 				if (selection == true) {
 					var integration = extensionToIntegration.get(btn.getText());
 					//Check the extension
-					final Map<String, List<Service>> serverToServices = getWizard().getAllSelectedRecommenders();
+					final Map<String, List<Service>> serverToServices = getWizard().getSelectedServerToRecommender();
 					boolean configure = EvaluateContributionsHandler.executeConfigure(integration,
 							serverToServices, 
 							getWizard().getMappingConfiguration().getEPackage() != null 
