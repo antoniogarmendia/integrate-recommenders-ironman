@@ -19,6 +19,7 @@ import integrate.recommenders.ironman.definition.mapping.MapTargetElement;
 import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.wizard.pages.contents.MLConfigureLanguageContentProvider;
+import integrate.recommenders.ironman.wizard.pages.editing.EditingFeatureTargetLangElements;
 import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetEClassLangElements;
 import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetLangElements;
 import integrate.recommenders.ironman.wizard.pages.label.MLSourceLanguageProvider;
@@ -161,6 +162,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 		TreeViewerColumn featureLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
 		featureLanguageColumn.getColumn().setWidth(220);
 		featureLanguageColumn.getColumn().setText("Target Language - Feature");	
+		featureLanguageColumn.setEditingSupport(new EditingFeatureTargetLangElements(this.configureLangTreeViewer));
 		//Provide Target and Items from the Target Language
 		featureLanguageColumn.setLabelProvider(new TargetFeatureLanguageProvider());			
 	}

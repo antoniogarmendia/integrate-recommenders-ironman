@@ -5,7 +5,6 @@ import project.generator.api.template.MetaInfTemplate
 import java.util.Map
 import java.util.List
 import integrate.recommenders.ironman.definition.services.Service
-import integrate.recommenders.ironman.definition.services.Recommender
 import org.eclipse.emf.ecore.EClass
 import project.generator.api.utils.GenModelUtils
 
