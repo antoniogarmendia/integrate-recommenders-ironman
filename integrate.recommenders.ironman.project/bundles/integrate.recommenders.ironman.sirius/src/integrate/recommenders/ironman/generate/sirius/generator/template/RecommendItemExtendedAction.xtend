@@ -151,6 +151,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		'''
 	}
 	
+	//TODO ongoing work
 	def EClassifier getEType() {
 		//val struct = this.service.detail.targetEClass.getEStructuralFeature(item);
 		//struct.EType;		

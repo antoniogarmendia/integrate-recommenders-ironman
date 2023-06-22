@@ -78,7 +78,9 @@ public class IronManWizard extends Wizard implements INewWizard {
 			for (Service service : listOfServices) {
 				final List<Service> services = mapServicesBySource.get(service.getDetail().getSource());
 				if (services == null) {
-					mapServicesBySource.put(service.getDetail().getSource(), new ArrayList<Service>());
+					final List<Service> newListServices = new ArrayList<Service>();
+					newListServices.add(service);
+					mapServicesBySource.put(service.getDetail().getSource(), newListServices);
 				} else {
 					services.add(service);
 				}
