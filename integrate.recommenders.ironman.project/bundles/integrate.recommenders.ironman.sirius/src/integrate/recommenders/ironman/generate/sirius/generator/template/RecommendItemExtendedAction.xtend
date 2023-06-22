@@ -4,7 +4,6 @@ import java.util.List
 import java.util.Map
 import project.generator.api.template.sirius.ExternalJavaActionTemplate
 import integrate.recommenders.ironman.definition.services.Service
-import integrate.recommenders.ironman.definition.services.Recommender
 import project.generator.api.utils.GenModelUtils
 import java.util.stream.Collectors
 import org.eclipse.emf.ecore.EClassifier
@@ -13,7 +12,6 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	val Map<String,List<Service>> recommenderToServices;
 	val String item;
-	val Map.Entry<String, List<Service>> entryService;
 	val String packageNameUtils;
 	val String packageNameDialog;
 	val String dataFusionAlgorithm;
@@ -24,7 +22,6 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		super(className,packageName);
 		this.recommenderToServices = recommenderToServices;
 		this.item = item;
-		this.entryService = getService;
 		this.packageNameUtils = packageNameUtils;
 		this.packageNameDialog = packageNameDialog;
 		this.dataFusionAlgorithm = dataFusionAlgorithm;
