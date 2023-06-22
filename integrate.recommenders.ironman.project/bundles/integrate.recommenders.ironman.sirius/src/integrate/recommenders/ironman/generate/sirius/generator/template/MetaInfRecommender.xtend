@@ -7,6 +7,8 @@ import java.util.List
 import integrate.recommenders.ironman.definition.services.Service
 import org.eclipse.emf.ecore.EClass
 import project.generator.api.utils.GenModelUtils
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.common.util.BasicEList
 
 class MetaInfRecommender extends MetaInfTemplate {
 	
@@ -37,12 +39,8 @@ class MetaInfRecommender extends MetaInfTemplate {
 			 org.eclipse.sirius,
 			 org.eclipse.sirius.common.acceleo.aql,
 			 org.eclipse.sirius.diagram,
-			 «FOR Map.Entry<String, List<Service>> service: recommenderToServices.entrySet»
-			 	«FOR serv: service.value»
-			 		«IF !(serv.detail.targetEClass instanceof EClass)»
-			 «GenModelUtils.getProjectFromEClass(serv.detail.targetEClass)»				
-			 		«ENDIF»
-			  	«ENDFOR»
+			 «FOR eClass : listOfDifferentTarget»
+			 «GenModelUtils.getProjectFromEClass(eClass)»,				
 			 «ENDFOR»
 			 org.eclipse.emf,
 			 integrate.recommenders.ironman.definition,
@@ -50,6 +48,20 @@ class MetaInfRecommender extends MetaInfTemplate {
 			 com.fasterxml.jackson.core.jackson-core,
 			 com.fasterxml.jackson.core.jackson-databind
 		'''	
+	}
+	
+	def EList<EClass> listOfDifferentTarget() {
+		val listOfClasses = new BasicEList<EClass>();
+		for(Map.Entry<String, List<Service>> service: recommenderToServices.entrySet){
+			for (serv: service.value){
+				if (!serv.detail.targetEClass.name.equals("EClass")
+					&& !listOfClasses.contains(serv.detail.targetEClass)
+				){
+					listOfClasses.add(serv.detail.targetEClass);
+				}
+			}			
+		}
+		return listOfClasses;
 	}
 	
 	override automaticModuleName() {

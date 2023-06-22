@@ -1,8 +1,11 @@
 package integrate.recommenders.ironman.generate.sirius.dialog.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -15,6 +18,7 @@ import org.eclipse.sirius.diagram.description.DiagramDescription;
 import org.eclipse.sirius.viewpoint.description.Group;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;
 
+import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.Activator;
 
@@ -90,7 +94,7 @@ public final class DesignGeneratorUtils {
 	}
 	
 	//Return all the items (String)
-	public static Set<String> getAllItems(Map<String, List<Service>> recommenderToServices) {
+	public static Set<String> getAllStringItems(Map<String, List<Service>> recommenderToServices) {
 		final Set<String> setOfItems = new HashSet<String>();
 		for (Map.Entry<String, List<Service>> entry : recommenderToServices.entrySet()) {
 			final List<Service> listOfServices = entry.getValue();
@@ -103,4 +107,26 @@ public final class DesignGeneratorUtils {
 		}		
 		return setOfItems;
 	}	
+	
+	//Return all the Item object
+	public static Map<Item,List<Service>> getAllItems(Map<String, List<Service>> recommenderToServices) {
+		final Map<Item,List<Service>> itemToServices = new HashMap<Item,List<Service>>();
+		for (Map.Entry<String, List<Service>> entry : recommenderToServices.entrySet()) {
+			final List<Service> listOfServices = entry.getValue();
+			for (Service service : listOfServices) {
+				for (Item item : service.getDetail().getItems()) {
+					final Optional<Item> optionalItem = 
+							itemToServices.keySet().stream().filter(i -> i.getRead().equals(item.getRead())).findAny();
+					if (!optionalItem.isPresent()) {
+						final List<Service> services = new ArrayList<Service>();
+						services.add(service);
+						itemToServices.put(item,services);
+					} else {
+						itemToServices.get(optionalItem.get()).add(service);						
+					}
+				}							
+			}			
+		}		
+		return itemToServices;
+	}
 }

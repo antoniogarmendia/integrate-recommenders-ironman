@@ -5,8 +5,6 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
-import integrate.recommenders.ironman.definition.services.Service;
-
 public class LanguageRecommenderContentProvider implements ITreeContentProvider {
 
 	@Override

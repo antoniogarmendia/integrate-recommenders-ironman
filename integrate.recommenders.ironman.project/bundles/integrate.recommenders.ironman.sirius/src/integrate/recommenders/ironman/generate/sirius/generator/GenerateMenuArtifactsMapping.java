@@ -10,6 +10,7 @@ import org.eclipse.sirius.viewpoint.description.Group;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.api.IStrategyGenerateMenu;
 
+@Deprecated
 public class GenerateMenuArtifactsMapping implements IStrategyGenerateMenu {
 
 	@Override

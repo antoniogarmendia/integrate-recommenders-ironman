@@ -1,7 +1,7 @@
 package integrate.recommenders.ironman.generate.sirius.generator;
 
 import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.PACKAGE_ACTIONS;
-import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.getAllItems;
+import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.*;
 import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.getViewpointURIFromDiagramDescription;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 		//Get PopupMenu
 		final PopupMenu popupMenu = currentDiagDescrip.getLayers().get(0).getToolSections().get(0).getPopupMenus().get(0);
 		popupMenu.setLabel("Recommender-" + getTarget(recommenderToServices));
-		final Set<String> setOfItems = getAllItems(recommenderToServices);
+		final Set<String> setOfItems = getAllStringItems(recommenderToServices);
 		//Add menu for each item
 		for (String item : setOfItems) {
 			ExternalJavaAction externalJavaAction = ToolFactory.eINSTANCE.createExternalJavaAction();

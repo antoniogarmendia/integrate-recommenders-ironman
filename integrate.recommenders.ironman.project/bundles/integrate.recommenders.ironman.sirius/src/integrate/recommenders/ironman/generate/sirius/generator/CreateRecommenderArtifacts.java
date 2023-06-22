@@ -14,6 +14,7 @@ import org.eclipse.sirius.diagram.description.DiagramDescription;
 import org.eclipse.sirius.viewpoint.description.Group;
 
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
+import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.api.IStrategyGenerateMenu;
 import integrate.recommenders.ironman.generate.sirius.generator.template.MetaInfRecommender;
@@ -47,11 +48,7 @@ public class CreateRecommenderArtifacts {
 		this.recommenderToServices = recommenderToServices;
 		this.dataFusionAlgorithm = dataFusionAlgorithm;
 		this.mapping = mapping;
-		if (this.mapping == null) {
-			this.generateMenu = new GenerateMenuArtifacts();
-		} else {
-			this.generateMenu = new GenerateMenuArtifactsMapping();
-		}
+		this.generateMenu = new GenerateMenuArtifacts();	
 	}
 	
 	public void doGenerateViewpointSpecificationProject() {
@@ -88,21 +85,25 @@ public class CreateRecommenderArtifacts {
 		final String packageName = viewpointProject.getName() + PACKAGE_ACTIONS;
 		final String packageNameUtils = viewpointProject.getName() + PACKAGE_UTILS;
 		final String packageNameDialog = viewpointProject.getName() + PACKAGE_DIALOG;
-		final Set<String> setOfItems = getAllItems(this.recommenderToServices);
+		final Set<String> setOfItems = getAllStringItems(this.recommenderToServices);
+		final Map<Item,List<Service>> itemToService = getAllItems(this.recommenderToServices);
 		
 		generateInfrastructureClasses(viewpointProject, allFiles, packageName, packageNameUtils, packageNameDialog, setOfItems);
 		
 		generateDialogClasses(viewpointProject, packageNameDialog, packageNameUtils, allFiles);
 		
 		//Actions package
-		for (String item : setOfItems) {
-			final String className = "Recommend" + item;
+		for (Map.Entry<Item, List<Service>> entry : itemToService.entrySet()) {
+			final Item item = entry.getKey();
+			final List<Service> service = entry.getValue();
+			final String className = "Recommend" + item.getRead();
 			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
 						className + ".java", 
 					new RecommendItemExtendedAction(className, packageName, packageNameUtils, 
-							packageNameDialog, item, this.recommenderToServices, this.dataFusionAlgorithm).doGenerate()));
-		}
+							packageNameDialog, item, this.recommenderToServices, this.dataFusionAlgorithm,
+							this.mapping, service).doGenerate()));
+		}	
 		
 		return allFiles;
 	}

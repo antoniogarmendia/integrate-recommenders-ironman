@@ -7,24 +7,31 @@ import integrate.recommenders.ironman.definition.services.Service
 import project.generator.api.utils.GenModelUtils
 import java.util.stream.Collectors
 import org.eclipse.emf.ecore.EClassifier
+import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration
+import integrate.recommenders.ironman.definition.services.Item
 
 class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	val Map<String,List<Service>> recommenderToServices;
-	val String item;
+	val Item item;
+	val List<Service> services;
 	val String packageNameUtils;
 	val String packageNameDialog;
 	val String dataFusionAlgorithm;
+	val MLMappingConfiguration mapping;
 	
-	new(String className, String packageName, String packageNameUtils, String packageNameDialog, String item, 
-		Map<String,List<Service>> recommenderToServices, String dataFusionAlgorithm
+	new(String className, String packageName, String packageNameUtils, String packageNameDialog, Item item, 
+		Map<String,List<Service>> recommenderToServices, String dataFusionAlgorithm, MLMappingConfiguration mapping,
+		List<Service> services
 	) {
 		super(className,packageName);
 		this.recommenderToServices = recommenderToServices;
 		this.item = item;
+		this.services = services;
 		this.packageNameUtils = packageNameUtils;
 		this.packageNameDialog = packageNameDialog;
 		this.dataFusionAlgorithm = dataFusionAlgorithm;
+		this.mapping = mapping;
 	}
 	
 	//Return the Entry
@@ -52,8 +59,8 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 				if (selectedNode instanceof DNodeList) {
 					var nodeList = (DNodeList) selectedNode;
 					final EObject targetEObject = nodeList.getTarget();
-«««					if (targetEObject instanceof «this.entryService.recommender.details.targetEClass.name») {
-«««						final «this.recommender.details.targetEClass.name» target = ((«this.recommender.details.targetEClass.name») targetEObject);
+					if (targetEObject instanceof «this.services.get(0).detail.targetEClass.name») {
+						final «this.services.get(0).detail.targetEClass.name» target = ((«this.services.get(0).detail.targetEClass.name») targetEObject);
 						//TODO EMF Jackson convert from XMI to JSON
 						//TODO feature read
 						final RecommenderCase recommenderCase = getRecommenderCase(target.getName());
@@ -91,13 +98,13 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import org.eclipse.jface.window.Window;
 			import org.eclipse.ui.PlatformUI;
 			import org.eclipse.emf.ecore.util.EcoreUtil;
+			import org.eclipse.emf.ecore.EClass;
 			import org.eclipse.emf.ecore.EClassifier;
 			import org.eclipse.emf.ecore.EStructuralFeature;
 			import org.eclipse.emf.common.util.EList;
 			import java.util.AbstractMap;
 			import integrate.recommenders.ironman.definition.algorithm.EvaluateMetaSearchContributionHandler;
 			import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
-«««			import «GenModelUtils.getPackageClassFromEClassifier(this.recommender.details.targetEClass)»;
 			import «GenModelUtils.getPackageClassFromEClassifier(this.getEType)»;
 			import «this.packageNameUtils».RecommenderCase;
 			import «this.packageNameDialog».RecommenderData;
@@ -119,18 +126,19 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	def addSelectedRecommendation() {
 		'''
 		
-		private void addSelectRecommendation(List<RecommenderData> selectedRecommendations, EClass eClass) {
+		private void addSelectRecommendation(List<RecommenderData> selectedRecommendations, 
+			«this.services.get(0).detail.targetEClass.name» target) {
 			selectedRecommendations.stream().forEach(rec -> {
-				final EClassifier classifier = eClass.eClass().getEPackage().getEClassifier("«getEType.name»");
+				final EClassifier classifier = target.eClass().getEPackage().getEClassifier("«getEType.name»");
 				final «getEType.name» element = («getEType.name») EcoreUtil.create((EClass)classifier);
 				
 				//TODO Feature
 				element.setName(rec.getName());
 				
 				//TODO Write
-				EStructuralFeature structFeateAllAttributes = eClass.eClass().getEStructuralFeature("eStructuralFeatures");
+				EStructuralFeature structFeateAllAttributes = target.eClass().getEStructuralFeature("eStructuralFeatures");
 				@SuppressWarnings("unchecked")
-				EList<EObject> listOfAttributes =  (EList<EObject>) eClass.eGet(structFeateAllAttributes);
+				EList<EObject> listOfAttributes =  (EList<EObject>) target.eGet(structFeateAllAttributes);
 				listOfAttributes.add(element);
 				System.out.println("It does work");
 			});
@@ -151,30 +159,20 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		'''
 	}
 	
-	//TODO ongoing work
 	def EClassifier getEType() {
-		//val struct = this.service.detail.targetEClass.getEStructuralFeature(item);
-		//struct.EType;		
+		this.services.get(0).detail.targetEClass;			
 	}
 	
 	def String allRecommenders(){
 		'''
 		«var int i = 1»
-		«FOR Map.Entry<String, List<Service>> entryRecommend : recommenderToServices.entrySet»
-			«IF recommendTypeOfItem(entryRecommend)»
-				URL_RECOMMENDER_«i++»,
-					Arrays.asList(
-					//List of Recommenders
-					«FOR Service service: entryRecommend.value»
-«««						«FOR Recommender recommender: service.services SEPARATOR ','»
-«««						RECOMMENDER_«i»_«recommender.name»
-«««						«ENDFOR»
-					«ENDFOR»
+			URL_RECOMMENDER_«i++»,
+				Arrays.asList(
+				//List of Recommenders
+				«FOR Service service: services SEPARATOR ','»
+					RECOMMENDER_«i»_«service.name»						
+				«ENDFOR»
 					))
-			«ELSE»
-			«{i=i+1;null}»
-			«ENDIF»
-		«ENDFOR»		
 		'''
 	}
 	
