@@ -65,7 +65,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 						final EStructuralFeature struct = target.eClass().getEStructuralFeature("«item.features»");
 						final String value = target.eGet(struct).toString();									
 						
-						final RecommenderCase recommenderCase = getRecommenderCase(value,eClassifier);
+						final RecommenderCase recommenderCase = getRecommenderCase(value,eClassifier,target);
 						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
 						//Merge 
 						final Map<String, Double> dataFusion = EvaluateMetaSearchContributionHandler.
@@ -106,6 +106,10 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import org.eclipse.emf.common.util.EList;
 			import java.util.AbstractMap;
 			import integrate.recommenders.ironman.definition.algorithm.EvaluateMetaSearchContributionHandler;
+			import integrate.recommenders.ironman.definition.recommendation.Recommendation;
+			import integrate.recommenders.ironman.definition.recommendation.RecommendationRequest;
+			import integrate.recommenders.ironman.definition.recommendation.SpecAttribute;
+			import integrate.recommenders.ironman.definition.recommendation.Target;
 			import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
 			import «GenModelUtils.getPackageClassFromEClassifier(this.getEType)»;
 			import «this.packageNameUtils».RecommenderCase;
@@ -114,7 +118,9 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import java.util.Arrays;
 			import «this.packageNameDialog».RecommenderDialog;
 			import org.eclipse.swt.SWT;
-			import org.eclipse.swt.widgets.MessageBox;			
+			import org.eclipse.swt.widgets.MessageBox;		
+			import com.fasterxml.jackson.core.JsonProcessingException;
+			import com.fasterxml.jackson.databind.ObjectMapper;
 		'''
 	}
 	
@@ -122,6 +128,28 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		'''
 		«recommenderCase»
 		«addSelectedRecommendation»
+		«makeBody»
+		«targetToRequest»
+		'''
+	}
+	
+	def targetToRequest() {
+		'''
+		private Target getTarget(Class target, String targetName) {
+			final Target targetRequest = new Target();
+			targetRequest.setName(targetName);
+			final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«item.read»");
+			final EStructuralFeature getStructValue = target.eClass().getEStructuralFeature("«item.features»");
+			
+			@SuppressWarnings("unchecked")
+			EList<EObject> listOfElements =  (EList<EObject>) target.eGet(readStruct);
+			for (EObject eObject : listOfElements) {
+				final SpecAttribute specAttribute = new SpecAttribute();
+				specAttribute.setName(eObject.eGet(getStructValue).toString());
+				targetRequest.getEAttributes().add(specAttribute);
+			}		
+			return targetRequest;
+		}
 		'''
 	}
 	
@@ -131,14 +159,15 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		private void addSelectRecommendation(List<RecommenderData> selectedRecommendations, 
 			«this.services.get(0).detail.targetEClass.name» target) {
 			selectedRecommendations.stream().forEach(rec -> {
-				final EClassifier classifier = target.eClass().getEPackage().getEClassifier("«getEType.name»");
-				final «getEType.name» element = («getEType.name») EcoreUtil.create((EClass)classifier);
+				final EClassifier eClassifierRead = target.eClass().getEStructuralFeature("«item.read»").getEType();
+				final EStructuralFeature structFeature = ((EClass) eClassifierRead).getEStructuralFeature("«item.features»");
+				final EObject element = EcoreUtil.create((EClass)eClassifierRead);
 				
-				//TODO Feature
-				element.setName(rec.getName());
+				//eSet Feature
+				element.eSet(structFeature, rec.getName());
 				
-				//TODO Write
-				EStructuralFeature structFeateAllAttributes = target.eClass().getEStructuralFeature("eStructuralFeatures");
+				//Write
+				EStructuralFeature structFeateAllAttributes = target.eClass().getEStructuralFeature("«item.write»");
 				@SuppressWarnings("unchecked")
 				EList<EObject> listOfAttributes =  (EList<EObject>) target.eGet(structFeateAllAttributes);
 				listOfAttributes.add(element);
@@ -150,13 +179,14 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	def recommenderCase() {
 		'''
-			private RecommenderCase getRecommenderCase(String targetName, EClassifier eClassifier) {
+			private RecommenderCase getRecommenderCase(String targetName, EClassifier eClassifier, «this.services.get(0).detail.targetEClass.name» target) {
 				final Map<String, Collection<String>> urlToRecommenders = 	Map.ofEntries(
 						new AbstractMap.SimpleEntry<String, Collection<String>>(
 								«allRecommenders»
 						);
+				final String body = makeBody(target, targetName);
 				final String type = eClassifier.getName();
-				return new RecommenderCase(urlToRecommenders, type, targetName);
+				return new RecommenderCase(urlToRecommenders, type, body);
 			}
 		'''
 	}
@@ -175,6 +205,27 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					RECOMMENDER_«i»_«service.name»						
 				«ENDFOR»
 					))
+		'''
+	}
+	
+	def makeBody() {
+		'''
+		
+		private String makeBody(Class target, String targetName) {
+			final RecommendationRequest recRequest = new RecommendationRequest();
+			final Recommendation recommendation = new Recommendation();
+			recRequest.setRecommendation(recommendation);
+			recommendation.setTarget(getTarget(target,targetName));
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				final String result = objectMapper.writeValueAsString(recRequest);
+				return result;
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}		
+			return null;
+		}		
 		'''
 	}
 	

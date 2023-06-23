@@ -5,10 +5,15 @@ import java.util.List;
 
 public class Target {
 	
+	private String name;
 	private List<SpecAttribute> eAttributes;
 	
 	public Target() {
 		this.eAttributes = new ArrayList<SpecAttribute>();
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public List<SpecAttribute> getEAttributes() {
@@ -17,5 +22,9 @@ public class Target {
 	
 	public void setEAttributes(ArrayList<SpecAttribute> eAttributes) {
 		this.eAttributes = eAttributes;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 }
