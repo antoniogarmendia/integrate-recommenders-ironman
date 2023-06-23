@@ -15,5 +15,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
 Export-Package: integrate.recommenders.ironman.definition.algorithm,
  integrate.recommenders.ironman.definition.integration,
  integrate.recommenders.ironman.definition.mapping,
+ integrate.recommenders.ironman.definition.recommendation,
  integrate.recommenders.ironman.definition.recommenders,
  integrate.recommenders.ironman.definition.services

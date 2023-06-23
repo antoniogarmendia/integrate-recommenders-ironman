@@ -1,12 +1,17 @@
 package integrate.recommenders.ironman.definition.recommendation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Target {
 	
-	public ArrayList<SpecAttribute> eAttributes;
+	private List<SpecAttribute> eAttributes;
 	
-	public ArrayList<SpecAttribute> getEAttributes() {
+	public Target() {
+		this.eAttributes = new ArrayList<SpecAttribute>();
+	}
+	
+	public List<SpecAttribute> getEAttributes() {
 		return eAttributes;
 	}
 	

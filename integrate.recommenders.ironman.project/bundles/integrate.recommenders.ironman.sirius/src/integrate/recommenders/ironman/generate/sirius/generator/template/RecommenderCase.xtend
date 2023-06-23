@@ -21,12 +21,12 @@ class RecommenderCase implements IGeneration{
 			
 			private Map<String, Collection<String>> urlToRecommenders;
 			private String type;
-			private String targetName;
+			private String body;
 			
-			public RecommenderCase(Map<String, Collection<String>> urlToRecommenders, String type, String targetName) {
+			public RecommenderCase(Map<String, Collection<String>> urlToRecommenders, String type, String body) {
 				this.urlToRecommenders = urlToRecommenders;
 				this.type = type;
-				this.targetName = targetName;
+				this.body = body;
 			}
 		
 			public String getType() {
@@ -37,8 +37,8 @@ class RecommenderCase implements IGeneration{
 				return urlToRecommenders;
 			}	
 			
-			public String getTargetName() {
-				return targetName;
+			public String getBody() {
+				return body;
 			}
 		}
 		'''

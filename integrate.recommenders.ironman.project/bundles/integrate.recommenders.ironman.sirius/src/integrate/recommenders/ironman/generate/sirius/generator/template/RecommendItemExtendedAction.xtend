@@ -61,9 +61,11 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 					final EObject targetEObject = nodeList.getTarget();
 					if (targetEObject instanceof «this.services.get(0).detail.targetEClass.name») {
 						final «this.services.get(0).detail.targetEClass.name» target = ((«this.services.get(0).detail.targetEClass.name») targetEObject);
-						//TODO EMF Jackson convert from XMI to JSON
-						//TODO feature read
-						final RecommenderCase recommenderCase = getRecommenderCase(target.getName());
+						final EClassifier eClassifier = target.eClass().getEStructuralFeature("«item.read»").getEType();
+						final EStructuralFeature struct = target.eClass().getEStructuralFeature("«item.features»");
+						final String value = target.eGet(struct).toString();									
+						
+						final RecommenderCase recommenderCase = getRecommenderCase(value,eClassifier);
 						final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
 						//Merge 
 						final Map<String, Double> dataFusion = EvaluateMetaSearchContributionHandler.
@@ -148,12 +150,12 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	def recommenderCase() {
 		'''
-			private RecommenderCase getRecommenderCase(String targetName) {
+			private RecommenderCase getRecommenderCase(String targetName, EClassifier eClassifier) {
 				final Map<String, Collection<String>> urlToRecommenders = 	Map.ofEntries(
 						new AbstractMap.SimpleEntry<String, Collection<String>>(
 								«allRecommenders»
 						);
-				final String type = "«getEType.name»";
+				final String type = eClassifier.getName();
 				return new RecommenderCase(urlToRecommenders, type, targetName);
 			}
 		'''

@@ -38,6 +38,7 @@ class RecommenderUtils implements IGeneration {
 			
 			import integrate.recommenders.ironman.wizard.rest.api.CallAPIJSON;
 			import integrate.recommenders.ironman.wizard.rest.api.REQUEST_METHOD;
+			import integrate.recommenders.ironman.definition.recommendation.RecommendationRequest;
 			import integrate.recommenders.ironman.definition.recommenders.AllRecommendations;
 			import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
 			import static integrate.recommenders.ironman.wizard.utils.IronManRestAPIUtils.*;
@@ -57,7 +58,21 @@ class RecommenderUtils implements IGeneration {
 				«normalization»
 				«convertToOrderedList»
 				«recommenders»
+				«makeBody»
 			}			
+		'''
+	}
+	
+	def makeBody() {
+		'''
+		
+		private static String makeBody(RecommenderCase recommenderCase) {
+			final RecommendationRequest as = new RecommendationRequest();
+			
+				
+			// TODO Auto-generated method stub
+			return null;
+		}
 		'''
 	}
 	
@@ -77,16 +92,19 @@ class RecommenderUtils implements IGeneration {
 		'''
 		
 		public static Map<String, List<ItemRecommender>> getAllRecommendations(RecommenderCase recommenderCase) {
-			final String body = "{\"name\": \"" + recommenderCase.getTargetName() + "\"}";
+			final String body = makeBody(recommenderCase);
 			final Map<String, Collection<String>> urlRecommenders = recommenderCase.getUrlToRecommenders();
 			final Map<String, List<ItemRecommender>> recServerToItemRecommenders = new HashMap<String,List<ItemRecommender>>();
 			for (Map.Entry<String, Collection<String>> entry : urlRecommenders.entrySet()) {
 				final String recommenderURL = entry.getKey();
 				final Collection<String> collectionOfRecommenders = entry.getValue();
-				final AllRecommendations recommendations = getRecommendations(recommenderURL, 
-						String.join("," , collectionOfRecommenders), body, recommenderCase.getType());
-				final List<ItemRecommender> itemRecommenders = filterEmptyRecommendations(recommendations);			
-				recServerToItemRecommenders.put(recommenderURL,itemRecommenders);					
+				//Search per recommender and then, join
+				for (String recommenderName : collectionOfRecommenders) {
+					final AllRecommendations recommendations = getRecommendations(recommenderURL, 
+							recommenderName, body, recommenderCase.getType());
+					final List<ItemRecommender> itemRecommenders = filterEmptyRecommendations(recommendations);			
+					recServerToItemRecommenders.put(recommenderURL,itemRecommenders);			
+				}		
 			}
 			return recServerToItemRecommenders;
 		}
@@ -96,14 +114,13 @@ class RecommenderUtils implements IGeneration {
 	def getRecommendations() {
 		'''
 		
-		private static AllRecommendations getRecommendations(String url, String services, String body, 
+		private static AllRecommendations getRecommendations(String url, String service, String body, 
 				String type) {
 			final Map<String,String> param = new HashMap<String, String>();
-			param.put(SERVICES_URL, services);
 			param.put(ITEM_TYPE_PARAM, type);
-			
+						
 			final RestAPIConfiguration config = new RestAPIConfiguration
-					.Builder(url + RECOMMENDER_URL + "?", REQUEST_METHOD.POST)
+					.Builder(url + "/"+ RECOMMENDER_URL + "/" + service + "?", REQUEST_METHOD.POST)
 					.setParameters(param)
 					.setBody(body)
 					.build();
