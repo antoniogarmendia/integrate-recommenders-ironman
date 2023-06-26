@@ -22,8 +22,9 @@ class MetaInfRecommender extends MetaInfTemplate {
 	
 	override bundleNameSymbolic() {
 		'''
-			Bundle-Name: ProjectTreeIntegration
+			Bundle-Name: %pluginName
 			Bundle-SymbolicName: «this.project.name»;singleton:=true
+			Bundle-Activator: «this.project.name».Activator
 		'''
 	}
 	
@@ -72,6 +73,7 @@ class MetaInfRecommender extends MetaInfTemplate {
 	
 	override requiredExecutionEnvironment() {
 		'''
+			Bundle-ActivationPolicy: lazy
 			Bundle-RequiredExecutionEnvironment: JavaSE-17
 		'''
 	}	

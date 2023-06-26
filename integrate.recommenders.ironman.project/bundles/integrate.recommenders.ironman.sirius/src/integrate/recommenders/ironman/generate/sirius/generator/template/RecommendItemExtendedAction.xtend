@@ -135,7 +135,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	def targetToRequest() {
 		'''
-		private Target getTarget(Class target, String targetName) {
+		private Target getTarget(«this.services.get(0).detail.targetEClass.name» target, String targetName) {
 			final Target targetRequest = new Target();
 			targetRequest.setName(targetName);
 			final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«item.read»");
@@ -211,7 +211,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	def makeBody() {
 		'''
 		
-		private String makeBody(Class target, String targetName) {
+		private String makeBody(«this.services.get(0).detail.targetEClass.name» target, String targetName) {
 			final RecommendationRequest recRequest = new RecommendationRequest();
 			final Recommendation recommendation = new Recommendation();
 			recRequest.setRecommendation(recommendation);

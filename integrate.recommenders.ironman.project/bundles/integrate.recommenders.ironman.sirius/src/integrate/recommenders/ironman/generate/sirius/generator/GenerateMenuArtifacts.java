@@ -38,6 +38,7 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 			Map<String,List<Service>> recommenderToServices) {
 		// Get source diagram extension
 		final Viewpoint recommenderVp = groupBaseRecommender.getOwnedViewpoints().get(0);
+		recommenderVp.setName(recommenderVp.getName() + " " + projectName);
 		final DiagramExtensionDescription diagramDesc = (DiagramExtensionDescription) recommenderVp.getOwnedRepresentationExtensions().get(0);
 		for (DiagramDescription diagramDescription : selectedDiagramDesc) {
 			final DiagramExtensionDescription currentDiagDescrip = EcoreUtil.copy(diagramDesc);

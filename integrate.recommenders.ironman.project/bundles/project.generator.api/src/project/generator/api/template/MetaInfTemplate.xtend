@@ -20,7 +20,6 @@ abstract class MetaInfTemplate implements IGeneration {
 	override doGenerate() {
 		val StringBuilder content = new StringBuilder();
 		content.append(begin());
-		content.append(bundleNameSymbolic());
 		content.append(exportPackage());
 		content.append(requireBundle());
 		content.append(automaticModuleName());

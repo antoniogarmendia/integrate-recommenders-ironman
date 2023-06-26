@@ -31,7 +31,6 @@ public abstract class MetaInfTemplate implements IGeneration {
   public String doGenerate() {
     final StringBuilder content = new StringBuilder();
     content.append(this.begin());
-    content.append(this.bundleNameSymbolic());
     content.append(this.exportPackage());
     content.append(this.requireBundle());
     content.append(this.automaticModuleName());
