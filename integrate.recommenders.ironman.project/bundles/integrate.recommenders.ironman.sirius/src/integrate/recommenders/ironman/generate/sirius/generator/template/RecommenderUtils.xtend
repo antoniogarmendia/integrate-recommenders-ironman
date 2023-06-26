@@ -89,7 +89,11 @@ class RecommenderUtils implements IGeneration {
 							recommenderName, recommenderCase);
 					if (recommendations != null) {
 						final List<ItemRecommender> itemRecommenders = filterEmptyRecommendations(recommendations);			
-						recServerToItemRecommenders.put(recommenderURL,itemRecommenders);
+						var listOfItemRecommenders = recServerToItemRecommenders.get(recommenderURL);
+						if (listOfItemRecommenders != null)
+							listOfItemRecommenders.addAll(itemRecommenders);
+						else
+							recServerToItemRecommenders.put(recommenderURL,itemRecommenders);
 					}			
 				}		
 			}
