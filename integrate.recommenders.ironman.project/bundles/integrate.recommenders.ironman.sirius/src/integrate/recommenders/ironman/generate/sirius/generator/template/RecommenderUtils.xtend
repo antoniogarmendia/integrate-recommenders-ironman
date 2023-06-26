@@ -21,6 +21,7 @@ class RecommenderUtils implements IGeneration {
 		'''
 			package «packageName»;
 			
+			import java.text.DecimalFormat;
 			import java.util.ArrayList;
 			import java.util.Collection;
 			import java.util.Collections;
@@ -174,11 +175,12 @@ class RecommenderUtils implements IGeneration {
 																	  	        Map.Entry::getValue,
 																	  	        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 			
+			final var formatDoubleOneDecimal = new DecimalFormat("#0.0");
 			for (Map.Entry<String, Double> entry : sortedNormalizeMap.entrySet()) {
 				final String recommendation = entry.getKey();
 				final double rating = entry.getValue();
 				final String recommenders = recommenders(recServerToItemRecommenders,recommendation);			
-				RecommenderData recData = new RecommenderData(recommendation, recommenders, Double.toString(rating));
+				RecommenderData recData = new RecommenderData(recommendation, recommenders, formatDoubleOneDecimal.format(rating));
 				listOfRecommendations.add(recData);		
 			}		
 			return listOfRecommendations;

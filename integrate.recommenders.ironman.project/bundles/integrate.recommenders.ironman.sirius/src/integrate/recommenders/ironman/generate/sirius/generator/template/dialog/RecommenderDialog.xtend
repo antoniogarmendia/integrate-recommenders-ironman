@@ -50,7 +50,18 @@ class RecommenderDialog implements IGeneration {
 			}
 			«createDialogArea»
 			«configureShell»
-			«selectedRecommendations»
+			«selectedRecommendations»		
+			«createResizable»	
+		}
+		'''
+	}
+	
+	def createResizable() {
+		'''
+		
+		@Override
+		protected boolean isResizable() {
+		  return true;
 		}
 		'''
 	}
@@ -78,7 +89,7 @@ class RecommenderDialog implements IGeneration {
 			
 			//Recommender Column
 			final TableViewerColumn recColumn = new TableViewerColumn(tableOfRecommendations, SWT.CENTER);
-			recColumn.getColumn().setWidth(180);
+			recColumn.getColumn().setWidth(320);
 			recColumn.getColumn().setText("Recommenders");
 			recColumn.setLabelProvider(new RecColumLabelProvider());
 				
