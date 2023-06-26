@@ -3,12 +3,11 @@ package integrate.recommenders.ironman.wizard.pages.label;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 
-import integrate.recommenders.ironman.definition.mapping.MapItemElement;
-import integrate.recommenders.ironman.definition.mapping.MapTargetElement;
+import integrate.recommenders.ironman.definition.mapping.AbstractItemElement;
+import integrate.recommenders.ironman.definition.mapping.TargetElement;
 
 public class MLTargetLanguageProvider extends StyledCellLabelProvider {
 	
@@ -17,14 +16,14 @@ public class MLTargetLanguageProvider extends StyledCellLabelProvider {
 		Object element = cell.getElement();
 		if (element instanceof Entry) {
 			final Entry<?, ?> entry = (Entry<?, ?>) element;
-			final EClass eClass = ((MapTargetElement)entry.getKey()).getTargetElement();
+			final EClass eClass = ((TargetElement)entry.getKey()).getTargetElement();
 			if (eClass != null)			
 				cell.setText(eClass.getName());			
-		} else if (element instanceof MapItemElement) {
-			final ENamedElement structFeat = ((MapItemElement) element).getWriteElement();
-			if (structFeat != null)
-				cell.setText(structFeat.getName());
-		}
+		} else if (element instanceof AbstractItemElement) {
+			final AbstractItemElement abstractItemElement = ((AbstractItemElement) element);
+			if (abstractItemElement.getStructFeature() != null)
+				cell.setText(abstractItemElement.getStructFeature().getName());
+		}		
 	}
 
 }

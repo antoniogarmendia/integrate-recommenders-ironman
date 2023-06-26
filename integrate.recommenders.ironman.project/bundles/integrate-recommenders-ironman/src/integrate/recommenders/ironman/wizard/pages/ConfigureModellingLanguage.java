@@ -13,9 +13,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
+import integrate.recommenders.ironman.definition.mapping.AbstractItemElement;
+import integrate.recommenders.ironman.definition.mapping.ActualFeature;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
-import integrate.recommenders.ironman.definition.mapping.MapItemElement;
-import integrate.recommenders.ironman.definition.mapping.MapTargetElement;
+import integrate.recommenders.ironman.definition.mapping.ReadFeature;
+import integrate.recommenders.ironman.definition.mapping.TargetElement;
+import integrate.recommenders.ironman.definition.mapping.TargetItemElement;
+import integrate.recommenders.ironman.definition.mapping.WriteFeature;
 import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.wizard.pages.contents.MLConfigureLanguageContentProvider;
@@ -38,7 +42,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import static integrate.recommenders.ironman.wizard.utils.IronManWizardUtils.*;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,7 +51,7 @@ import java.util.Optional;
 public class ConfigureModellingLanguage extends WizardPage {
 
 	private Label labelNsUri;
-	private final MLMappingConfiguration mapping;
+	private MLMappingConfiguration mapping;
 	private Button mappingLanguageButton;
 	private TreeViewer configureLangTreeViewer;
 	private Button checkedButton;
@@ -56,7 +60,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 		super(pageName);
 		setTitle(IRONMAN_WIZARD_PAGE_CONFIGURE_MODELLING_LANGUAGE);	
 		//Get Selected Target & Items
-		mapping = new MLMappingConfiguration(null,null);
+		mapping = new MLMappingConfiguration();
 		this.mappingLanguageButton = null;
 		this.checkedButton = null;
 	}	
@@ -137,41 +141,41 @@ public class ConfigureModellingLanguage extends WizardPage {
 	private void createColumns() {
 		//Target and Items (Source Language)
 		TreeViewerColumn srcLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
-		srcLanguageColumn.getColumn().setWidth(180);
-		srcLanguageColumn.getColumn().setText("Source Language - Target and Items");		
+		srcLanguageColumn.getColumn().setWidth(220);
+		srcLanguageColumn.getColumn().setText("Recommender Language");		
 		//Provider Target and Items from the Source Language
 		srcLanguageColumn.setLabelProvider(new MLSourceLanguageProvider());
 		
 		//Target and Items (Target Language)
 		TreeViewerColumn targetLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.LEFT);
 		targetLanguageColumn.getColumn().setWidth(220);
-		targetLanguageColumn.getColumn().setText("Target Language - Write Feature");
+		targetLanguageColumn.getColumn().setText("Modelling Language");
 		targetLanguageColumn.setEditingSupport(new EditingTargetLangElements(this.configureLangTreeViewer, this.mapping));
 		//Provide Target and Items from the Target Language
 		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());	
 		
-		//Type EClass column
-		TreeViewerColumn typeEClassLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
-		typeEClassLanguageColumn.getColumn().setWidth(220);
-		typeEClassLanguageColumn.getColumn().setText("Target Language - Type EClass");	
-		typeEClassLanguageColumn.setEditingSupport(new EditingTargetEClassLangElements(this.configureLangTreeViewer, this.mapping));
+		//Type EClass column TODO remove??
+//		TreeViewerColumn typeEClassLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
+//		typeEClassLanguageColumn.getColumn().setWidth(220);
+//		typeEClassLanguageColumn.getColumn().setText("Target Language - Type EClass");	
+//		typeEClassLanguageColumn.setEditingSupport(new EditingTargetEClassLangElements(this.configureLangTreeViewer, this.mapping));
 		//Provide the EClass that match with the selected language
-		typeEClassLanguageColumn.setLabelProvider(new TargetEClassLanguageProvider());
+//		typeEClassLanguageColumn.setLabelProvider(new TargetEClassLanguageProvider());
 				
-		//Feature Column
-		TreeViewerColumn featureLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
-		featureLanguageColumn.getColumn().setWidth(220);
-		featureLanguageColumn.getColumn().setText("Target Language - Feature");	
-		featureLanguageColumn.setEditingSupport(new EditingFeatureTargetLangElements(this.configureLangTreeViewer));
-		//Provide Target and Items from the Target Language
-		featureLanguageColumn.setLabelProvider(new TargetFeatureLanguageProvider());			
+		//Feature Column TODO remove??
+//		TreeViewerColumn featureLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
+//		featureLanguageColumn.getColumn().setWidth(220);
+//		featureLanguageColumn.getColumn().setText("Target Language - Feature");	
+//		featureLanguageColumn.setEditingSupport(new EditingFeatureTargetLangElements(this.configureLangTreeViewer));
+//		//Provide Target and Items from the Target Language
+//		featureLanguageColumn.setLabelProvider(new TargetFeatureLanguageProvider());			
 	}
 	
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (this.mapping.getEPackage() == null) {		
-			this.mapping.setSourceToTargetMap(getSourcetoTargetMap());
+			this.mapping.setMapTargetElementToTargetItems(getMapTargetElementToTargetItems());
 			this.configureLangTreeViewer.refresh();
 			((Composite)getControl()).layout();
 		}
@@ -182,34 +186,47 @@ public class ConfigureModellingLanguage extends WizardPage {
 		return (IronManWizard) super.getWizard();
 	}
 	
-	private Map<MapTargetElement, List<MapItemElement>> getSourcetoTargetMap() {
-		final Map<String, List<Service>> selectedServerToRecommender 
-							= getWizard().getSelectedServerToRecommender();
-		final Map<MapTargetElement, List<MapItemElement>> sourceToTargetMap = new 
-				LinkedHashMap<MapTargetElement, List<MapItemElement>>();
+	private Map<TargetElement,List<TargetItemElement>> getMapTargetElementToTargetItems() {
+		final var selectedServerToRecommender 
+							= getWizard().getSelectedServerToRecommender();		
+		final var mapTargetElementToTargetItems = new  HashMap<TargetElement,List<TargetItemElement>>();		
 		for (Entry<String, List<Service>> entryRecommender : selectedServerToRecommender.entrySet()) {
 			final List<Service> recommenders = entryRecommender.getValue();
 			for (Service recommender : recommenders) {
-				MapTargetElement entryTargetElement = 
-						isTargetPresent(sourceToTargetMap, recommender.getDetail().getTarget()); 
-				if (entryTargetElement == null) {	
-					entryTargetElement = new MapTargetElement(recommender.getDetail().getTarget(), null);
-					sourceToTargetMap.put(entryTargetElement, new ArrayList<MapItemElement>());
+				TargetElement targetElement = isTargetPresent(mapTargetElementToTargetItems, 
+					recommender.getDetail().getTarget());
+				List<TargetItemElement> listOfItems = new ArrayList<TargetItemElement>();
+				if (targetElement == null) {
+					targetElement = new TargetElement(recommender.getDetail().getTarget());	
+					mapTargetElementToTargetItems.put(targetElement, listOfItems);
+				} else {
+					listOfItems = mapTargetElementToTargetItems.get(targetElement);
 				}
 				for(Item item: recommender.getDetail().getItems()) {
-					final boolean isItemPresent = isItemPresent(sourceToTargetMap.get(entryTargetElement), item.getRead()); 
-					if (!isItemPresent) {		
-						final MapItemElement itemElement = new MapItemElement(item.getRead(), null);
-						sourceToTargetMap.get(entryTargetElement).add(itemElement);						
+					final boolean isItemPresent = isItemPresent(mapTargetElementToTargetItems.get(targetElement), item); 
+					if (!isItemPresent) {
+						final TargetItemElement targetItemElement = new TargetItemElement();
+						new ReadFeature(targetItemElement, item.getRead());
+						new WriteFeature(targetItemElement, item.getWrite());
+						new ActualFeature(targetItemElement, item.getFeatures());						
+						listOfItems.add(targetItemElement);
 					}					
-				}
+				}				
 			}			
-		}		
-		return sourceToTargetMap;
+		}	
+		return mapTargetElementToTargetItems;
 	}
 	
-	private MapTargetElement isTargetPresent(final Map<MapTargetElement, List<MapItemElement>> sourceToTargetMap, String target) {
-		 final Optional<Entry<MapTargetElement, List<MapItemElement>>> targetElement = sourceToTargetMap.entrySet().stream()
+	private boolean isItemPresent(List<TargetItemElement> list, Item item) {
+		return list.stream().filter(i -> i.getFeature().getItem().equals(item.getFeatures())
+								&& i.getRead().getItem().equals(item.getRead())
+								&& i.getWrite().getItem().equals(item.getWrite())
+								).findAny()
+								.isPresent();	
+	}
+
+	private TargetElement isTargetPresent(final Map<TargetElement, List<TargetItemElement>> sourceToTargetMap, String target) {
+		final Optional<Entry<TargetElement, List<TargetItemElement>>> targetElement = sourceToTargetMap.entrySet().stream()
 			 .filter(e -> e.getKey().getSourceElement().equals(target))
 			 .findAny();
 		 if (targetElement.isPresent())
@@ -220,13 +237,4 @@ public class ConfigureModellingLanguage extends WizardPage {
 	public MLMappingConfiguration getMapping() {
 		return this.mapping;
 	}	
-	
-	private boolean isItemPresent(List<MapItemElement> listOfItems, String item) {
-		return listOfItems
-					.stream()
-					.filter(presentedItem -> presentedItem.getItem().equals(item))
-					.findAny()
-					.isPresent();	
-	}	
-
 }

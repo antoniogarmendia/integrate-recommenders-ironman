@@ -2,22 +2,17 @@ package integrate.recommenders.ironman.definition.mapping;
 
 import org.eclipse.emf.ecore.EClass;
 
-public class MapTargetElement {
+public class TargetElement {
 	
-	private String sourceElement;
+	private final String sourceElement;
 	private EClass targetElement;
 	
-	public MapTargetElement(String sourceElement, EClass targetElement) {
-		this.sourceElement = sourceElement;
-		this.targetElement = targetElement;
+	public TargetElement(String sourceElement) {
+		this.sourceElement = sourceElement;		
 	}
 
 	public String getSourceElement() {
 		return sourceElement;
-	}
-	
-	public void setSourceElement(String sourceElement) {
-		this.sourceElement = sourceElement;
 	}
 	
 	public EClass getTargetElement() {

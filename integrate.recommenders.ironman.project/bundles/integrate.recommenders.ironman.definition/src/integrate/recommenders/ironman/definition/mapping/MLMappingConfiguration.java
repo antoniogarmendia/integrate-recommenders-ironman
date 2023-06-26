@@ -9,15 +9,18 @@ import org.eclipse.emf.ecore.EPackage;
 public class MLMappingConfiguration {
 	
 	//Target and Items
-	//Key = target Element
-	private Map<MapTargetElement, List<MapItemElement>> sourceToTargetMap;
-	
+	private Map<TargetElement,List<TargetItemElement>> mapTargetElementToTargetItems;
+		
 	//GenModel that represents the language
-	private GenModel genModel;
+	private GenModel genModel;	
 	
-	public MLMappingConfiguration(Map<MapTargetElement,List<MapItemElement>> sourceToTargetMap, GenModel genModel) {
-		this.sourceToTargetMap = sourceToTargetMap;
-		this.genModel = genModel;
+	public void setMapTargetElementToTargetItems(
+			Map<TargetElement, List<TargetItemElement>> mapTargetElementToTargetItems) {
+		this.mapTargetElementToTargetItems = mapTargetElementToTargetItems;
+	}
+	
+	public Map<TargetElement, List<TargetItemElement>> getMapTargetElementToTargetItems() {
+		return mapTargetElementToTargetItems;
 	}
 	
 	public EPackage getEPackage() {
@@ -25,17 +28,9 @@ public class MLMappingConfiguration {
 			return this.genModel.getGenPackages().get(0).getEcorePackage();
 		else 
 			return null;
-	}
-	
-	public Map<MapTargetElement, List<MapItemElement>> getSourceToTargetMap() {
-		return sourceToTargetMap;
-	}
+	}	
 	
 	public void setGenModel(GenModel genModel) {
 		this.genModel = genModel;
 	}	
-	
-	public void setSourceToTargetMap(Map<MapTargetElement, List<MapItemElement>> sourceToTargetMap) {
-		this.sourceToTargetMap = sourceToTargetMap;
-	}
 }
