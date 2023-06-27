@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Editor
+Bundle-SymbolicName: integrate.recommenders.ironman.generate.tree.editor
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: integrate.recommenders.ironman.generate.tree.editor
+Bundle-RequiredExecutionEnvironment: JavaSE-17
