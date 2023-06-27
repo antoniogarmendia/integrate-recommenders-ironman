@@ -9,4 +9,8 @@ Require-Bundle: integrate.recommenders.ironman.definition;bundle-version="1.0.0"
  integrate.recommenders.ironman.generate.sirius;bundle-version="1.0.0",
  org.eclipse.ui;bundle-version="3.200.0",
  org.eclipse.emf.ecore,
- org.eclipse.sirius.diagram;bundle-version="6.6.0"
+ org.eclipse.sirius.diagram;bundle-version="6.6.0",
+ integrate.recommenders.ironman.generate.tree.editor,
+ project.generator.api,
+ org.eclipse.core.runtime;bundle-version="3.24.0",
+ org.eclipse.core.resources
