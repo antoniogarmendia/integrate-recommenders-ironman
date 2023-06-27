@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
-import integrate.recommenders.ironman.definition.mapping.AbstractItemElement;
 import integrate.recommenders.ironman.definition.mapping.ActualFeature;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
 import integrate.recommenders.ironman.definition.mapping.ReadFeature;
@@ -23,13 +22,9 @@ import integrate.recommenders.ironman.definition.mapping.WriteFeature;
 import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.wizard.pages.contents.MLConfigureLanguageContentProvider;
-import integrate.recommenders.ironman.wizard.pages.editing.EditingFeatureTargetLangElements;
-import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetEClassLangElements;
 import integrate.recommenders.ironman.wizard.pages.editing.EditingTargetLangElements;
 import integrate.recommenders.ironman.wizard.pages.label.MLSourceLanguageProvider;
 import integrate.recommenders.ironman.wizard.pages.label.MLTargetLanguageProvider;
-import integrate.recommenders.ironman.wizard.pages.label.TargetEClassLanguageProvider;
-import integrate.recommenders.ironman.wizard.pages.label.TargetFeatureLanguageProvider;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
@@ -76,6 +71,10 @@ public class ConfigureModellingLanguage extends WizardPage {
 				.create(container);					
 	
 		checkedButton.addListener(SWT.Selection, enableListener(container));
+		
+		WidgetFactory.label(SWT.NONE).create(container);
+		WidgetFactory.label(SWT.NONE).create(container);
+		
 		//Create composite to select the mapping to a language
 		this.labelNsUri = WidgetFactory.label(SWT.NONE).text("Mapping to Language: [Language not defined]").create(container);
 		//Button to Search Package
@@ -152,23 +151,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 		targetLanguageColumn.getColumn().setText("Modelling Language");
 		targetLanguageColumn.setEditingSupport(new EditingTargetLangElements(this.configureLangTreeViewer, this.mapping));
 		//Provide Target and Items from the Target Language
-		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());	
-		
-		//Type EClass column TODO remove??
-//		TreeViewerColumn typeEClassLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
-//		typeEClassLanguageColumn.getColumn().setWidth(220);
-//		typeEClassLanguageColumn.getColumn().setText("Target Language - Type EClass");	
-//		typeEClassLanguageColumn.setEditingSupport(new EditingTargetEClassLangElements(this.configureLangTreeViewer, this.mapping));
-		//Provide the EClass that match with the selected language
-//		typeEClassLanguageColumn.setLabelProvider(new TargetEClassLanguageProvider());
-				
-		//Feature Column TODO remove??
-//		TreeViewerColumn featureLanguageColumn = new TreeViewerColumn(this.configureLangTreeViewer, SWT.CENTER);
-//		featureLanguageColumn.getColumn().setWidth(220);
-//		featureLanguageColumn.getColumn().setText("Target Language - Feature");	
-//		featureLanguageColumn.setEditingSupport(new EditingFeatureTargetLangElements(this.configureLangTreeViewer));
-//		//Provide Target and Items from the Target Language
-//		featureLanguageColumn.setLabelProvider(new TargetFeatureLanguageProvider());			
+		targetLanguageColumn.setLabelProvider(new MLTargetLanguageProvider());				
 	}
 	
 	@Override

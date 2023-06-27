@@ -147,20 +147,16 @@ public class EditingTargetLangElements extends EditingSupport {
 		return true;
 	}
 
-	@Override //TODO update?
+	@Override 
 	protected Object getValue(Object element) {
 		if (element instanceof Entry) {
 			final Entry<?, ?> entry = (Entry<?, ?>) element;
 			return listOfEClasses.indexOf(((TargetElement)entry.getKey()).getTargetElement());
 		} 
-//		else if (element instanceof MapItemElement){
-//			final MapItemElement mapItemElement = (MapItemElement) element;
-//			return this.listOfFeatures.indexOf(mapItemElement.getWriteElement());			
-//		}
 		return 0;
 	}
 
-	@Override //TODO update?
+	@Override 
 	protected void setValue(Object element, Object value) {
 		if (value instanceof Integer && ((Integer) value) != -1) {
 			if (element instanceof Entry) {

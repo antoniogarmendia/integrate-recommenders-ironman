@@ -5,6 +5,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.widgets.LabelFactory;
@@ -12,6 +13,7 @@ import org.eclipse.jface.widgets.WidgetFactory;
 import org.eclipse.sirius.diagram.description.DiagramDescription;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -59,7 +61,12 @@ public class SiriusViewpointDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		final Composite container = (Composite) super.createDialogArea(parent);
-		LabelFactory.newLabel(SWT.NONE).text("Select Available Representations").create(container);
+		container.setLayout(GridLayoutFactory.fillDefaults().create());		
+		//container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL,GridData.FILL_VERTICAL));
+		LabelFactory.newLabel(SWT.NONE).text("Select Available Representations")
+			.create(container)
+			//.setLayoutData(new GridData(GridData.FILL,GridData.FILL, true, true));
+			;
 		
 		//Text Project Name
 		WidgetFactory.label(SWT.NONE).text("Project Name: ").create(container);
@@ -68,7 +75,9 @@ public class SiriusViewpointDialog extends Dialog {
 			.onModify(t -> {
 					projectName = ((Text)t.widget).getText();
 			})
-			.create(container);
+			.create(container)
+			.setLayoutData(new GridData(GridData.FILL,GridData.FILL, false, false));
+			;
 		
 		//Scrolled Composite
 		final ScrolledComposite sc = new ScrolledComposite(container, SWT.V_SCROLL);

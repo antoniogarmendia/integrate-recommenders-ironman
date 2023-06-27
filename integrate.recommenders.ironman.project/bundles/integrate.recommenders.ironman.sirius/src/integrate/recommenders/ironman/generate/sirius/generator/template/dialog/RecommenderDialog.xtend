@@ -38,14 +38,16 @@ class RecommenderDialog implements IGeneration {
 		public class RecommenderDialog extends Dialog {
 			
 			private final String target;
+			private final String property;
 			private CheckboxTableViewer tableOfRecommendations;
 			private final List<RecommenderData> recommendations;
 			private List<RecommenderData> selectedRecommendations;
 			
 			public RecommenderDialog(Shell parentShell, Map<String, List<ItemRecommender>> recServerToItemRecommenders, 
-					Map<String, Double> normalizeDataFusion, String target) {
+					Map<String, Double> normalizeDataFusion, String target, String property) {
 				super(parentShell);		
 				this.target = target;
+				this.property = property;
 				this.recommendations = convertToOrderedListOfRecommendations(recServerToItemRecommenders, normalizeDataFusion);		
 			}
 			«createDialogArea»
@@ -131,7 +133,7 @@ class RecommenderDialog implements IGeneration {
 		@Override
 		protected void configureShell(Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setText("Recommend " + "EAttribute " + "for " + this.target);
+			newShell.setText("Recommend " + this.property + " for " + this.target);
 		}
 		'''
 	}
