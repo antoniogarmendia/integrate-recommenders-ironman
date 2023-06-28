@@ -1,8 +1,6 @@
 package integrate.recommenders.ironman.generate.sirius.generator;
 
-import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.PACKAGE_ACTIONS;
 import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.*;
-import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.getViewpointURIFromDiagramDescription;
 
 import java.util.List;
 import java.util.Map;
@@ -90,6 +88,7 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 	
 	private EPackage getEPackageByNsURI(Map<String, List<Service>> recommenderToServices) {
 		final String nsURI = recommenderToServices.entrySet().stream().findAny().orElseThrow().getValue().get(0).getDetail().getNsURI();
+		Object asd = EPackageRegistryImpl.INSTANCE.getEPackage(nsURI); 
 		return EPackageRegistryImpl.INSTANCE.getEPackage(nsURI);		
 	}
 }

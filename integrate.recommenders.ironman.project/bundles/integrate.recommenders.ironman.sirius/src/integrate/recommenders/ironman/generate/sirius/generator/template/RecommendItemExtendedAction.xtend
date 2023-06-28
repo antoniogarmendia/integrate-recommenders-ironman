@@ -128,7 +128,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	
 	def String getTargetInstanceClass() {
 		if (mapping === null) {
-			return this.services.get(0).detail.targetEClass.name;
+			return this.services.get(0).detail.obtainTargetEClass.name;
 		} else 
 			return this.targetElement.targetElement.name;
 	}
@@ -271,12 +271,11 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			return "eClassifier.getName()";
 		} else {
 			return "\"" + this.targetItemElement.read.item + "\"";
-		}
-		
+		}		
 	}
 	
 	def EClassifier getEType() {
-		this.services.get(0).detail.targetEClass;			
+		this.services.get(0).detail.obtainTargetEClass;			
 	}
 	
 	def String allRecommenders(){

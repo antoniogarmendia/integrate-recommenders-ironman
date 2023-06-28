@@ -21,6 +21,7 @@ public class TreeEditor implements IIntegration {
 
 	public static final String TREE_EDITOR_INTEGRATION_SUFFIX = "tree.integration";
 	private String projectName;
+	private MLMappingConfiguration mapping;
 	
 	public TreeEditor() {
 		this.projectName = TREE_EDITOR_INTEGRATION_SUFFIX;
@@ -28,6 +29,7 @@ public class TreeEditor implements IIntegration {
 
 	@Override
 	public boolean configure(Map<String, List<Service>> recommenderToServices, MLMappingConfiguration mapping) {
+		this.mapping = mapping;
 		return true;
 	}
 
@@ -44,13 +46,13 @@ public class TreeEditor implements IIntegration {
 	@Override
 	public void generateIntegration(String dataFusionAlgorithm, Map<String, List<Service>> recommenderToServices) {
 		// Create Project
-		final ProjectFeatures projectFeat = new ProjectFeatures.Builder(TREE_EDITOR_INTEGRATION_SUFFIX)
+		final ProjectFeatures projectFeat = new ProjectFeatures.Builder(this.projectName)
 					.isJavaProject(true)
 					.javaSE("JavaSE-17")
 					.isPlugin(true)
 					.build();
 		final IProject project = new CreateProjectEngine(projectFeat).doGenerateProject(new NullProgressMonitor(), true);		
-		new GenerateTreeEditorProject(project,recommenderToServices).generateAll();	
+		new GenerateTreeEditorProject(project,recommenderToServices,mapping).generateAll();	
 	}
 
 }

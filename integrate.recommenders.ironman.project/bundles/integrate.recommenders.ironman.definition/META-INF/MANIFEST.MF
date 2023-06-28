@@ -4,14 +4,14 @@ Bundle-Name: Definition
 Bundle-SymbolicName: integrate.recommenders.ironman.definition;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: integrate.recommenders.ironman.definition
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-16
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.13.2",
  com.fasterxml.jackson.core.jackson-databind;bundle-version="2.13.2",
- org.eclipse.emf.ecore;bundle-version="2.25.0",
- com.fasterxml.jackson.core.jackson-core;bundle-version="2.13.2",
- org.eclipse.emf.codegen.ecore;bundle-version="2.28.0",
+ org.eclipse.emf.ecore,
+ com.fasterxml.jackson.core.jackson-core,
+ org.eclipse.emf.codegen.ecore,
  org.eclipse.equinox.registry,
- org.eclipse.core.runtime;bundle-version="3.24.0"
+ org.eclipse.core.runtime
 Export-Package: integrate.recommenders.ironman.definition.algorithm,
  integrate.recommenders.ironman.definition.integration,
  integrate.recommenders.ironman.definition.mapping,
