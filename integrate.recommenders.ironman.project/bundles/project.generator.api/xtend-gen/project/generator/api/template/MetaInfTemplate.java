@@ -1,40 +1,35 @@
 package project.generator.api.template;
 
-import org.eclipse.xtend2.lib.StringConcatenation;
-
-@SuppressWarnings("all")
 public abstract class MetaInfTemplate implements IGeneration {
-  public CharSequence begin() {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("Manifest-Version: 1.0");
-    _builder.newLine();
-    _builder.append("Bundle-ManifestVersion: 2");
-    _builder.newLine();
-    String _bundleNameSymbolic = this.bundleNameSymbolic();
-    _builder.append(_bundleNameSymbolic);
-    _builder.newLineIfNotEmpty();
-    _builder.append("Bundle-Version: 1.0.0.qualifier");
-    _builder.newLine();
-    return _builder;
+  public java.lang.CharSequence begin() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method bundleNameSymbolic() from the type MetaInfTemplate refers to the missing type String");
   }
 
-  public abstract String bundleNameSymbolic();
+  public abstract /* String */Object bundleNameSymbolic();
 
-  public abstract String exportPackage();
+  public abstract /* String */Object exportPackage();
 
-  public abstract String requireBundle();
+  public abstract /* String */Object requireBundle();
 
-  public abstract String automaticModuleName();
+  public abstract /* String */Object automaticModuleName();
 
-  public abstract String requiredExecutionEnvironment();
+  public abstract /* String */Object requiredExecutionEnvironment();
 
   public String doGenerate() {
-    final StringBuilder content = new StringBuilder();
-    content.append(this.begin());
-    content.append(this.exportPackage());
-    content.append(this.requireBundle());
-    content.append(this.automaticModuleName());
-    content.append(this.requiredExecutionEnvironment());
-    return content.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nStringBuilder cannot be resolved to a type."
+      + "\nStringBuilder cannot be resolved."
+      + "\nThe method begin() from the type MetaInfTemplate refers to the missing type java.lang.CharSequence"
+      + "\nThe method exportPackage() from the type MetaInfTemplate refers to the missing type String"
+      + "\nThe method requireBundle() from the type MetaInfTemplate refers to the missing type String"
+      + "\nThe method automaticModuleName() from the type MetaInfTemplate refers to the missing type String"
+      + "\nThe method requiredExecutionEnvironment() from the type MetaInfTemplate refers to the missing type String"
+      + "\nappend cannot be resolved"
+      + "\nappend cannot be resolved"
+      + "\nappend cannot be resolved"
+      + "\nappend cannot be resolved"
+      + "\nappend cannot be resolved"
+      + "\ntoString cannot be resolved");
   }
 }

@@ -5,6 +5,7 @@ public class Item {
 	private String features;
 	private String read;
 	private String write;
+	private String className;
 	
 	public Item() {
 		// Do nothing
@@ -28,6 +29,10 @@ public class Item {
 		return write;
 	}
     
+    public String getClassName() {
+		return className;
+	}
+    
     public void setFeatures(String features) {
 		this.features = features;
 	}
@@ -38,6 +43,10 @@ public class Item {
     
     public void setWrite(String write) {
 		this.write = write;
+	}
+    
+    public void setClassName(String className) {
+		this.className = className;
 	}
 
 }

@@ -81,7 +81,7 @@ public class Detail {
 		return this.ePackage;
 	}
 	
-	public EClass getTargetEClass() {
+	public EClass obtainTargetEClass() {
 		if(this.targetEClass == null) {
 			this.targetEClass = this.getEPackage()
 									.getEClassifiers().stream()
@@ -92,5 +92,5 @@ public class Detail {
 									;	
 		}			
 		return this.targetEClass;	
-	}
+	}			
 }

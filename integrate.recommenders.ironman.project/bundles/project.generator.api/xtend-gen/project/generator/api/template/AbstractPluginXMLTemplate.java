@@ -2,9 +2,8 @@ package project.generator.api.template;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
 
-@SuppressWarnings("all")
 public abstract class AbstractPluginXMLTemplate implements IGeneration {
-  public CharSequence begin() {
+  public java.lang.CharSequence begin() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     _builder.newLine();
@@ -15,17 +14,22 @@ public abstract class AbstractPluginXMLTemplate implements IGeneration {
     return _builder;
   }
 
-  public abstract String middle();
+  public abstract /* String */Object middle();
 
   public String doGenerate() {
-    final StringBuilder content = new StringBuilder();
-    content.append(this.begin());
-    content.append(this.middle());
-    content.append(this.end());
-    return content.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nStringBuilder cannot be resolved to a type."
+      + "\nStringBuilder cannot be resolved."
+      + "\nThe method begin() from the type AbstractPluginXMLTemplate refers to the missing type java.lang.CharSequence"
+      + "\nThe method middle() from the type AbstractPluginXMLTemplate refers to the missing type String"
+      + "\nThe method end() from the type AbstractPluginXMLTemplate refers to the missing type java.lang.CharSequence"
+      + "\nappend cannot be resolved"
+      + "\nappend cannot be resolved"
+      + "\nappend cannot be resolved"
+      + "\ntoString cannot be resolved");
   }
 
-  public CharSequence end() {
+  public java.lang.CharSequence end() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("</plugin>");
     _builder.newLine();

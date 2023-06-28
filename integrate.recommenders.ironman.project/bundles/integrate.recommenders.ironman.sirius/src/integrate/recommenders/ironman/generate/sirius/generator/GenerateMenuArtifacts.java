@@ -1,8 +1,6 @@
 package integrate.recommenders.ironman.generate.sirius.generator;
 
-import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.PACKAGE_ACTIONS;
 import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.*;
-import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.getViewpointURIFromDiagramDescription;
 
 import java.util.List;
 import java.util.Map;

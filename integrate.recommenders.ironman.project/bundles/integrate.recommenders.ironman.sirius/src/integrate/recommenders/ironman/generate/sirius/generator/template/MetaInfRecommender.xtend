@@ -55,10 +55,10 @@ class MetaInfRecommender extends MetaInfTemplate {
 		val listOfClasses = new BasicEList<EClass>();
 		for(Map.Entry<String, List<Service>> service: recommenderToServices.entrySet){
 			for (serv: service.value){
-				if (!serv.detail.targetEClass.name.equals("EClass")
-					&& !listOfClasses.contains(serv.detail.targetEClass)
+				if (!serv.detail.obtainTargetEClass.name.equals("EClass")
+					&& !listOfClasses.contains(serv.detail.obtainTargetEClass)
 				){
-					listOfClasses.add(serv.detail.targetEClass);
+					listOfClasses.add(serv.detail.obtainTargetEClass);
 				}
 			}			
 		}
