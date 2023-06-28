@@ -275,7 +275,11 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	}
 	
 	def EClassifier getEType() {
-		this.services.get(0).detail.obtainTargetEClass;			
+		if (this.mapping === null) {
+			return this.services.get(0).detail.obtainTargetEClass;
+			} else {
+				return mapping.mapTargetElementToTargetItems.entrySet.get(0).key.targetElement;					
+		}						
 	}
 	
 	def String allRecommenders(){

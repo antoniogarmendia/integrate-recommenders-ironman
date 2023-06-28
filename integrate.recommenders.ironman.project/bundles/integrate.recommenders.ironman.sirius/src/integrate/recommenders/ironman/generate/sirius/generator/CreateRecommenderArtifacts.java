@@ -57,7 +57,7 @@ public class CreateRecommenderArtifacts {
 		//1. Load resources
 		final Group groupBaseRecommender = copyOfBaseRecommenderGroup(reset);
 		//2. Refine viewpoint
-		this.generateMenu.generateMenuArtifacts(this.projectName, groupBaseRecommender, selectedDiagramDesc, recommenderToServices);
+		this.generateMenu.generateMenuArtifacts(this.projectName, groupBaseRecommender, selectedDiagramDesc, recommenderToServices, mapping);
 		//3. Create Viewpoint Specification Project
 		final IProject viewpointProject = createViewpointProject(VIEWPOINT_RECOMMENDER_NAME
 				+ "." + VIEWPOINT_MODEL_EXTENSION, groupBaseRecommender);		
@@ -147,7 +147,7 @@ public class CreateRecommenderArtifacts {
 						setOfItems).doGenerate()));
 		//Generate MANIFEST.MF
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/META-INF"), "MANIFEST.MF", 
-				new MetaInfRecommender(viewpointProject, this.recommenderToServices).doGenerate()));
+				new MetaInfRecommender(viewpointProject, this.recommenderToServices, mapping).doGenerate()));
 		//Generate RecommenderCase
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/utils/"), 
