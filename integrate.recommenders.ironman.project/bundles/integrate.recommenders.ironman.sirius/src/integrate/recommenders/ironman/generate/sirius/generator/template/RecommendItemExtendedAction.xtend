@@ -270,7 +270,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		if (mapping === null) {
 			return "eClassifier.getName()";
 		} else {
-			return "\"" + this.targetItemElement.read.item + "\"";
+			return "\"" + this.item.className + "\"";
 		}		
 	}
 	
