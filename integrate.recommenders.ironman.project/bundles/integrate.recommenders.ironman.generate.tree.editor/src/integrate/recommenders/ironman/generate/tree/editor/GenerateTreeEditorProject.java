@@ -62,7 +62,7 @@ public class GenerateTreeEditorProject {
 				"RecommenderCase.java", new RecommenderCase(this.project.getName()).doGenerate()));	
 		
 		allFiles.add(() -> WriteUtils.write(this.project.getFolder("/META-INF"), 
-				"MANIFEST.MF", new MetaInfRecommender(this.project, recommenderToServices).doGenerate()));
+				"MANIFEST.MF", new MetaInfRecommender(this.project, recommenderToServices, this.mapping).doGenerate()));
 		
 		generateDialogClasses(this.project, this.project.getName(), this.project.getName(), allFiles);
 		
