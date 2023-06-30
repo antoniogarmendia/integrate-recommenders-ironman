@@ -189,6 +189,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 					final boolean isItemPresent = isItemPresent(mapTargetElementToTargetItems.get(targetElement), item); 
 					if (!isItemPresent) {
 						final TargetItemElement targetItemElement = new TargetItemElement();
+						targetItemElement.setClassName(item.getClassName());
 						new ReadFeature(targetItemElement, item.getRead());
 						new WriteFeature(targetItemElement, item.getWrite());
 						new ActualFeature(targetItemElement, item.getFeatures());						

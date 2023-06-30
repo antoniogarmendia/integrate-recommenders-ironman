@@ -23,14 +23,16 @@ class RecommenderPopup implements IGeneration {
 	val Map<String, List<Service>> recommenderToServices;
 	val Map<Item,List<Service>> itemToService;
 	val MLMappingConfiguration mapping;
+	val String dataFusionAlgorithm;
 		
 	new(String packageName, Map<String, List<Service>> recommenderToServices, 
-		MLMappingConfiguration mapping
+		MLMappingConfiguration mapping, String dataFusionAlgorithm
 	) {
 		this.packageName = packageName;
 		this.recommenderToServices = recommenderToServices;
 		this.itemToService = getAllItems(this.recommenderToServices)
 		this.mapping = mapping;		
+		this.dataFusionAlgorithm = dataFusionAlgorithm;
 	}
 	
 	override doGenerate() {
@@ -75,24 +77,24 @@ class RecommenderPopup implements IGeneration {
 		'''	
 		«FOR Map.Entry<Item,List<Service>> item : itemToService.entrySet»
 		public Action menu«item.key.read»(«item.value.get(0).detail.obtainTargetEClass.name» target) {
-			return new Action("Recommend «item.key.read»",null) {		
+			return new Action("Recommend «item.key.className»",null) {		
 								@Override
 								public void run() {
 								
-								final EClassifier eClassifier = target.eClass().getEStructuralFeature("eAllAttributes").getEType();
-								final EStructuralFeature struct = target.eClass().getEStructuralFeature("name");
+								final EClassifier eClassifier = target.eClass().getEStructuralFeature("«readStructFeature(item.key)»").getEType();
+								final EStructuralFeature struct = target.eClass().getEStructuralFeature("«actualStructFeature(item.key)»");
 								final String value = target.eGet(struct).toString();									
 											
 								final RecommenderCase recommenderCase = getRecommenderCase«item.key.read»(value,eClassifier,target);
 								final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
 									//Merge 
 								final Map<String, Double> dataFusion = EvaluateMetaSearchContributionHandler.
-										executeMetaSearchAlgorithByName("BordaCount", recServerToItemRecommenders);
+										executeMetaSearchAlgorithByName("«this.dataFusionAlgorithm»", recServerToItemRecommenders);
 								if (dataFusion.size() != 0 ) {
 									final Map<String, Double> normalizeDataFusion = normalization(dataFusion);
 									//Graphical Interface
 									final RecommenderDialog recDialog = new RecommenderDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
-											, recServerToItemRecommenders, normalizeDataFusion, "EClass", eClassifier.getName());
+											, recServerToItemRecommenders, normalizeDataFusion, "«getTargetInstanceClass(item.key)»", «classifierTypeRequest(item.key)»);
 													
 									if (recDialog.open() == Window.OK) {
 										//Add selected elements
@@ -313,8 +315,8 @@ class RecommenderPopup implements IGeneration {
 	private Target getTarget«item.read»(«targetInstanceEClass» target, String targetName) {
 		final Target targetRequest = new Target();
 		targetRequest.setName(targetName);
-		final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«item.read»");
-		final EStructuralFeature getStructValue = target.eClass().getEStructuralFeature("«item.features»");
+		final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«readStructFeature(item)»");
+		final EStructuralFeature getStructValue = target.eClass().getEStructuralFeature("«actualStructFeature(item)»");
 		
 		@SuppressWarnings("unchecked")
 		EList<EObject> listOfElements =  (EList<EObject>) target.eGet(readStruct);
@@ -350,5 +352,31 @@ class RecommenderPopup implements IGeneration {
 			});
 		}
 		'''
+	}
+	
+	def TargetItemElement getTargetItemElement(Item item) {
+		return mapping.mapTargetElementToTargetItems
+					.get(this.getTargetElement(item))
+					.stream.filter(i | i.getFeature().getItem().equals(item.getFeatures())
+								&& i.getRead().getItem().equals(item.getRead())
+								&& i.getWrite().getItem().equals(item.getWrite())
+								).findAny()
+								.get
+	}
+	
+	def String readStructFeature(Item item) {
+		if (mapping === null) {
+			return item.read;
+		} else {
+			return this.getTargetItemElement(item).read.structFeature.name
+		}
+	}
+	
+	def String actualStructFeature(Item item) {
+		if (mapping === null) {
+			return item.features
+		} else {
+			return this.getTargetItemElement(item).feature.structFeature.name
+		}
 	}
 }

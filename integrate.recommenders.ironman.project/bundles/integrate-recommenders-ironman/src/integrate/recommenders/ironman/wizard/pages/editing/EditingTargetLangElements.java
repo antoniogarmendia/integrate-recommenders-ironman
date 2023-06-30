@@ -170,6 +170,7 @@ public class EditingTargetLangElements extends EditingSupport {
 				final EStructuralFeature strucFeat = this.listOfFeatures.get((Integer) value);
 				((AbstractItemElement) element).setStructFeature(strucFeat);
 				getViewer().update(element, null);
+				getViewer().update(((AbstractItemElement) element).getParentTargetItemElement(), null);
 			}
 		}
 	}	

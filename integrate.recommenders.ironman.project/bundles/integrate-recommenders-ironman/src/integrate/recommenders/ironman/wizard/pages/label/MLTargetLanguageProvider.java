@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 
 import integrate.recommenders.ironman.definition.mapping.AbstractItemElement;
 import integrate.recommenders.ironman.definition.mapping.TargetElement;
+import integrate.recommenders.ironman.definition.mapping.TargetItemElement;
 
 public class MLTargetLanguageProvider extends StyledCellLabelProvider {
 	
@@ -23,7 +24,11 @@ public class MLTargetLanguageProvider extends StyledCellLabelProvider {
 			final AbstractItemElement abstractItemElement = ((AbstractItemElement) element);
 			if (abstractItemElement.getStructFeature() != null)
 				cell.setText(abstractItemElement.getStructFeature().getName());
-		}		
+		} else if (element instanceof TargetItemElement) {
+			final TargetItemElement targetElement = (TargetItemElement) element;
+			if (targetElement.getRead().getStructFeature() != null)
+				cell.setText("Item: " + targetElement.getRead().getStructFeature().getEType().getName());
+		}	
 	}
 
 }

@@ -26,12 +26,14 @@ public class GenerateTreeEditorProject {
 	private final Map<String, List<Service>> recommenderToServices;
 	private final IProject project;
 	private MLMappingConfiguration mapping;
+	private final String dataFusionAlgorithm;
 	
 	public GenerateTreeEditorProject(IProject project, Map<String, List<Service>> recommenderToServices, 
-			MLMappingConfiguration mapping) {
+			MLMappingConfiguration mapping, String dataFusionAlgorithm) {
 		this.project = project;
 		this.recommenderToServices = recommenderToServices;
 		this.mapping = mapping;
+		this.dataFusionAlgorithm = dataFusionAlgorithm;
 	}
 
 	public void generateAll() {
@@ -47,7 +49,7 @@ public class GenerateTreeEditorProject {
 		allFiles.add(() -> WriteUtils.write(this.project.getFolder("/src/" +
 				this.project.getName().replaceAll(DOT_SEPARATOR_PATH, "/")), 
 				"RecommenderPopup.java", new RecommenderPopup(this.project.getName(),
-						recommenderToServices, this.mapping).doGenerate()));	
+						recommenderToServices, this.mapping, this.dataFusionAlgorithm).doGenerate()));	
 		
 		//Generate RecommenderUtils
 		allFiles.add(() -> WriteUtils.write(project.getFolder("/src/" 

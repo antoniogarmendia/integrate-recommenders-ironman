@@ -22,7 +22,7 @@ public class MLSourceLanguageProvider extends StyledCellLabelProvider {
 			if (entry.getKey() instanceof TargetElement)
 				cell.setText(((TargetElement)entry.getKey()).getSourceElement());			
 		} else if (element instanceof TargetItemElement) {
-			cell.setText("Item: " + ((TargetItemElement)element).getRead().getItem());		
+			cell.setText("Item: " + ((TargetItemElement)element).getClassName());		
 		} else if (element instanceof ReadFeature) {
 			cell.setText("Read: " + ((AbstractItemElement)element).getItem());
 		} else if (element instanceof WriteFeature) {
