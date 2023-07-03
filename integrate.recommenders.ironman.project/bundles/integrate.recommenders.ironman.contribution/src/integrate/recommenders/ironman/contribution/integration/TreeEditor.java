@@ -52,11 +52,7 @@ public class TreeEditor implements IIntegration {
 					.isPlugin(true)
 					.build();
 		final IProject project = new CreateProjectEngine(projectFeat).doGenerateProject(new NullProgressMonitor(), true);		
-<<<<<<< HEAD
-		new GenerateTreeEditorProject(project,recommenderToServices,mapping).generateAll();	
-=======
 		new GenerateTreeEditorProject(project,recommenderToServices,mapping,dataFusionAlgorithm).generateAll();	
->>>>>>> is-designer2
 	}
 
 }

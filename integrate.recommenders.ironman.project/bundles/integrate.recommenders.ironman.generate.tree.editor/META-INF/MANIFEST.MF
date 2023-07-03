@@ -13,12 +13,7 @@ Require-Bundle: org.eclipse.jface,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
  org.eclipse.xtend.lib.macro,
-<<<<<<< HEAD
- org.eclipse.emf.ecore;bundle-version="2.25.0",
- org.eclipse.core.runtime;bundle-version="3.24.0"
-=======
  org.eclipse.emf.ecore,
  org.eclipse.core.runtime
->>>>>>> is-designer2
 Export-Package: integrate.recommenders.ironman.generate.tree.editor,
  integrate.recommenders.ironman.generate.tree.editor.dialog

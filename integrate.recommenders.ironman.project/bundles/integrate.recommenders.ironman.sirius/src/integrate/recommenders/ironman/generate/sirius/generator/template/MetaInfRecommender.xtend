@@ -76,22 +76,10 @@ class MetaInfRecommender extends MetaInfTemplate {
 	
 	def EList<EClass> listOfDifferentTargetMapping() {
 		val listOfClasses = new BasicEList<EClass>();
-<<<<<<< HEAD
-		for(Map.Entry<String, List<Service>> service: recommenderToServices.entrySet){
-			for (serv: service.value){
-				if (!serv.detail.obtainTargetEClass.name.equals("EClass")
-					&& !listOfClasses.contains(serv.detail.obtainTargetEClass)
-				){
-					listOfClasses.add(serv.detail.obtainTargetEClass);
-				}
-			}			
-		}
-=======
 		for (Map.Entry<TargetElement,List<TargetItemElement>> entry: mapping.mapTargetElementToTargetItems.entrySet) {
 			val TargetElement targetElement = entry.key;
 			listOfClasses.add(targetElement.targetElement);
 		}		
->>>>>>> is-designer2
 		return listOfClasses;
 	}
 	
