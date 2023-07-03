@@ -90,8 +90,8 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		'''
 			if (!selectedElements.isEmpty()) {
 				final EObject selectedNode = selectedElements.stream().findFirst().get();
-				if (selectedNode instanceof DNodeList) {
-					var nodeList = (DNodeList) selectedNode;
+				if (selectedNode instanceof DSemanticDecorator) {
+					var nodeList = (DSemanticDecorator) selectedNode;
 					final EObject targetEObject = nodeList.getTarget();
 					if (targetEObject instanceof «getTargetInstanceClass») {
 						final «getTargetInstanceClass» target = ((«getTargetInstanceClass») targetEObject);
@@ -168,6 +168,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import org.eclipse.emf.ecore.EClass;
 			import org.eclipse.emf.ecore.EClassifier;
 			import org.eclipse.emf.ecore.EStructuralFeature;
+			import org.eclipse.sirius.viewpoint.DSemanticDecorator;
 			import org.eclipse.emf.common.util.EList;
 			import java.util.AbstractMap;
 			import integrate.recommenders.ironman.definition.algorithm.EvaluateMetaSearchContributionHandler;

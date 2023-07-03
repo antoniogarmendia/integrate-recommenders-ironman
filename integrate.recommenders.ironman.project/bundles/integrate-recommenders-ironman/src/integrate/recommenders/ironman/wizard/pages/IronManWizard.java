@@ -116,7 +116,7 @@ public class IronManWizard extends Wizard implements INewWizard {
 		final MLMappingConfiguration copyMapping = new MLMappingConfiguration(
 				(Map<TargetElement, List<TargetItemElement>>) mapping.getMapTargetElementToTargetItems().entrySet()
 					.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-				, mapping.getGenModel());
+				, mapping.getGenModel(), mapping.getNsURIPackage());
 		//Remove empty mapping
 		copyMapping.getMapTargetElementToTargetItems().entrySet().forEach(entry -> {
 			entry.getValue().removeIf(targetItem -> targetItem.getRead().getStructFeature() == null);

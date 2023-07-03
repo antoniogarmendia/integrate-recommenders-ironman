@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -95,10 +100,9 @@ public class EditingTargetLangElements extends EditingSupport {
 									.collect(Collectors.toCollection(BasicEList::new));
 			
 			this.listOfFeatures.stream()
-						.map(eStruct -> eStruct.getName())
+						.map(ENamedElement::getName)
 						.collect(Collectors.toCollection(() -> listOfCCElements));
-		}
-		
+		}		
 	}
 
 	private void fillListOfEStructCC(List<String> listOfCCElements) {
@@ -126,8 +130,12 @@ public class EditingTargetLangElements extends EditingSupport {
 			Comparator<EClass> reverseOrderComparator =
 					Comparator
 		            .comparing(EClass::getName, Comparator.naturalOrder());
-			ePackage.getEClassifiers()
-				.stream()
+			
+			//Get all EClass. I did not use getEClassifiers because the use of subPackages
+			//See IFML meta-model
+			StreamSupport.stream(
+			          Spliterators.spliteratorUnknownSize(ePackage.eAllContents(), Spliterator.ORDERED),
+			          false)
 				.filter(EClass.class::isInstance)
 				.map(EClass.class::cast)
 				.sorted(reverseOrderComparator)
