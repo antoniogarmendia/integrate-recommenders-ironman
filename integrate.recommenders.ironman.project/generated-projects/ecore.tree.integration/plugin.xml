@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            class="ecore.tree.integration.RecommenderPopup"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      </menuContribution>
+   </extension>
+</plugin>

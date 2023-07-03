@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<extension point="org.eclipse.sirius.componentization">
+    <component class="ecore.er.recommender.sirius.Activator"
+               id="ecore.er.recommender.sirius"
+        name="ecore.er.recommender.sirius">
+    </component>
+</extension>
+<extension
+        point="org.eclipse.sirius.externalJavaAction">
+        <javaActions
+        	 actionClass="ecore.er.recommender.sirius.actions.Recommendattributes"
+        	 id="ecore.er.recommender.sirius.actions.attributes">
+        </javaActions>
+  </extension>
+</plugin>

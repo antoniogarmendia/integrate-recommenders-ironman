@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ProjectTreeIntegration
+Bundle-SymbolicName: uml.tree.integration;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.uml2.uml,
+ org.eclipse.core.expressions;bundle-version="3.8.100",
+ integrate.recommenders.ironman.definition,
+ integrate.recommenders.ironman.wizard,
+ com.fasterxml.jackson.core.jackson-core,
+ com.fasterxml.jackson.core.jackson-databind
+Automatic-Module-Name: uml.tree.integration
+Bundle-RequiredExecutionEnvironment: JavaSE-11

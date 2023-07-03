@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/description/tool/1.1.0" name="RecommenderVp" version="12.0.0.2017041100">
+  <ownedViewpoints name="Recommender Extension ecore.er.recommender.sirius">
+    <ownedRepresentationExtensions xsi:type="description_1:DiagramExtensionDescription" name="Recommender-Entities Diagram" viewpointURI="viewpoint:/org.obeonetwork.dsl.entity.design/Entity Views" representationName="Entities Diagram">
+      <layers name="Recommender">
+        <toolSections name="Recommender-Section">
+          <ownedTools xsi:type="tool:PopupMenu" name="RecommenderMenu" label="Recommender-Entity">
+            <menuItemDescription xsi:type="tool:ExternalJavaAction" name="ecore.er.recommender.sirius.actions.Recommendattributes" label="Attribute" id="ecore.er.recommender.sirius.actions.attributes"/>
+          </ownedTools>
+        </toolSections>
+      </layers>
+    </ownedRepresentationExtensions>
+    <ownedJavaExtensions qualifiedClassName="ecore.er.recommender.sirius.Services"/>
+  </ownedViewpoints>
+</description:Group>
