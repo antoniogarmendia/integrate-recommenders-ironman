@@ -271,7 +271,6 @@ class RecommenderPopup implements IGeneration {
 				import «GenModelUtils.getPackageClassFromEClassifier(target)»;
 			«ENDFOR»	
 		«ENDIF»
->>>>>>> is-designer2
 		'''
 	}
 	
@@ -371,13 +370,8 @@ class RecommenderPopup implements IGeneration {
 	private Target getTarget«item.read»(«targetInstanceEClass» target, String targetName) {
 		final Target targetRequest = new Target();
 		targetRequest.setName(targetName);
-<<<<<<< HEAD
-		final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«item.read»");
-		final EStructuralFeature getStructValue = target.eClass().getEStructuralFeature("«item.features»");
-=======
 		final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«readStructFeature(item)»");
 		final EStructuralFeature getStructValue = target.eClass().getEStructuralFeature("«actualStructFeature(item)»");
->>>>>>> is-designer2
 		
 		@SuppressWarnings("unchecked")
 		EList<EObject> listOfElements =  (EList<EObject>) target.eGet(readStruct);
