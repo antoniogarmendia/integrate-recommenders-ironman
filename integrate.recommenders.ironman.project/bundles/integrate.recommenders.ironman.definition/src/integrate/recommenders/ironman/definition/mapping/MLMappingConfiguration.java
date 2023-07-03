@@ -9,10 +9,20 @@ import org.eclipse.emf.ecore.EPackage;
 public class MLMappingConfiguration {
 	
 	//Target and Items
-	private Map<TargetElement,List<TargetItemElement>> mapTargetElementToTargetItems;
+	private Map<TargetElement, List<TargetItemElement>> mapTargetElementToTargetItems;
 		
 	//GenModel that represents the language
 	private GenModel genModel;	
+	
+	public MLMappingConfiguration() {
+		// Do nothing
+	}
+	
+	public MLMappingConfiguration(Map<TargetElement,List<TargetItemElement>> mapTargetElementToTargetItems,
+			GenModel genModel) {
+		this.mapTargetElementToTargetItems = mapTargetElementToTargetItems;
+		this.genModel = genModel;
+	}
 	
 	public void setMapTargetElementToTargetItems(
 			Map<TargetElement, List<TargetItemElement>> mapTargetElementToTargetItems) {
@@ -29,6 +39,10 @@ public class MLMappingConfiguration {
 		else 
 			return null;
 	}	
+	
+	public GenModel getGenModel() {
+		return genModel;
+	}
 	
 	public void setGenModel(GenModel genModel) {
 		this.genModel = genModel;

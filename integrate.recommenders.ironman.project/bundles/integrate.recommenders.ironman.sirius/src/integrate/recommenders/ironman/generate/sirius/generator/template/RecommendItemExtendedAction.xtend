@@ -42,7 +42,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		}			
 	}
 	
-	def TargetElement getTargetElement() {
+	def TargetElement getTargetElement() {		
 		return mapping.mapTargetElementToTargetItems.entrySet
 					.stream.filter(entry | isItemPresent(entry.value,item))
 					.findAny
@@ -60,6 +60,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	}
 	
 	def boolean isItemPresent(List<TargetItemElement> list, Item item) {
+		println(list.toString + "" + item.read)
 		return list.stream().filter(i | i.getFeature().getItem().equals(item.getFeatures())
 								&& i.getRead().getItem().equals(item.getRead())
 								&& i.getWrite().getItem().equals(item.getWrite())

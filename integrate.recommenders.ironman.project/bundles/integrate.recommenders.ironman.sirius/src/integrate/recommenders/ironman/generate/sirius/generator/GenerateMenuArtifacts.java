@@ -5,6 +5,7 @@ import static integrate.recommenders.ironman.generate.sirius.dialog.utils.Design
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -57,7 +58,7 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 		//Get PopupMenu
 		final PopupMenu popupMenu = currentDiagDescrip.getLayers().get(0).getToolSections().get(0).getPopupMenus().get(0);
 		popupMenu.setLabel("Recommender-" + getTarget(recommenderToServices, mapping));
-		final Set<String> setOfItems = getAllStringItems(recommenderToServices);
+		final Set<String> setOfItems = getAllStringItemsMapping(recommenderToServices, mapping);
 		//Add menu for each item
 		for (String item : setOfItems) {
 			ExternalJavaAction externalJavaAction = ToolFactory.eINSTANCE.createExternalJavaAction();
@@ -65,6 +66,18 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 			externalJavaAction.setName(packageName + ".Recommend" + item);
 			externalJavaAction.setLabel(getETypefromItem(item, recommenderToServices, mapping));
 			popupMenu.getMenuItemDescription().add(externalJavaAction);
+		}
+	}
+	
+	public Set<String> getAllStringItemsMapping(Map<String, List<Service>> recommenderToServices, 
+			MLMappingConfiguration mapping){
+		if (mapping == null)
+			return getAllStringItems(recommenderToServices);
+		else {
+			return mapping.getMapTargetElementToTargetItems().values().stream()
+						.flatMap(item -> item.stream())
+						.map(item -> item.getRead().getStructFeature().getName())
+						.collect(Collectors.toSet());
 		}
 	}
 	
@@ -97,8 +110,11 @@ public class GenerateMenuArtifacts  implements IStrategyGenerateMenu {
 		} else {
 			return mapping.getMapTargetElementToTargetItems().values().stream()
 						.flatMap(listTargetItems -> listTargetItems.stream())
-						.filter(targetItem -> targetItem.getRead().getItem().equals(item))
-						.findAny().orElseThrow().getRead().getStructFeature().getName();			
+						.filter(targetItem -> targetItem.getRead()
+								.getStructFeature().getName().equals(item))
+						.findAny().orElseThrow()
+						.getRead().getStructFeature().getName()
+						;			
 		}		
 	}
 

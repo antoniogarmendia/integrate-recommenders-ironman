@@ -92,7 +92,7 @@ class MetaInfRecommender extends MetaInfTemplate {
 	override requiredExecutionEnvironment() {
 		'''
 			Bundle-ActivationPolicy: lazy
-			Bundle-RequiredExecutionEnvironment: JavaSE-17
+			Bundle-RequiredExecutionEnvironment: JavaSE-16
 		'''
 	}	
 }
