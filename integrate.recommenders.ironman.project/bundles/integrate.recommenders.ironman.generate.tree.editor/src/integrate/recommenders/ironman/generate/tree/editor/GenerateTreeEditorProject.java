@@ -26,12 +26,23 @@ public class GenerateTreeEditorProject {
 	private final Map<String, List<Service>> recommenderToServices;
 	private final IProject project;
 	private MLMappingConfiguration mapping;
+<<<<<<< HEAD
 	
 	public GenerateTreeEditorProject(IProject project, Map<String, List<Service>> recommenderToServices, 
 			MLMappingConfiguration mapping) {
 		this.project = project;
 		this.recommenderToServices = recommenderToServices;
 		this.mapping = mapping;
+=======
+	private final String dataFusionAlgorithm;
+	
+	public GenerateTreeEditorProject(IProject project, Map<String, List<Service>> recommenderToServices, 
+			MLMappingConfiguration mapping, String dataFusionAlgorithm) {
+		this.project = project;
+		this.recommenderToServices = recommenderToServices;
+		this.mapping = mapping;
+		this.dataFusionAlgorithm = dataFusionAlgorithm;
+>>>>>>> is-designer2
 	}
 
 	public void generateAll() {
@@ -47,7 +58,11 @@ public class GenerateTreeEditorProject {
 		allFiles.add(() -> WriteUtils.write(this.project.getFolder("/src/" +
 				this.project.getName().replaceAll(DOT_SEPARATOR_PATH, "/")), 
 				"RecommenderPopup.java", new RecommenderPopup(this.project.getName(),
+<<<<<<< HEAD
 						recommenderToServices, this.mapping).doGenerate()));	
+=======
+						recommenderToServices, this.mapping, this.dataFusionAlgorithm).doGenerate()));	
+>>>>>>> is-designer2
 		
 		//Generate RecommenderUtils
 		allFiles.add(() -> WriteUtils.write(project.getFolder("/src/" 
@@ -60,7 +75,11 @@ public class GenerateTreeEditorProject {
 				"RecommenderCase.java", new RecommenderCase(this.project.getName()).doGenerate()));	
 		
 		allFiles.add(() -> WriteUtils.write(this.project.getFolder("/META-INF"), 
+<<<<<<< HEAD
 				"MANIFEST.MF", new MetaInfRecommender(this.project, recommenderToServices).doGenerate()));
+=======
+				"MANIFEST.MF", new MetaInfRecommender(this.project, recommenderToServices, this.mapping).doGenerate()));
+>>>>>>> is-designer2
 		
 		generateDialogClasses(this.project, this.project.getName(), this.project.getName(), allFiles);
 		

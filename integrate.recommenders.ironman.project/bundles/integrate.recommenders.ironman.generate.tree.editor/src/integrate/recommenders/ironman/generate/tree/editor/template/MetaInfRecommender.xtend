@@ -9,15 +9,30 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EClass
 import static project.generator.api.utils.GenModelUtils.*
 import org.eclipse.emf.common.util.BasicEList
+<<<<<<< HEAD
+=======
+import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration
+import integrate.recommenders.ironman.definition.mapping.TargetElement
+import integrate.recommenders.ironman.definition.mapping.TargetItemElement
+>>>>>>> is-designer2
 
 class MetaInfRecommender extends MetaInfTemplate {
 	
 	val IProject project;
 	val Map<String, List<Service>> recommenderToServices;
+<<<<<<< HEAD
 	
 	new(IProject project, Map<String, List<Service>> recommenderToServices) {
 		this.project = project;	
 		this.recommenderToServices = recommenderToServices;
+=======
+	val MLMappingConfiguration mapping;
+	
+	new(IProject project, Map<String, List<Service>> recommenderToServices, MLMappingConfiguration mapping) {
+		this.project = project;	
+		this.recommenderToServices = recommenderToServices;
+		this.mapping = mapping;
+>>>>>>> is-designer2
 	}
 	
 	override bundleNameSymbolic() {
@@ -35,7 +50,11 @@ class MetaInfRecommender extends MetaInfTemplate {
 		'''
 		Require-Bundle: org.eclipse.ui,
 		 org.eclipse.core.runtime,
+<<<<<<< HEAD
 		 «FOR EClass target: listOfTargets»
+=======
+		 «FOR EClass target: listOfDifferentTarget»
+>>>>>>> is-designer2
 		 «getProjectFromEClass(target) + ","»
 		 «ENDFOR»
 		 org.eclipse.core.expressions;bundle-version="3.8.100",
@@ -58,6 +77,7 @@ class MetaInfRecommender extends MetaInfTemplate {
 		'''
 	}	
 	
+<<<<<<< HEAD
 	def EList<EClass> listOfTargets(){
 		var listOfTargets = new BasicEList<EClass>();
 		for (Map.Entry<String, List<Service>> entryService: recommenderToServices.entrySet) {
@@ -67,5 +87,32 @@ class MetaInfRecommender extends MetaInfTemplate {
 			}
 		}		
 		return listOfTargets;
+=======
+	def EList<EClass> listOfDifferentTarget() {
+		if (mapping === null) {
+			val listOfClasses = new BasicEList<EClass>();
+			for(Map.Entry<String, List<Service>> service: recommenderToServices.entrySet){
+				for (serv: service.value){
+					if (!serv.detail.obtainTargetEClass.name.equals("EClass")
+						&& !listOfClasses.contains(serv.detail.obtainTargetEClass)
+					){
+						listOfClasses.add(serv.detail.obtainTargetEClass);
+					}
+				}			
+			}
+			return listOfClasses;
+		} else {
+			return listOfDifferentTargetMapping;
+		}	
+	}
+	
+	def EList<EClass> listOfDifferentTargetMapping() {
+		val listOfClasses = new BasicEList<EClass>();
+		for (Map.Entry<TargetElement,List<TargetItemElement>> entry: mapping.mapTargetElementToTargetItems.entrySet) {
+			val TargetElement targetElement = entry.key;
+			listOfClasses.add(targetElement.targetElement);
+		}		
+		return listOfClasses;
+>>>>>>> is-designer2
 	}
 }

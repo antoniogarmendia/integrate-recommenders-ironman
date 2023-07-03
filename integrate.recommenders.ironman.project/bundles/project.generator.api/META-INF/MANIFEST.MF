@@ -24,4 +24,8 @@ Export-Package: project.generator.api,
  project.generator.api.template.sirius,
  project.generator.api.utils,
  project.generator.api.vp.utils
+<<<<<<< HEAD
 Bundle-RequiredExecutionEnvironment: JavaSE-17
+=======
+Bundle-RequiredExecutionEnvironment: JavaSE-16
+>>>>>>> is-designer2

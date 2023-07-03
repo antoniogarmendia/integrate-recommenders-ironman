@@ -10,12 +10,15 @@ import static integrate.recommenders.ironman.wizard.utils.IronManWizardUtils.*;
 import integrate.recommenders.ironman.definition.integration.EvaluateContributionsHandler;
 import integrate.recommenders.ironman.definition.integration.IIntegration;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
+import integrate.recommenders.ironman.definition.mapping.TargetElement;
+import integrate.recommenders.ironman.definition.mapping.TargetItemElement;
 import integrate.recommenders.ironman.definition.services.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class IronManWizard extends Wizard implements INewWizard {
 	
@@ -108,8 +111,18 @@ public class IronManWizard extends Wizard implements INewWizard {
 		return true;
 	}
 	
-	public MLMappingConfiguration getMappingConfiguration() {
-		return this.modellingLanguages.getMapping();
+	public MLMappingConfiguration getMappingConfiguration() {		
+		final MLMappingConfiguration mapping = this.modellingLanguages.getMapping();
+		final MLMappingConfiguration copyMapping = new MLMappingConfiguration(
+				(Map<TargetElement, List<TargetItemElement>>) mapping.getMapTargetElementToTargetItems().entrySet()
+					.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+				, mapping.getGenModel(), mapping.getNsURIPackage());
+		//Remove empty mapping
+		copyMapping.getMapTargetElementToTargetItems().entrySet().forEach(entry -> {
+			entry.getValue().removeIf(targetItem -> targetItem.getRead().getStructFeature() == null);
+		});
+			
+		return copyMapping;
 	}
 	
 	public Map<String,List<Service>> getSelectedServerToRecommender() {

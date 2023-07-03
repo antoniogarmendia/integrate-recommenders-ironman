@@ -15,6 +15,7 @@ public class Item {
 		this.features = item.features;
 		this.read = item.read;
 		this.write = item.write;
+		this.className = item.className;
 	}
 	
     public String getFeatures() {

@@ -16,6 +16,11 @@ import static integrate.recommenders.ironman.generate.tree.editor.utils.TreeEdit
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration
 import integrate.recommenders.ironman.definition.mapping.TargetElement
 import integrate.recommenders.ironman.definition.mapping.TargetItemElement
+<<<<<<< HEAD
+=======
+import java.util.stream.Stream
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock
+>>>>>>> is-designer2
 
 class RecommenderPopup implements IGeneration {
 	
@@ -23,14 +28,25 @@ class RecommenderPopup implements IGeneration {
 	val Map<String, List<Service>> recommenderToServices;
 	val Map<Item,List<Service>> itemToService;
 	val MLMappingConfiguration mapping;
+<<<<<<< HEAD
 		
 	new(String packageName, Map<String, List<Service>> recommenderToServices, 
 		MLMappingConfiguration mapping
+=======
+	val String dataFusionAlgorithm;
+		
+	new(String packageName, Map<String, List<Service>> recommenderToServices, 
+		MLMappingConfiguration mapping, String dataFusionAlgorithm
+>>>>>>> is-designer2
 	) {
 		this.packageName = packageName;
 		this.recommenderToServices = recommenderToServices;
 		this.itemToService = getAllItems(this.recommenderToServices)
 		this.mapping = mapping;		
+<<<<<<< HEAD
+=======
+		this.dataFusionAlgorithm = dataFusionAlgorithm;
+>>>>>>> is-designer2
 	}
 	
 	override doGenerate() {
@@ -52,12 +68,21 @@ class RecommenderPopup implements IGeneration {
 						TreeSelection treeselection = (TreeSelection)selection;
 						Object firstelement = treeselection.getFirstElement();
 						//Cast of the target element
+<<<<<<< HEAD
 						«FOR String target: listOfTargets»
 						if (firstelement instanceof «target») {
 							//Add Recommender Menu
 							MenuManager menu = new MenuManager();
 							menu.setMenuText("Recommender");
 							«addAllMenus(target)»			
+=======
+						«FOR EClass target: listOfDifferentTarget»
+						if (firstelement instanceof «target.name») {
+							//Add Recommender Menu
+							MenuManager menu = new MenuManager();
+							menu.setMenuText("Recommender");
+							«addAllMenus(target.name)»			
+>>>>>>> is-designer2
 							additions.addContributionItem(menu, null);				
 						}
 						«ENDFOR»					
@@ -74,6 +99,7 @@ class RecommenderPopup implements IGeneration {
 		def menuMethods() {
 		'''	
 		«FOR Map.Entry<Item,List<Service>> item : itemToService.entrySet»
+<<<<<<< HEAD
 		public Action menu«item.key.read»(«item.value.get(0).detail.obtainTargetEClass.name» target) {
 			return new Action("Recommend «item.key.read»",null) {		
 								@Override
@@ -81,18 +107,35 @@ class RecommenderPopup implements IGeneration {
 								
 								final EClassifier eClassifier = target.eClass().getEStructuralFeature("eAllAttributes").getEType();
 								final EStructuralFeature struct = target.eClass().getEStructuralFeature("name");
+=======
+		public Action menu«readStructFeature(item.key)»(«getTargetInstanceClass(item.key)» target) {
+			return new Action("Recommend «actionName(item.key)»",null) {		
+								@Override
+								public void run() {
+								
+								final EClassifier eClassifier = target.eClass().getEStructuralFeature("«readStructFeature(item.key)»").getEType();
+								final EStructuralFeature struct = target.eClass().getEStructuralFeature("«actualStructFeature(item.key)»");
+>>>>>>> is-designer2
 								final String value = target.eGet(struct).toString();									
 											
 								final RecommenderCase recommenderCase = getRecommenderCase«item.key.read»(value,eClassifier,target);
 								final Map<String, List<ItemRecommender>> recServerToItemRecommenders = getAllRecommendations(recommenderCase);
 									//Merge 
 								final Map<String, Double> dataFusion = EvaluateMetaSearchContributionHandler.
+<<<<<<< HEAD
 										executeMetaSearchAlgorithByName("BordaCount", recServerToItemRecommenders);
+=======
+										executeMetaSearchAlgorithByName("«this.dataFusionAlgorithm»", recServerToItemRecommenders);
+>>>>>>> is-designer2
 								if (dataFusion.size() != 0 ) {
 									final Map<String, Double> normalizeDataFusion = normalization(dataFusion);
 									//Graphical Interface
 									final RecommenderDialog recDialog = new RecommenderDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
+<<<<<<< HEAD
 											, recServerToItemRecommenders, normalizeDataFusion, "EClass", eClassifier.getName());
+=======
+											, recServerToItemRecommenders, normalizeDataFusion, "«getTargetInstanceClass(item.key)»", «classifierTypeRequest(item.key)»);
+>>>>>>> is-designer2
 													
 									if (recDialog.open() == Window.OK) {
 										//Add selected elements
@@ -112,6 +155,7 @@ class RecommenderPopup implements IGeneration {
 		'''
 	}
 	
+<<<<<<< HEAD
 	def Set<String> listOfTargets(){
 		val Set<String> setOfTargets = new HashSet<String>();
 		for (Map.Entry<String, List<Service>> entryService: recommenderToServices.entrySet) {
@@ -120,6 +164,41 @@ class RecommenderPopup implements IGeneration {
 			}
 		}		
 		return setOfTargets;
+=======
+	def String actionName(Item item) {
+		if (this.mapping === null) {
+			return item.className;
+		} else {
+			return getTargetItemElement(item).read.structFeature.EType.name;
+		}
+	}
+	
+	def EList<EClass> listOfDifferentTarget() {
+		if (mapping === null) {
+			val listOfClasses = new BasicEList<EClass>();
+			for(Map.Entry<String, List<Service>> service: recommenderToServices.entrySet){
+				for (serv: service.value){
+					if (!serv.detail.obtainTargetEClass.name.equals("EClass")
+						&& !listOfClasses.contains(serv.detail.obtainTargetEClass)
+					){
+						listOfClasses.add(serv.detail.obtainTargetEClass);
+					}
+				}			
+			}
+			return listOfClasses;
+		} else {
+			return listOfDifferentTargetMapping;
+		}	
+	}
+	
+	def EList<EClass> listOfDifferentTargetMapping() {
+		val listOfClasses = new BasicEList<EClass>();
+		for (Map.Entry<TargetElement,List<TargetItemElement>> entry: mapping.mapTargetElementToTargetItems.entrySet) {
+			val TargetElement targetElement = entry.key;
+			listOfClasses.add(targetElement.targetElement);
+		}		
+		return listOfClasses;
+>>>>>>> is-designer2
 	}
 	
 	def EList<EClass> listOfTargetsEClass(){
@@ -134,6 +213,7 @@ class RecommenderPopup implements IGeneration {
 	}
 	
 	def Set<String> getAllTargetItems(String target){
+<<<<<<< HEAD
 		val Set<String> allItems = new HashSet<String>();
 		for (Map.Entry<String, List<Service>> entryService: recommenderToServices.entrySet) {
 			for (Service service: entryService.value) {
@@ -145,6 +225,31 @@ class RecommenderPopup implements IGeneration {
 			}
 		}		
 		return allItems;
+=======
+		//Search within the mapping
+		val Set<String> allItems = new HashSet<String>();
+		if (this.mapping === null) {			
+			for (Map.Entry<String, List<Service>> entryService: recommenderToServices.entrySet) {
+				for (Service service: entryService.value) {
+					if (service.detail.target.equals(target)) {
+						for (Item item: service.detail.items) {
+							allItems.add(item.read);
+						}				
+					}
+				}
+			}			
+		} else {
+			val List<TargetItemElement> listOfTargetItems = this.mapping.mapTargetElementToTargetItems.entrySet
+							.stream.filter(entry | entry.key.targetElement.name.equals(target))
+							.map(entry | entry.value)
+							.flatMap(list | list.stream)
+							.toList
+			for (TargetItemElement itemElement : listOfTargetItems) {
+				allItems.add(itemElement.read.structFeature.name);
+			}			
+		}
+		return allItems; 
+>>>>>>> is-designer2
 	}
 	
 	def Detail getTargetItems(String item){
@@ -203,9 +308,13 @@ class RecommenderPopup implements IGeneration {
 		import integrate.recommenders.ironman.definition.recommendation.SpecAttribute;
 		import integrate.recommenders.ironman.definition.recommendation.Target;
 		import integrate.recommenders.ironman.definition.recommenders.ItemRecommender;
+<<<<<<< HEAD
 		«FOR EClass target: listOfTargetsEClass»
 		import «GenModelUtils.getPackageClassFromEClassifier(target)»;
 		«ENDFOR»
+=======
+		
+>>>>>>> is-designer2
 		import org.eclipse.emf.ecore.EClassifier;
 		import org.eclipse.emf.common.util.EList;
 		import org.eclipse.emf.ecore.EClass;
@@ -214,6 +323,26 @@ class RecommenderPopup implements IGeneration {
 		import org.eclipse.emf.ecore.EStructuralFeature;
 		import org.eclipse.emf.ecore.util.EcoreUtil;
 		import static «this.packageName».RecommenderUtils.*;
+<<<<<<< HEAD
+=======
+		«importModellingLanguageClasses»
+		'''
+	}
+	
+	def importModellingLanguageClasses() {
+		'''
+		«IF mapping !== null»
+			«FOR Map.Entry<Item,List<Service>> item : itemToService.entrySet»
+				«IF !this.getTargetElement(item.key).targetElement.name.equals("EClass")»
+				import «GenModelUtils.getPackageClassFromEClassifier(this.getTargetElement(item.key).targetElement)»;
+				«ENDIF»
+			«ENDFOR»
+		«ELSE»	
+			«FOR EClass target: listOfTargetsEClass»
+				import «GenModelUtils.getPackageClassFromEClassifier(target)»;
+			«ENDFOR»	
+		«ENDIF»
+>>>>>>> is-designer2
 		'''
 	}
 	
@@ -263,7 +392,11 @@ class RecommenderPopup implements IGeneration {
 		if (mapping === null) {
 			return "eClassifier.getName()";
 		} else {
+<<<<<<< HEAD
 			return "\"" + item.read + "\"";
+=======
+			return "\"" + item.className + "\"";
+>>>>>>> is-designer2
 		}		
 	}
 	
@@ -313,8 +446,13 @@ class RecommenderPopup implements IGeneration {
 	private Target getTarget«item.read»(«targetInstanceEClass» target, String targetName) {
 		final Target targetRequest = new Target();
 		targetRequest.setName(targetName);
+<<<<<<< HEAD
 		final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«item.read»");
 		final EStructuralFeature getStructValue = target.eClass().getEStructuralFeature("«item.features»");
+=======
+		final EStructuralFeature readStruct = target.eClass().getEStructuralFeature("«readStructFeature(item)»");
+		final EStructuralFeature getStructValue = target.eClass().getEStructuralFeature("«actualStructFeature(item)»");
+>>>>>>> is-designer2
 		
 		@SuppressWarnings("unchecked")
 		EList<EObject> listOfElements =  (EList<EObject>) target.eGet(readStruct);
@@ -334,15 +472,24 @@ class RecommenderPopup implements IGeneration {
 		private void addSelectRecommendation«item.read»(List<RecommenderData> selectedRecommendations, 
 			«targetInstanceEClass» target) {
 			selectedRecommendations.stream().forEach(rec -> {
+<<<<<<< HEAD
 				final EClassifier eClassifierRead = target.eClass().getEStructuralFeature("«item.read»").getEType();
 				final EStructuralFeature structFeature = ((EClass) eClassifierRead).getEStructuralFeature("«item.features»");
+=======
+				final EClassifier eClassifierRead = target.eClass().getEStructuralFeature("«readStructFeature(item)»").getEType();
+				final EStructuralFeature structFeature = ((EClass) eClassifierRead).getEStructuralFeature("«actualStructFeature(item)»");
+>>>>>>> is-designer2
 				final EObject element = EcoreUtil.create((EClass)eClassifierRead);
 				
 				//eSet Feature
 				element.eSet(structFeature, rec.getName());
 				
 				//Write
+<<<<<<< HEAD
 				EStructuralFeature structFeateAllAttributes = target.eClass().getEStructuralFeature("«item.write»");
+=======
+				EStructuralFeature structFeateAllAttributes = target.eClass().getEStructuralFeature("«writeStructFeature(item)»");
+>>>>>>> is-designer2
 				@SuppressWarnings("unchecked")
 				EList<EObject> listOfAttributes =  (EList<EObject>) target.eGet(structFeateAllAttributes);
 				listOfAttributes.add(element);
@@ -351,4 +498,41 @@ class RecommenderPopup implements IGeneration {
 		}
 		'''
 	}
+<<<<<<< HEAD
+=======
+	
+	def TargetItemElement getTargetItemElement(Item item) {
+		return mapping.mapTargetElementToTargetItems
+					.get(this.getTargetElement(item))
+					.stream.filter(i | i.getFeature().getItem().equals(item.getFeatures())
+								&& i.getRead().getItem().equals(item.getRead())
+								&& i.getWrite().getItem().equals(item.getWrite())
+								).findAny()
+								.get
+	}
+	
+	def String readStructFeature(Item item) {
+		if (mapping === null) {
+			return item.read;
+		} else {
+			return this.getTargetItemElement(item).read.structFeature.name
+		}
+	}
+	
+	def String writeStructFeature(Item item) {
+		if (mapping === null) {
+			return item.read;
+		} else {
+			return this.getTargetItemElement(item).write.structFeature.name
+		}
+	}
+	
+	def String actualStructFeature(Item item) {
+		if (mapping === null) {
+			return item.features
+		} else {
+			return this.getTargetItemElement(item).feature.structFeature.name
+		}
+	}
+>>>>>>> is-designer2
 }

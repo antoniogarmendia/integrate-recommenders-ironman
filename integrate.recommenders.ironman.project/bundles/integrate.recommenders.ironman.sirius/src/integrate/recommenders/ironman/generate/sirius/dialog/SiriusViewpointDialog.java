@@ -29,10 +29,10 @@ import static integrate.recommenders.ironman.generate.sirius.dialog.utils.Recomm
 
 public class SiriusViewpointDialog extends Dialog {
 
-	public final String metaModel;
-	public String projectName;
-	public CheckboxTreeViewer checkboxTreeViewer;
-	public EList<DiagramDescription> selectedDiagramDescriptions;
+	private final String metaModel;
+	private String projectName;
+	private CheckboxTreeViewer checkboxTreeViewer;
+	private EList<DiagramDescription> selectedDiagramDescriptions;
 	
 	public SiriusViewpointDialog(Shell parentShell, String metaModel) {
 		super(parentShell);		

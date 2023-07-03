@@ -5,15 +5,18 @@ public class TargetItemElement {
 	private AbstractItemElement read;
 	private AbstractItemElement write;
 	private AbstractItemElement feature;
+	private String className;
 	
 	public TargetItemElement() {
 		// Do nothing
 	}
 	
-	public TargetItemElement(AbstractItemElement read, AbstractItemElement write, AbstractItemElement feature) {
+	public TargetItemElement(AbstractItemElement read, AbstractItemElement write, AbstractItemElement feature, 
+			String className) {
 		this.read = read;
 		this.write = write;
 		this.feature = feature;
+		this.className = className;
 	}
 
 	public AbstractItemElement getRead() {
@@ -38,5 +41,13 @@ public class TargetItemElement {
 	
 	public void setFeature(AbstractItemElement feature) {
 		this.feature = feature;
+	}
+	
+	public String getClassName() {
+		return className;
+	}
+	
+	public void setClassName(String className) {
+		this.className = className;
 	}
 }

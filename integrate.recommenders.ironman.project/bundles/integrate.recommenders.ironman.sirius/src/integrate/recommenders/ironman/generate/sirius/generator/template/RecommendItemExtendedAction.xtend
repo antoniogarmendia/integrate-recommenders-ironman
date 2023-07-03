@@ -42,7 +42,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		}			
 	}
 	
-	def TargetElement getTargetElement() {
+	def TargetElement getTargetElement() {		
 		return mapping.mapTargetElementToTargetItems.entrySet
 					.stream.filter(entry | isItemPresent(entry.value,item))
 					.findAny
@@ -60,6 +60,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 	}
 	
 	def boolean isItemPresent(List<TargetItemElement> list, Item item) {
+		println(list.toString + "" + item.read)
 		return list.stream().filter(i | i.getFeature().getItem().equals(item.getFeatures())
 								&& i.getRead().getItem().equals(item.getRead())
 								&& i.getWrite().getItem().equals(item.getWrite())
@@ -89,8 +90,8 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		'''
 			if (!selectedElements.isEmpty()) {
 				final EObject selectedNode = selectedElements.stream().findFirst().get();
-				if (selectedNode instanceof DNodeList) {
-					var nodeList = (DNodeList) selectedNode;
+				if (selectedNode instanceof DSemanticDecorator) {
+					var nodeList = (DSemanticDecorator) selectedNode;
 					final EObject targetEObject = nodeList.getTarget();
 					if (targetEObject instanceof «getTargetInstanceClass») {
 						final «getTargetInstanceClass» target = ((«getTargetInstanceClass») targetEObject);
@@ -167,6 +168,7 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 			import org.eclipse.emf.ecore.EClass;
 			import org.eclipse.emf.ecore.EClassifier;
 			import org.eclipse.emf.ecore.EStructuralFeature;
+			import org.eclipse.sirius.viewpoint.DSemanticDecorator;
 			import org.eclipse.emf.common.util.EList;
 			import java.util.AbstractMap;
 			import integrate.recommenders.ironman.definition.algorithm.EvaluateMetaSearchContributionHandler;
@@ -270,12 +272,24 @@ class RecommendItemExtendedAction extends ExternalJavaActionTemplate {
 		if (mapping === null) {
 			return "eClassifier.getName()";
 		} else {
+<<<<<<< HEAD
 			return "\"" + this.targetItemElement.read.item + "\"";
+=======
+			return "\"" + this.item.className + "\"";
+>>>>>>> is-designer2
 		}		
 	}
 	
 	def EClassifier getEType() {
+<<<<<<< HEAD
 		this.services.get(0).detail.obtainTargetEClass;			
+=======
+		if (this.mapping === null) {
+			return this.services.get(0).detail.obtainTargetEClass;
+			} else {
+				return mapping.mapTargetElementToTargetItems.entrySet.get(0).key.targetElement;					
+		}						
+>>>>>>> is-designer2
 	}
 	
 	def String allRecommenders(){

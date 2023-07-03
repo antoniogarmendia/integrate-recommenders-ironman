@@ -39,7 +39,7 @@ public class SiriusIntegration implements IIntegration {
 		siriusDialog.open();
 		if (siriusDialog.getSelectedDiagramDescriptions().size() != 0) {
 			this.selectedDiagramDesc = siriusDialog.getSelectedDiagramDescriptions();
-			this.projectName = siriusDialog.projectName;
+			this.projectName = siriusDialog.getProjectName();
 			return true;
 		}
 		

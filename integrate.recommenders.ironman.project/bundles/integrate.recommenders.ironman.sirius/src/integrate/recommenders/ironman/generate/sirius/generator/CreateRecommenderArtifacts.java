@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -11,9 +12,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.sirius.diagram.description.DiagramDescription;
+import org.eclipse.sirius.diagram.description.MappingBasedDecoration;
 import org.eclipse.sirius.viewpoint.description.Group;
 
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
+import integrate.recommenders.ironman.definition.mapping.TargetItemElement;
 import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
 import integrate.recommenders.ironman.generate.sirius.api.IStrategyGenerateMenu;
@@ -57,7 +60,7 @@ public class CreateRecommenderArtifacts {
 		//1. Load resources
 		final Group groupBaseRecommender = copyOfBaseRecommenderGroup(reset);
 		//2. Refine viewpoint
-		this.generateMenu.generateMenuArtifacts(this.projectName, groupBaseRecommender, selectedDiagramDesc, recommenderToServices);
+		this.generateMenu.generateMenuArtifacts(this.projectName, groupBaseRecommender, selectedDiagramDesc, recommenderToServices, mapping);
 		//3. Create Viewpoint Specification Project
 		final IProject viewpointProject = createViewpointProject(VIEWPOINT_RECOMMENDER_NAME
 				+ "." + VIEWPOINT_MODEL_EXTENSION, groupBaseRecommender);		
@@ -85,8 +88,8 @@ public class CreateRecommenderArtifacts {
 		final String packageName = viewpointProject.getName() + PACKAGE_ACTIONS;
 		final String packageNameUtils = viewpointProject.getName() + PACKAGE_UTILS;
 		final String packageNameDialog = viewpointProject.getName() + PACKAGE_DIALOG;
-		final Set<String> setOfItems = getAllStringItems(this.recommenderToServices);
-		final Map<Item,List<Service>> itemToService = getAllItems(this.recommenderToServices);
+		final Set<String> setOfItems = getAllStringsItemsMapping();
+		final Map<Item,List<Service>> itemToService = getAllItemsMapping();
 		
 		generateInfrastructureClasses(viewpointProject, allFiles, packageName, packageNameUtils, packageNameDialog, setOfItems);
 		
@@ -96,16 +99,57 @@ public class CreateRecommenderArtifacts {
 		for (Map.Entry<Item, List<Service>> entry : itemToService.entrySet()) {
 			final Item item = entry.getKey();
 			final List<Service> service = entry.getValue();
-			final String className = "Recommend" + item.getRead();
+			final String className = "Recommend" + getClassSuffix(item);
 			allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 					+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/actions/"), 
 						className + ".java", 
 					new RecommendItemExtendedAction(className, packageName, packageNameUtils, 
 							packageNameDialog, item, this.recommenderToServices, this.dataFusionAlgorithm,
 							this.mapping, service).doGenerate()));
-		}	
-		
+		}		
 		return allFiles;
+	}
+	
+	private Set<String> getAllStringsItemsMapping() {
+		if (this.mapping == null) {
+			return getAllStringItems(this.recommenderToServices);
+		} else {
+			return this.mapping.getMapTargetElementToTargetItems()
+						.values().stream()
+						.flatMap(listOfItems -> listOfItems.stream())
+						.map(item -> item.getRead().getStructFeature().getName())
+						.collect(Collectors.toSet())
+						;				
+		}
+	}
+	
+	
+	private Map<Item,List<Service>> getAllItemsMapping() {
+		final Map<Item,List<Service>> itemToService = getAllItems(this.recommenderToServices);
+		if(mapping != null) {
+			itemToService.entrySet().removeIf(entry -> !itemIsPresent(entry.getKey()));
+		} 
+		return itemToService;
+	}
+
+	private boolean itemIsPresent(Item key) {
+		return this.mapping.getMapTargetElementToTargetItems().values()
+			.stream().flatMap(listOfItems -> listOfItems.stream())
+			.filter(item -> item.getRead().getItem().equals(key.getRead())).findAny().isPresent();		
+	}
+	
+	private String getClassSuffix(Item item) {
+		if (this.mapping == null) {
+			return item.getRead();
+		} else {
+			return mappingitem(item).getRead().getStructFeature().getName();
+		}
+	}
+	
+	private TargetItemElement mappingitem(Item key) {
+		return this.mapping.getMapTargetElementToTargetItems().values()
+			.stream().flatMap(listOfItems -> listOfItems.stream())
+			.filter(item -> item.getRead().getItem().equals(key.getRead())).findAny().get();		
 	}
 
 	private void generateDialogClasses(IProject viewpointProject, String packageNameDialog, String packageNameUtils, ArrayList<Runnable> allFiles) {
@@ -147,7 +191,7 @@ public class CreateRecommenderArtifacts {
 						setOfItems).doGenerate()));
 		//Generate MANIFEST.MF
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/META-INF"), "MANIFEST.MF", 
-				new MetaInfRecommender(viewpointProject, this.recommenderToServices).doGenerate()));
+				new MetaInfRecommender(viewpointProject, this.recommenderToServices, mapping).doGenerate()));
 		//Generate RecommenderCase
 		allFiles.add(() -> WriteUtils.write(viewpointProject.getFolder("/src/" 
 				+  viewpointProject.getName().replaceAll(DOT_SEPARATOR_PATH, "/") + "/utils/"), 

@@ -118,6 +118,7 @@ public class ConfigureModellingLanguage extends WizardPage {
             		  Resource genModelResource = reset.getResource(location, true);
             		  final GenModel genModel = (GenModel) genModelResource.getContents().get(0);            		  
             		  this.mapping.setGenModel(genModel);
+            		  this.mapping.setNsURIPackage(sourceNsUris);
             		  labelNsUri.setText("Mapping to Language: " + sourceNsUris);
             		  labelNsUri.redraw();            		  
             	  }
@@ -189,6 +190,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 					final boolean isItemPresent = isItemPresent(mapTargetElementToTargetItems.get(targetElement), item); 
 					if (!isItemPresent) {
 						final TargetItemElement targetItemElement = new TargetItemElement();
+						targetItemElement.setClassName(item.getClassName());
 						new ReadFeature(targetItemElement, item.getRead());
 						new WriteFeature(targetItemElement, item.getWrite());
 						new ActualFeature(targetItemElement, item.getFeatures());						
@@ -201,11 +203,10 @@ public class ConfigureModellingLanguage extends WizardPage {
 	}
 	
 	private boolean isItemPresent(List<TargetItemElement> list, Item item) {
-		return list.stream().filter(i -> i.getFeature().getItem().equals(item.getFeatures())
+		return list.stream().anyMatch(i -> i.getFeature().getItem().equals(item.getFeatures())
 								&& i.getRead().getItem().equals(item.getRead())
 								&& i.getWrite().getItem().equals(item.getWrite())
-								).findAny()
-								.isPresent();	
+								);	
 	}
 
 	private TargetElement isTargetPresent(final Map<TargetElement, List<TargetItemElement>> sourceToTargetMap, String target) {
