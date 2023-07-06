@@ -3,8 +3,15 @@ package integrate.recommenders.ironman.wizard.pages.label;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 
 import integrate.recommenders.ironman.definition.mapping.AbstractItemElement;
 import integrate.recommenders.ironman.definition.mapping.TargetElement;
@@ -29,6 +36,8 @@ public class MLTargetLanguageProvider extends StyledCellLabelProvider {
 			if (targetElement.getRead().getStructFeature() != null)
 				cell.setText("Item: " + targetElement.getRead().getStructFeature().getEType().getName());
 		}	
+		//Remove the bold in font
+		cell.setFont(JFaceResources.getFont(JFaceResources.DEFAULT_FONT));
 	}
 
 }

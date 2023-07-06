@@ -51,6 +51,7 @@ public class SelectTargetItems extends WizardPage {
 		checkboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		createColumns(checkboxTreeViewer);
+		treeViewerStyle(checkboxTreeViewer);
 				
 		checkboxTreeViewer.setContentProvider(new SelectItemContentProvider());	
 				

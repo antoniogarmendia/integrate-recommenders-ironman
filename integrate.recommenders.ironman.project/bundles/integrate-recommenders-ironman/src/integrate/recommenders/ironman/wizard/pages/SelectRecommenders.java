@@ -49,6 +49,7 @@ public class SelectRecommenders extends WizardPage {
 		checkboxTreeViewer.getTree().addSelectionListener(selectTreeViewerItem());
 		
 		createColumns(checkboxTreeViewer);	
+		treeViewerStyle(checkboxTreeViewer);
 				
 		checkboxTreeViewer.setContentProvider(new LanguageRecommenderContentProvider());	
 		checkboxTreeViewer.setInput(getWizard().getServicesBySource());		

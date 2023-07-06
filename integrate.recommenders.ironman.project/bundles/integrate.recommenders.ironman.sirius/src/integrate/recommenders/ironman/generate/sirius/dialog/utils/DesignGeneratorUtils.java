@@ -13,10 +13,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.sirius.business.api.componentization.ViewpointRegistry;
 import org.eclipse.sirius.diagram.description.DiagramDescription;
 import org.eclipse.sirius.viewpoint.description.Group;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 
 import integrate.recommenders.ironman.definition.services.Item;
 import integrate.recommenders.ironman.definition.services.Service;
@@ -128,5 +135,16 @@ public final class DesignGeneratorUtils {
 			}			
 		}		
 		return itemToServices;
+	}
+	
+	public static void treeViewerStyle(TreeViewer treeViewer) {
+		final Color backGround = new Color(Display.getDefault(), 220, 220, 220);
+		treeViewer.getTree().setHeaderBackground(backGround);	
+		//Bold Header
+		FontDescriptor boldDescriptor = FontDescriptor.createFrom(new FontData())
+				.setStyle(SWT.BOLD)
+				.setHeight(9);
+	    Font boldFont = boldDescriptor.createFont(Display.getCurrent());
+	    treeViewer.getTree().setFont(boldFont); 
 	}
 }

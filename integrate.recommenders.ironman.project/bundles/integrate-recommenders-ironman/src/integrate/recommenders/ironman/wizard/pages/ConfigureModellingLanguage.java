@@ -1,17 +1,32 @@
 package integrate.recommenders.ironman.wizard.pages;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.widgets.WidgetFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 import integrate.recommenders.ironman.definition.mapping.ActualFeature;
 import integrate.recommenders.ironman.definition.mapping.MLMappingConfiguration;
@@ -80,14 +95,15 @@ public class ConfigureModellingLanguage extends WizardPage {
 		//Button to Search Package
 		buttonChangeModellingLang(container);
 
-		configureLangTreeViewer = new TreeViewer(container, SWT.VIRTUAL | SWT.BORDER );
+		configureLangTreeViewer = new TreeViewer(container, SWT.VIRTUAL | SWT.BORDER);
 		configureLangTreeViewer.getTree().setHeaderVisible(true);
 		configureLangTreeViewer.getTree().setLinesVisible(true);
 		configureLangTreeViewer.setUseHashlookup(true);
 		
 		configureLangTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL,GridData.FILL, true, true,3,1));
 		createColumns();
-		
+		treeViewerStyle(configureLangTreeViewer);
+			
 		configureLangTreeViewer.setContentProvider(new MLConfigureLanguageContentProvider());	
 		configureLangTreeViewer.setInput(this.mapping);
 		
@@ -103,7 +119,7 @@ public class ConfigureModellingLanguage extends WizardPage {
 	}
 
 	private void buttonChangeModellingLang(final Composite container) {
-		this.mappingLanguageButton  = WidgetFactory.button(SWT.NONE).text("Add Modeling Language").create(container);
+		this.mappingLanguageButton  = WidgetFactory.button(SWT.NONE).text("Add Modelling Language").create(container);
 		this.mappingLanguageButton.addListener(SWT.Selection, event -> {
 			final RegisteredPackageDialog registeredPackageDialog = new RegisteredPackageDialog(getShell());
 			  registeredPackageDialog.setMultipleSelection(false);

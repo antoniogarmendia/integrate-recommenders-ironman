@@ -1,5 +1,6 @@
 package integrate.recommenders.ironman.generate.sirius.dialog.label.provider;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.sirius.diagram.description.DiagramDescription;
@@ -21,7 +22,8 @@ public class DiagramRepresentationLabelProvider extends StyledCellLabelProvider 
 			cell.setText(((DiagramDescription) element).getName());
 			cell.setImage(SiriusEditPlugin.getPlugin().getImage(SiriusEditPlugin.getPlugin().getItemImageDescriptor(element)));
 		}
-		super.update(cell);
+		//Remove the bold in font
+		cell.setFont(JFaceResources.getFont(JFaceResources.DEFAULT_FONT));
 	}
 
 }

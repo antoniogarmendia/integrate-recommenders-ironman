@@ -18,8 +18,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 
 public final class IronManWizardUtils {
@@ -40,6 +47,18 @@ public final class IronManWizardUtils {
 	public static final String IRONMAN_WIZARD_PAGE_AGGREGATION_METHOD_NAME = "Select Aggregation Method";
 	
 	public static final String IRONMAN_WIZARD_PAGE_CONFIGURE_MODELLING_NAME = "Modelling Tools Integration";
+	
+	
+	public static void treeViewerStyle(TreeViewer treeViewer) {
+		final Color backGround = new Color(Display.getDefault(), 220, 220, 220);
+		treeViewer.getTree().setHeaderBackground(backGround);	
+		//Bold Header
+		FontDescriptor boldDescriptor = FontDescriptor.createFrom(new FontData())
+				.setStyle(SWT.BOLD)
+				.setHeight(9);
+	    Font boldFont = boldDescriptor.createFont(Display.getCurrent());
+	    treeViewer.getTree().setFont(boldFont); 
+	}
 	
 	/*
 	 * this returns a map of key = URL of the server and as value the object Service	 * 

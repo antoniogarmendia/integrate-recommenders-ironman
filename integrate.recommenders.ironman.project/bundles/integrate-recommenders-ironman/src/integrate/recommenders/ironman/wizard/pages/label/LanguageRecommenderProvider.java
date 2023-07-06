@@ -2,6 +2,7 @@ package integrate.recommenders.ironman.wizard.pages.label;
 
 import java.util.Map;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 
@@ -17,6 +18,8 @@ public class LanguageRecommenderProvider extends StyledCellLabelProvider {
 		}
 		else if (element instanceof Service)
 			cell.setText(((Service) element).getName());
+		//Remove the bold in font
+		cell.setFont(JFaceResources.getFont(JFaceResources.DEFAULT_FONT));
 	}
 
 }

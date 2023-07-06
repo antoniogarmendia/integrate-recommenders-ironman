@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import integrate.recommenders.ironman.generate.sirius.dialog.content.provider.DiagramRepresentationContentProvider;
 import integrate.recommenders.ironman.generate.sirius.dialog.label.provider.DiagramRepresentationLabelProvider;
 import integrate.recommenders.ironman.generate.sirius.dialog.label.provider.PluginLabelProvider;
+import static integrate.recommenders.ironman.generate.sirius.dialog.utils.DesignGeneratorUtils.*;
 
 import static integrate.recommenders.ironman.generate.sirius.dialog.utils.RecommenderViewpointUtils.*;
 
@@ -119,6 +120,8 @@ public class SiriusViewpointDialog extends Dialog {
 		
 		checkboxTreeViewer.setContentProvider(new DiagramRepresentationContentProvider());	
 		checkboxTreeViewer.setInput(getAllViewpointbyMetamodelNsURI(this.metaModel));
+		
+		treeViewerStyle(checkboxTreeViewer);
 		
 		addListener(checkboxTreeViewer);
 	}	

@@ -1,5 +1,6 @@
 package integrate.recommenders.ironman.wizard.pages.label;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 
@@ -16,6 +17,8 @@ public class SelectItemRecommenderProvider extends CellLabelProvider {
 		}
 		if (element instanceof Item)
 			cell.setText(((Item) element).getRead());
+		//Remove the bold in font
+		cell.setFont(JFaceResources.getFont(JFaceResources.DEFAULT_FONT));	
 	}
 
 }

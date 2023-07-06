@@ -29,7 +29,7 @@ public class ConfigureAggregationMethod extends WizardPage {
 		compositeContainer.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		final Collection<String> algorithms = EvaluateMetaSearchContributionHandler.getPlatformIntegrationExtensions();
-		WidgetFactory.label(SWT.NONE).text("List of Metasearch Algorithms").create(compositeContainer);
+		WidgetFactory.label(SWT.NONE).text("List of aggregation methods:").create(compositeContainer);
 		for (String algorithmName : algorithms) {
 			WidgetFactory.button(SWT.RADIO).text(algorithmName).create(compositeContainer);
 		}		

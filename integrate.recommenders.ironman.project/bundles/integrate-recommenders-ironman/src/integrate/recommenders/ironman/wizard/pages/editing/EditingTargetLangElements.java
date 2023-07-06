@@ -19,12 +19,15 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import integrate.recommenders.ironman.definition.mapping.AbstractItemElement;
 import integrate.recommenders.ironman.definition.mapping.ActualFeature;
@@ -45,8 +48,8 @@ public class EditingTargetLangElements extends EditingSupport {
 	public EditingTargetLangElements(ColumnViewer viewer, MLMappingConfiguration mapping) {
 		super(viewer);		
 		this.mapping = mapping;
-		this.listOfEClasses = new BasicEList<EClass>();	
-		this.listOfFeatures = new BasicEList<EStructuralFeature>();
+		this.listOfEClasses = new BasicEList<>();	
+		this.listOfFeatures = new BasicEList<>();
 		this.eClass = null;
 	}
 
@@ -62,11 +65,17 @@ public class EditingTargetLangElements extends EditingSupport {
 				fillListOfEStruct(listOfCCElements);
 			else if (element instanceof ActualFeature)
 				fillListOfEAttributes(listOfCCElements, (ActualFeature) element);
-					
-		return new ComboBoxCellEditor((Composite)getViewer().getControl(), listOfCCElements.toArray(new String[0]),
+		
+		ComboBoxCellEditor comboEditor = new ComboBoxCellEditor((Composite)getViewer().getControl(), listOfCCElements.toArray(new String[0]),
 				SWT.BORDER 
 				| SWT.READ_ONLY				
-				);
+				);	
+		final Control control = comboEditor.getControl();
+		if (control instanceof CCombo) {
+			CCombo ccombo = (CCombo) control; 
+			ccombo.setFont(JFaceResources.getFont(JFaceResources.DEFAULT_FONT));
+		}
+		return comboEditor;
 	}
 
 	private void fillListOfEAttributes(List<String> listOfCCElements, ActualFeature actualFeature) {
